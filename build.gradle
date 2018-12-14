@@ -1,4 +1,4 @@
-group "com.example.zircon.skeleton"
+group "com.jscisco.lom"
 version "0.0.1"
 
 buildscript {
