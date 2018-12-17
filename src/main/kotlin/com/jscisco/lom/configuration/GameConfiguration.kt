@@ -24,6 +24,7 @@ object GameConfiguration {
         val config = AppConfigs.newConfig()
                 .enableBetaFeatures()
                 .withDefaultTileset(TILESET)
+//                .withDebugMode(true)
         if (FULL_SCREEN) {
             config.fullScreen()
         } else {
