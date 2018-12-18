@@ -6,5 +6,6 @@ object GameBlockRepository {
 
     fun floor() = GameBlock.create()
 
+    fun wall() = GameBlock.createWith(GameTileRepository.wall())
 
 }

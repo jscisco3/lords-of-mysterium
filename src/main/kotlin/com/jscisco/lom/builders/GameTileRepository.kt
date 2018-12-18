@@ -11,7 +11,15 @@ object GameTileRepository {
     fun floor(): CharacterTile {
         return Tiles.newBuilder()
                 .withCharacter('.')
-                .withForegroundColor(TileColors.fromString("#0E0E0E"))
+                .withForegroundColor(TileColors.fromString("#FFFFFF"))
+                .withBackgroundColor(TileColors.fromString("#000000"))
+                .buildCharacterTile()
+    }
+
+    fun wall(): CharacterTile {
+        return Tiles.newBuilder()
+                .withCharacter('#')
+                .withForegroundColor(TileColors.fromString("#FF0000"))
                 .withBackgroundColor(TileColors.fromString("#000000"))
                 .buildCharacterTile()
     }

@@ -16,6 +16,7 @@ class DungeonView(tileGrid: TileGrid, dungeon: Dungeon) : BaseView(tileGrid) {
 
     init {
 
+        logger.info(dungeon.visibleSize().toString())
         var gameComponent = GameComponents.newGameComponentBuilder<Tile, GameBlock>()
                 .withVisibleSize(dungeon.visibleSize())
                 .withGameArea(dungeon)

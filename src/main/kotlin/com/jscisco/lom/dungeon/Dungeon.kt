@@ -18,7 +18,7 @@ class Dungeon(startingBlocks: Map<Position3D, GameBlock>,
         .build() {
 
     init {
-
+        this.scrollUpBy(this.actualSize().zLength)
     }
 
     companion object {
