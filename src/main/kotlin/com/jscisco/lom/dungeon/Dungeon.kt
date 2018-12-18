@@ -4,6 +4,7 @@ import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.builders.GameBlockRepository
 import com.jscisco.lom.entities.Entity
 import org.hexworks.cobalt.datatypes.Identifier
+import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.cobalt.datatypes.extensions.map
 import org.hexworks.zircon.api.builder.game.GameAreaBuilder
 import org.hexworks.zircon.api.data.Tile
@@ -63,6 +64,13 @@ class Dungeon(startingBlocks: Map<Position3D, GameBlock>,
                 it.removeEntity(entity)
             }
         }
+    }
+
+    /**
+     * Finds the [Position3D] of the given [Entity].
+     */
+    fun findPositionOf(entity: Entity): Maybe<Position3D> {
+        return Maybe.ofNullable(entityPositionLookup[entity.id])
     }
 
     companion object {

@@ -5,6 +5,7 @@ import com.jscisco.lom.entities.GameEntity
 import com.jscisco.lom.entities.attributes.EntityMetadata
 import com.jscisco.lom.entities.attributes.flags.Player
 import com.jscisco.lom.entities.attributes.flags.Wall
+import com.jscisco.lom.systems.PlayerInputHandler
 import java.util.*
 
 object EntityFactory {
@@ -18,6 +19,9 @@ object EntityFactory {
                 ),
                 attributes = setOf(
                         Player
+                ),
+                systems = setOf(
+                        PlayerInputHandler
                 )
         )
     }
