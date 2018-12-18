@@ -8,7 +8,7 @@ abstract class BaseView(tileGrid: TileGrid) : View {
     final override val screen = Screens.createScreenFor(tileGrid)
 
     final override fun dock() {
-        screen.display();
+        screen.display()
     }
 
 }

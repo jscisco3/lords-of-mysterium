@@ -12,7 +12,7 @@ import org.hexworks.zircon.api.grid.TileGrid
 
 class DungeonView(tileGrid: TileGrid, dungeon: Dungeon) : BaseView(tileGrid) {
 
-    val logger: Logger = LoggerFactory.getLogger(javaClass)
+    private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     init {
 

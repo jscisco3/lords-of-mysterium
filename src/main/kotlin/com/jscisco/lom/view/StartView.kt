@@ -1,6 +1,6 @@
 package com.jscisco.lom.view
 
-import com.jscisco.lom.configuration.GameConfiguration.DUNGEON_SIZE
+import com.jscisco.lom.configuration.GameConfiguration
 import com.jscisco.lom.dungeon.Dungeon
 import com.jscisco.lom.dungeon.DungeonBuilder
 import org.hexworks.cobalt.logging.api.LoggerFactory
@@ -35,8 +35,8 @@ class StartView(tileGrid: TileGrid) : BaseView(tileGrid) {
         }
 
         jumpIntoDungeon.onMouseClicked {
-//            val dungeon = null
-//            DungeonView(tileGrid, dungeon).dock()
+            val dungeon: Dungeon = DungeonBuilder(GameConfiguration.DUNGEON_SIZE, tileGrid.size).build()
+            DungeonView(tileGrid, dungeon).dock()
         }
 
         panel.addComponent(startButton)

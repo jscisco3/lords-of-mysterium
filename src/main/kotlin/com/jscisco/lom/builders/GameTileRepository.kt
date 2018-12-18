@@ -23,4 +23,13 @@ object GameTileRepository {
                 .withBackgroundColor(TileColors.fromString("#000000"))
                 .buildCharacterTile()
     }
+
+    private val DEFAULT = Tiles.newBuilder()
+            .withBackgroundColor(TileColors.fromString("#000000"))
+            .buildCharacterTile()
+
+    val PLAYER = DEFAULT
+            .withCharacter('@')
+            .withForegroundColor(TileColors.fromString("#0000FF"))
+
 }
