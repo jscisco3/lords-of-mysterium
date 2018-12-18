@@ -6,6 +6,7 @@ import com.jscisco.lom.dungeon.DungeonBuilder
 import com.jscisco.lom.view.DungeonView
 import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.SwingApplications
+import org.hexworks.zircon.api.data.impl.Position3D
 import org.hexworks.zircon.api.grid.TileGrid
 
 fun main(args: Array<String>) {

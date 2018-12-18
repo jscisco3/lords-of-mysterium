@@ -9,7 +9,7 @@ import org.hexworks.zircon.api.data.Size
 import org.hexworks.zircon.api.data.impl.Position3D
 import org.hexworks.zircon.api.data.impl.Size3D
 
-class DungeonBuilder(private val dungeonSize: Size3D, val gridSize: Size) {
+class DungeonBuilder(private val dungeonSize: Size3D, gridSize: Size) {
 
     val logger: Logger = LoggerFactory.getLogger(javaClass)
 
@@ -23,16 +23,13 @@ class DungeonBuilder(private val dungeonSize: Size3D, val gridSize: Size) {
 
 
     fun build(): Dungeon {
-//        randomizeTiles()
-        startingBlocks.set(Position3D.create(0, 0, 1), GameBlockRepository.wall())
-        logger.info(startingBlocks.get(Position3D.create(0, 0, 1)).toString())
+        randomizeTiles()
         return Dungeon(startingBlocks, visibleSize, dungeonSize)
     }
 
     private fun randomizeTiles() {
         forAllPositions { pos ->
-            startingBlocks[pos] = if (Math.random() < 0.5) {
-                logger.info("Creating a wall at %s".format(pos.toString()))
+            startingBlocks[pos] = if (Math.random() < 0.2) {
                 GameBlockRepository.wall()
             } else {
                 GameBlockRepository.floor()
