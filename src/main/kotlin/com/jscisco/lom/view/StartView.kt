@@ -1,6 +1,8 @@
 package com.jscisco.lom.view
 
+import com.jscisco.lom.configuration.GameConfiguration.DUNGEON_SIZE
 import com.jscisco.lom.dungeon.Dungeon
+import com.jscisco.lom.dungeon.DungeonBuilder
 import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Positions
@@ -33,7 +35,8 @@ class StartView(tileGrid: TileGrid) : BaseView(tileGrid) {
         }
 
         jumpIntoDungeon.onMouseClicked {
-            DungeonView(tileGrid, Dungeon(10)).dock()
+//            val dungeon = null
+//            DungeonView(tileGrid, dungeon).dock()
         }
 
         panel.addComponent(startButton)

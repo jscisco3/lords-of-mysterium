@@ -1,15 +1,16 @@
 package com.jscisco.lom.blocks
 
+import com.jscisco.lom.builders.GameTileRepository
 import org.hexworks.zircon.api.data.BlockSide
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.data.base.BlockBase
 
-class GameBlock(private var defaultTile: Tile = TerrainRepository.floor()) : BlockBase<Tile>() {
+class GameBlock(private var defaultTile: Tile = GameTileRepository.floor()) : BlockBase<Tile>() {
     override val layers: MutableList<Tile>
-        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+        get() = mutableListOf(defaultTile, GameTileRepository.EMPTY)
 
     override fun fetchSide(side: BlockSide): Tile {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return GameTileRepository.EMPTY
     }
 
     companion object {

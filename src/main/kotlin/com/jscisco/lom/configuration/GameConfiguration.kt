@@ -4,7 +4,6 @@ import org.hexworks.zircon.api.AppConfigs
 import org.hexworks.zircon.api.CP437TilesetResources
 import org.hexworks.zircon.api.Sizes
 import org.hexworks.zircon.api.application.AppConfig
-import java.awt.GraphicsEnvironment
 import java.awt.Toolkit
 
 object GameConfiguration {
@@ -16,9 +15,10 @@ object GameConfiguration {
 
     val TILESET = CP437TilesetResources.rogueYun16x16()
 
-
     val WINDOW_WIDTH = SCREEN_SIZE.width.div(TILESET.width).times(SCREEN_SIZE_PERCENT).toInt()
     val WINDOW_HEIGHT = SCREEN_SIZE.height.div(TILESET.height).times(SCREEN_SIZE_PERCENT).toInt()
+
+    val DUNGEON_SIZE = Sizes.create3DSize(WINDOW_WIDTH * 1, WINDOW_HEIGHT * 1, 2)
 
     fun buildAppConfig(): AppConfig {
         val config = AppConfigs.newConfig()
