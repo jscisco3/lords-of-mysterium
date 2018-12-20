@@ -1,79 +1,24 @@
 package com.jscisco.lom.dungeon
 
 import com.jscisco.lom.blocks.GameBlock
-import com.jscisco.lom.builders.GameBlockRepository
-import com.jscisco.lom.entities.Entity
-import org.hexworks.cobalt.datatypes.Identifier
-import org.hexworks.cobalt.datatypes.Maybe
-import org.hexworks.cobalt.datatypes.extensions.map
+import com.jscisco.lom.builders.GameBlockFactory
+import com.jscisco.lom.configuration.GameConfiguration.WINDOW_HEIGHT
+import com.jscisco.lom.configuration.GameConfiguration.WINDOW_WIDTH
 import org.hexworks.zircon.api.builder.game.GameAreaBuilder
 import org.hexworks.zircon.api.data.Tile
-import org.hexworks.zircon.api.data.impl.Position3D
 import org.hexworks.zircon.api.data.impl.Size3D
 import org.hexworks.zircon.api.game.GameArea
 
-class Dungeon(startingBlocks: Map<Position3D, GameBlock>,
-              visibleSize: Size3D,
-              actualSize: Size3D) : GameArea<Tile, GameBlock> by GameAreaBuilder.newBuilder<Tile, GameBlock>()
-        .withVisibleSize(visibleSize)
-        .withActualSize(actualSize)
-        .withDefaultBlock(DEFAULT_BLOCK)
+class Dungeon(private val visibleSize: Size3D, val maxDepth: Int) : GameArea<Tile, GameBlock> by GameAreaBuilder<Tile, GameBlock>()
         .withLayersPerBlock(2)
+        .withVisibleSize(visibleSize)
+        .withActualSize(Size3D.create(WINDOW_WIDTH, WINDOW_HEIGHT, 2))
+        .withDefaultBlock(DEFAULT_BLOCK)
         .build() {
 
-    private val entities = linkedMapOf<Identifier, Entity>()
-    private val entityPositionLookup = mutableMapOf<Identifier, Position3D>()
-
-    init {
-        startingBlocks.forEach { pos, block ->
-            setBlockAt(pos, block)
-            block.entities.forEach {
-                entityPositionLookup[it.id] = pos
-            }
-        }
-    }
-
-    /**
-     * Add an entity without a position
-     */
-    fun addDungeonEntity(entity: Entity) {
-        entities[entity.id] = entity
-    }
-
-    /**
-     * Add the given [Entity] at the given [Position3D]
-     * Has no effect if the given [Entity] already in the dungeon
-     */
-    fun addEntity(entity: Entity, position: Position3D) {
-        entities[entity.id]
-        if (entityPositionLookup.containsKey(entity.id).not()) {
-            entityPositionLookup[entity.id] = position
-            fetchBlockAt(position).map {
-                it.addEntity(entity)
-            }
-        }
-    }
-
-    /**
-     * Remove the given [Entity]
-     */
-    fun removeEntity(entity: Entity) {
-        entities.remove(entity.id)
-        entityPositionLookup.remove(entity.id)?.let { pos ->
-            fetchBlockAt(pos).map {
-                it.removeEntity(entity)
-            }
-        }
-    }
-
-    /**
-     * Finds the [Position3D] of the given [Entity].
-     */
-    fun findPositionOf(entity: Entity): Maybe<Position3D> {
-        return Maybe.ofNullable(entityPositionLookup[entity.id])
-    }
 
     companion object {
-        private val DEFAULT_BLOCK = GameBlockRepository.floor()
+        private val DEFAULT_BLOCK = GameBlockFactory.floor()
     }
+
 }

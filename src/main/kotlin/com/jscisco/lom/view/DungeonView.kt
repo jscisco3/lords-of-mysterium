@@ -16,14 +16,15 @@ class DungeonView(tileGrid: TileGrid, dungeon: Dungeon) : BaseView(tileGrid) {
 
     init {
 
-        logger.info(dungeon.visibleSize().toString())
-        var gameComponent = GameComponents.newGameComponentBuilder<Tile, GameBlock>()
-                .withVisibleSize(dungeon.visibleSize())
+        val gameComponent = GameComponents.newGameComponentBuilder<Tile, GameBlock>()
                 .withGameArea(dungeon)
+                .withVisibleSize(dungeon.visibleSize())
                 .withProjectionMode(ProjectionMode.TOP_DOWN)
                 .withAlignmentWithin(screen, ComponentAlignment.TOP_RIGHT)
                 .build()
 
         screen.addComponent(gameComponent)
+
     }
+
 }
