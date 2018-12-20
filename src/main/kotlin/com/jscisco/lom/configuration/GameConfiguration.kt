@@ -15,7 +15,7 @@ object GameConfiguration {
     private val SCREEN_SIZE = GraphicsEnvironment.getLocalGraphicsEnvironment().maximumWindowBounds
 
     //    private val SCREEN_SIZE = Toolkit.getDefaultToolkit().screenSize
-    private const val SCREEN_SIZE_PERCENT = 0.6
+    private const val SCREEN_SIZE_PERCENT = 0.7
     private const val FULL_SCREEN = false
 
     val TILESET = CP437TilesetResources.rogueYun16x16()

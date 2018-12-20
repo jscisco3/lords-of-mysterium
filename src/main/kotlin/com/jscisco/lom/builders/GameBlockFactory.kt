@@ -5,7 +5,7 @@ import com.jscisco.lom.blocks.GameBlock
 object GameBlockFactory {
 
 
-    fun floor() = GameBlock.createWith(EntityFactory.newFloor())
+    fun floor() = GameBlock.create()
 
     fun wall() = GameBlock.createWith(EntityFactory.newWall())
 

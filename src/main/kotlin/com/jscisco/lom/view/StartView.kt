@@ -24,6 +24,7 @@ class StartView(tileGrid: TileGrid) : BaseView(tileGrid) {
 
         jumpIntoDungeon.onMouseClicked {
             val visibleSize = Sizes.create3DSize(tileGrid.width / 5 * 4, tileGrid.height / 6 * 5, 1)
+            logger.info(visibleSize.toString())
             val dungeon: Dungeon = Dungeon(visibleSize, 5)
             DungeonView(tileGrid, dungeon).dock()
         }
