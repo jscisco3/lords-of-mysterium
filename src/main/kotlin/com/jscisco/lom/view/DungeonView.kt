@@ -13,7 +13,7 @@ import org.hexworks.zircon.api.component.ComponentAlignment
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.game.ProjectionMode
 import org.hexworks.zircon.api.grid.TileGrid
-import org.hexworks.zircon.api.kotlin.onKeyStroke
+import org.hexworks.zircon.api.kotlin.onInput
 import org.hexworks.zircon.internal.Zircon
 
 class DungeonView(tileGrid: TileGrid, dungeon: Dungeon) : BaseView(tileGrid) {
@@ -28,8 +28,8 @@ class DungeonView(tileGrid: TileGrid, dungeon: Dungeon) : BaseView(tileGrid) {
         /**
          * Input crap
          */
-        screen.onKeyStroke {
-            Zircon.eventBus.publish(GameLogEvent(it.toString()))
+        screen.onInput {
+            dungeon.handleInput(it)
         }
 
         val gameComponent = GameComponents.newGameComponentBuilder<Tile, GameBlock>()
@@ -55,7 +55,7 @@ class DungeonView(tileGrid: TileGrid, dungeon: Dungeon) : BaseView(tileGrid) {
          * Subscribe events
          */
         Zircon.eventBus.subscribe<GameLogEvent> { (text) ->
-            logArea.addParagraph(text, withNewLine = false, withTypingEffectSpeedInMs = 5)
+            logArea.addParagraph(text, withNewLine = false)
         }
 
         /**

@@ -1,9 +1,12 @@
 package com.jscisco.lom.view
 
-import com.jscisco.lom.dungeon.Dungeon
+import com.jscisco.lom.builders.EntityFactory
+import com.jscisco.lom.configuration.GameConfiguration
+import com.jscisco.lom.dungeon.DungeonBuilder
 import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Sizes
+import org.hexworks.zircon.api.data.impl.Size3D
 import org.hexworks.zircon.api.grid.TileGrid
 import org.hexworks.zircon.api.kotlin.onMouseClicked
 
@@ -23,9 +26,17 @@ class StartView(tileGrid: TileGrid) : BaseView(tileGrid) {
                 .build()
 
         jumpIntoDungeon.onMouseClicked {
+            val dungeonSize = Size3D.create(GameConfiguration.WINDOW_WIDTH, GameConfiguration.WINDOW_HEIGHT, 1)
             val visibleSize = Sizes.create3DSize(tileGrid.width / 5 * 4, tileGrid.height / 6 * 5, 1)
-            logger.info(visibleSize.toString())
-            val dungeon: Dungeon = Dungeon(visibleSize, 5)
+
+            val hero = EntityFactory.newPlayer()
+
+            val dungeon = DungeonBuilder(dungeonSize, hero = hero)
+                    .build(visibleSize, dungeonSize)
+
+//            dungeon.addEntity(hero, dungeon.findEmptyLocationWithin(Positions.default3DPosition().withZ(0),
+//                    DUNGEON_SIZE.copy(zLength = 0)).get())
+
             DungeonView(tileGrid, dungeon).dock()
         }
 

@@ -2,6 +2,7 @@ package com.jscisco.lom.blocks
 
 import com.jscisco.lom.builders.GameTileBuilder
 import com.jscisco.lom.entities.Entity
+import com.jscisco.lom.extensions.occupiesBlock
 import com.jscisco.lom.extensions.tile
 import org.hexworks.zircon.api.data.BlockSide
 import org.hexworks.zircon.api.data.Tile
@@ -16,6 +17,14 @@ class GameBlock(private var defaultTile: Tile = GameTileBuilder.floor(),
     override fun fetchSide(side: BlockSide): Tile {
         return GameTileBuilder.EMPTY
     }
+
+    val isOccupied: Boolean
+        get() = currentEntities.any {
+            it.occupiesBlock
+        }
+
+    val entities: Iterable<Entity>
+        get() = currentEntities.toList()
 
     fun addEntity(entity: Entity) {
         currentEntities.add(entity)
