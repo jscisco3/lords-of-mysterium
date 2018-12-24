@@ -3,7 +3,6 @@ package com.jscisco.lom.dungeon
 import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.builders.GameBlockFactory
 import com.jscisco.lom.entities.Entity
-import com.jscisco.lom.events.GameLogEvent
 import com.jscisco.lom.events.MoveEntity
 import org.hexworks.cobalt.datatypes.Identifier
 import org.hexworks.cobalt.datatypes.Maybe
@@ -36,19 +35,21 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     private val entityPositionLookup = mutableMapOf<Identifier, Position3D>()
 
     init {
-        addEntity(hero, Positions.default3DPosition().withZ(0))
-        updateCamera()
         blocks.forEach { pos, block ->
             setBlockAt(pos, block)
             block.entities.forEach {
                 entityPositionLookup[it.id] = pos
             }
         }
+        addEntity(hero, Position3D.create(1, 1, 0))
 
-        Zircon.eventBus.subscribe<MoveEntity> { (entity, direction) ->
-            moveEntity(entity, entityPositionLookup[entity.id]!!.withRelativeX(direction.x).withRelativeY(direction.y))
-            Zircon.eventBus.publish(GameLogEvent(entityPositionLookup[entity.id]!!.toString()))
+        Zircon.eventBus.subscribe<MoveEntity> { (entity, position) ->
+            logger.info(position.toString())
+            moveEntity(entity, position)
         }
+
+        updateCamera()
+
     }
 
     fun handleInput(input: Input) {
@@ -79,10 +80,10 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
             scrollBackwardBy(halfHeight - screenPosition.y)
         }
         if (screenPosition.x > halfWidth) {
-            scrollLeftBy(screenPosition.x - halfHeight)
+            scrollRightBy(screenPosition.x - halfWidth)
         }
         if (screenPosition.x < halfWidth) {
-            scrollRightBy(halfWidth - screenPosition.x)
+            scrollLeftBy(halfWidth - screenPosition.x)
         }
     }
 

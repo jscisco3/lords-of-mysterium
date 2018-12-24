@@ -34,9 +34,6 @@ class StartView(tileGrid: TileGrid) : BaseView(tileGrid) {
             val dungeon = DungeonBuilder(dungeonSize, hero = hero)
                     .build(visibleSize, dungeonSize)
 
-//            dungeon.addEntity(hero, dungeon.findEmptyLocationWithin(Positions.default3DPosition().withZ(0),
-//                    DUNGEON_SIZE.copy(zLength = 0)).get())
-
             DungeonView(tileGrid, dungeon).dock()
         }
 
