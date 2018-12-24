@@ -3,7 +3,9 @@ package com.jscisco.lom.builders;
 import com.jscisco.lom.entities.Entity
 import com.jscisco.lom.entities.GameEntity
 import com.jscisco.lom.entities.attributes.EntityMetadata
+import com.jscisco.lom.entities.attributes.flags.BlockOccupier
 import com.jscisco.lom.entities.attributes.flags.Player
+import com.jscisco.lom.entities.attributes.flags.VisionBlocker
 import com.jscisco.lom.entities.attributes.flags.Wall
 import java.util.*
 
@@ -17,7 +19,8 @@ object EntityFactory {
                         tile = GameTileBuilder.PLAYER
                 ),
                 attributes = setOf(
-                        Player
+                        Player,
+                        BlockOccupier
                 )
         )
     }
@@ -28,7 +31,9 @@ object EntityFactory {
                         name = "Wall",
                         tile = GameTileBuilder.wall()
                 ),
-                attributes = setOf(Wall)
+                attributes = setOf(Wall,
+                        BlockOccupier,
+                        VisionBlocker)
         )
     }
 }

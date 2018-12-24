@@ -21,6 +21,7 @@ ext {
     mockitoVersion = "1.10.19"
     assertjVersion = "3.6.2"
     slf4jVersion = "1.7.25"
+    squidLibVersion = "3.0.0"
 
     libraries = [
             kotlin_stdlib   : "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
@@ -31,7 +32,8 @@ ext {
             zircon_jvm_swing: "org.hexworks.zircon:zircon.jvm.swing:$zirconVersion",
             junit           : "junit:junit:$junitVersion",
             mockito         : "org.mockito:mockito-all:$mockitoVersion",
-            assertj         : "org.assertj:assertj-core:$assertjVersion"
+            assertj         : "org.assertj:assertj-core:$assertjVersion",
+            squidLib        : "com.squidpony:squidlib-util:$squidLibVersion"
     ]
 }
 

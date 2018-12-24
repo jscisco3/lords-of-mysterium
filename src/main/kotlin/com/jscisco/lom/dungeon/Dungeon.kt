@@ -41,7 +41,10 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
                 entityPositionLookup[it.id] = pos
             }
         }
-        addEntity(hero, Position3D.create(1, 1, 0))
+        addEntity(hero, findEmptyLocationWithin(
+                Position3D.defaultPosition().withZ(0),
+                actualSize
+        ).get())
 
         Zircon.eventBus.subscribe<MoveEntity> { (entity, position) ->
             moveEntity(entity, position)
@@ -62,7 +65,9 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
                     entityPositionLookup[hero.id]!!
                 }
             }
-            Zircon.eventBus.publish(MoveEntity(hero, newPos))
+            if (fetchBlockAt(newPos).get().isOccupied.not()) {
+                Zircon.eventBus.publish(MoveEntity(hero, newPos))
+            }
         }
         // Update camera position to be ~centered~ on the hero
         updateCamera()
