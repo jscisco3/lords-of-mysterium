@@ -7,6 +7,7 @@ import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Sizes
 import org.hexworks.zircon.api.data.impl.Size3D
+import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.grid.TileGrid
 import org.hexworks.zircon.api.kotlin.onMouseClicked
 
@@ -23,6 +24,9 @@ class StartView(tileGrid: TileGrid) : BaseView(tileGrid) {
 
         var jumpIntoDungeon = Components.button()
                 .withText("Jump into dungeon")
+                .wrapSides(false)
+                .withBoxType(BoxType.SINGLE)
+                .wrapWithBox()
                 .build()
 
         jumpIntoDungeon.onMouseClicked {

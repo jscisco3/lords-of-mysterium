@@ -44,7 +44,6 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         addEntity(hero, Position3D.create(1, 1, 0))
 
         Zircon.eventBus.subscribe<MoveEntity> { (entity, position) ->
-            logger.info(position.toString())
             moveEntity(entity, position)
         }
 
