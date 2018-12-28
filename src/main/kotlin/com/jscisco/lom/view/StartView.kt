@@ -3,6 +3,7 @@ package com.jscisco.lom.view
 import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.configuration.GameConfiguration
 import com.jscisco.lom.dungeon.DungeonBuilder
+import com.jscisco.lom.dungeon.strategies.EmptyDungeonStrategy
 import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Sizes
@@ -35,7 +36,7 @@ class StartView(tileGrid: TileGrid) : BaseView(tileGrid) {
 
             val hero = EntityFactory.newPlayer()
 
-            val dungeon = DungeonBuilder(dungeonSize, hero = hero)
+            val dungeon = DungeonBuilder(dungeonSize, hero = hero, strategy = EmptyDungeonStrategy(dungeonSize))
                     .build(visibleSize, dungeonSize)
 
             DungeonView(tileGrid, dungeon).dock()
