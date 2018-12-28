@@ -19,6 +19,8 @@ import org.hexworks.zircon.api.game.GameArea
 import org.hexworks.zircon.api.input.Input
 import org.hexworks.zircon.api.kotlin.whenKeyStroke
 import org.hexworks.zircon.internal.Zircon
+import squidpony.squidgrid.FOV
+
 
 class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
               private val visibleSize: Size3D,
@@ -161,6 +163,14 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         } else {
             false
         }
+    }
+
+    fun updateFOV() {
+
+    }
+
+    private fun calculateFOV() {
+        val fov = FOV()
     }
 
     companion object {

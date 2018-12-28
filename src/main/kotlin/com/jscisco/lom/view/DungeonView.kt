@@ -30,6 +30,7 @@ class DungeonView(tileGrid: TileGrid, dungeon: Dungeon) : BaseView(tileGrid) {
          */
         screen.onInput {
             dungeon.handleInput(it)
+            dungeon.updateFOV()
         }
 
         val gameComponent = GameComponents.newGameComponentBuilder<Tile, GameBlock>()
