@@ -1,20 +1,21 @@
 package com.jscisco.lom.blocks
 
 import com.jscisco.lom.builders.GameTileBuilder
-import com.jscisco.lom.entities.Entity
-import com.jscisco.lom.entities.attributes.flags.Wall
-import com.jscisco.lom.extensions.hasAttribute
+import com.jscisco.lom.extensions.GameEntity
+import com.jscisco.lom.extensions.isWall
 import com.jscisco.lom.extensions.occupiesBlock
 import com.jscisco.lom.extensions.tile
+import org.hexworks.amethyst.api.EntityType
 import org.hexworks.zircon.api.data.BlockSide
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.data.base.BlockBase
 
 class GameBlock(private var defaultTile: Tile = GameTileBuilder.floor(),
-                private var currentEntities: MutableList<Entity> = mutableListOf()) : BlockBase<Tile>() {
+                private var currentEntities: MutableList<GameEntity<EntityType>> = mutableListOf()) : BlockBase<Tile>() {
 
     override val layers: MutableList<Tile>
-        get() = mutableListOf(defaultTile, currentEntities.map { it.tile }.lastOrNull() ?: GameTileBuilder.EMPTY)
+        get() = mutableListOf(defaultTile, currentEntities.map { it.tile }.lastOrNull()
+                ?: GameTileBuilder.EMPTY)
 
     override fun fetchSide(side: BlockSide): Tile {
         return GameTileBuilder.EMPTY
@@ -27,24 +28,24 @@ class GameBlock(private var defaultTile: Tile = GameTileBuilder.floor(),
 
     val isWall: Boolean
         get() = currentEntities.any {
-            it.hasAttribute<Wall>()
+            it.isWall
         }
 
-    val entities: Iterable<Entity>
+    val entities: Iterable<GameEntity<EntityType>>
         get() = currentEntities.toList()
 
-    fun addEntity(entity: Entity) {
+    fun addEntity(entity: GameEntity<EntityType>) {
         currentEntities.add(entity)
     }
 
-    fun removeEntity(entity: Entity) {
+    fun removeEntity(entity: GameEntity<EntityType>) {
         currentEntities.remove(entity)
     }
 
     companion object {
         fun create(): GameBlock = GameBlock()
 
-        fun createWith(entity: Entity): GameBlock = GameBlock().also {
+        fun createWith(entity: GameEntity<EntityType>): GameBlock = GameBlock().also {
             it.addEntity(entity)
         }
     }

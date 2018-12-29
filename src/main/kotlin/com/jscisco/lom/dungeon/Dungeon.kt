@@ -2,8 +2,11 @@ package com.jscisco.lom.dungeon
 
 import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.builders.GameBlockFactory
-import com.jscisco.lom.entities.Entity
 import com.jscisco.lom.events.MoveEntity
+import com.jscisco.lom.extensions.GameEntity
+import org.hexworks.amethyst.api.Entity
+import org.hexworks.amethyst.api.EntityType
+import org.hexworks.amethyst.api.newEngine
 import org.hexworks.cobalt.datatypes.Identifier
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.cobalt.datatypes.extensions.map
@@ -19,13 +22,12 @@ import org.hexworks.zircon.api.game.GameArea
 import org.hexworks.zircon.api.input.Input
 import org.hexworks.zircon.api.kotlin.whenKeyStroke
 import org.hexworks.zircon.internal.Zircon
-import squidpony.squidgrid.FOV
 
 
 class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
               private val visibleSize: Size3D,
               private val actualSize: Size3D,
-              private val hero: Entity) : GameArea<Tile, GameBlock> by GameAreaBuilder<Tile, GameBlock>()
+              private val hero: GameEntity<EntityType>) : GameArea<Tile, GameBlock> by GameAreaBuilder<Tile, GameBlock>()
         .withVisibleSize(visibleSize)
         .withActualSize(actualSize)
         .withDefaultBlock(DEFAULT_BLOCK)
@@ -33,7 +35,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         .build() {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
-    private val entities = linkedMapOf<Identifier, Entity>()
+    private val engine = newEngine<GameContext>()
     private val entityPositionLookup = mutableMapOf<Identifier, Position3D>()
 
     init {
@@ -96,7 +98,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     /**
      * Finds the [Position3D] of the given [Entity].
      */
-    fun findPositionOf(entity: Entity): Maybe<Position3D> {
+    fun findPositionOf(entity: GameEntity<EntityType>): Maybe<Position3D> {
         return Maybe.ofNullable(entityPositionLookup[entity.id])
     }
 
@@ -126,16 +128,16 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     /**
      * Add a global entity, that is, an entity without a position
      */
-    fun addDungeonEntity(entity: Entity) {
-        entities[entity.id] = entity
+    fun addDungeonEntity(entity: Entity<EntityType, GameContext>) {
+        engine.addEntity(entity)
     }
 
     /**
      * Add an [Entity] at a given [Position3D]
      * No effect if the [Entity] already exists in the dungeon
      */
-    fun addEntity(entity: Entity, position: Position3D) {
-        entities[entity.id] = entity
+    fun addEntity(entity: Entity<EntityType, GameContext>, position: Position3D) {
+        engine.addEntity(entity)
         if (entityPositionLookup.containsKey(entity.id).not()) {
             entityPositionLookup[entity.id] = position
             fetchBlockAt(position).map {
@@ -148,7 +150,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
      * Move an [Entity] to the desired [Postion3D]
      * @return true if the [Entity] was moved
      */
-    fun moveEntity(entity: Entity, position: Position3D): Boolean {
+    fun moveEntity(entity: GameEntity<EntityType>, position: Position3D): Boolean {
         return if (actualSize().containsPosition(position) && position.x >= 0 && position.y >= 0) {
             entityPositionLookup.remove(entity.id)?.let { oldPos ->
                 fetchBlockAt(oldPos).map { oldBlock ->
@@ -163,14 +165,6 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         } else {
             false
         }
-    }
-
-    fun updateFOV() {
-
-    }
-
-    private fun calculateFOV() {
-        val fov = FOV()
     }
 
     companion object {

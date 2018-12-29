@@ -17,6 +17,7 @@ buildscript {
 
 ext {
     zirconVersion = "2018.5.38-PREVIEW"
+    amethystVersion = "2018.0.2-PREVIEW"
     junitVersion = "4.12"
     mockitoVersion = "1.10.19"
     assertjVersion = "3.6.2"
@@ -26,6 +27,7 @@ ext {
     libraries = [
             kotlin_stdlib   : "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",
             kotlin_reflect  : "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion",
+            amethyst        : "org.hexworks.amethyst:amethyst.core-jvm:$amethystVersion",
             slf4j_api       : "org.slf4j:slf4j-api:$slf4jVersion",
             slf4j_simple    : "org.slf4j:slf4j-simple:$slf4jVersion",
             zircon_core_jvm : "org.hexworks.zircon:zircon.core-jvm:$zirconVersion",
@@ -77,6 +79,8 @@ build.dependsOn(shadowJar)
 dependencies {
     compile libraries.kotlin_stdlib
     compile libraries.kotlin_reflect
+
+    compile libraries.amethyst
 
     compile libraries.slf4j_api
     compile libraries.slf4j_simple

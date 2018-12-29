@@ -1,39 +1,27 @@
 package com.jscisco.lom.builders;
 
-import com.jscisco.lom.entities.Entity
-import com.jscisco.lom.entities.GameEntity
-import com.jscisco.lom.entities.attributes.EntityMetadata
-import com.jscisco.lom.entities.attributes.flags.BlockOccupier
-import com.jscisco.lom.entities.attributes.flags.Player
-import com.jscisco.lom.entities.attributes.flags.VisionBlocker
-import com.jscisco.lom.entities.attributes.flags.Wall
+import com.jscisco.lom.attributes.EntityTile
+import com.jscisco.lom.attributes.flags.BlockOccupier
+import com.jscisco.lom.attributes.flags.VisionBlocker
+import com.jscisco.lom.attributes.types.Player
+import com.jscisco.lom.attributes.types.Wall
+import com.jscisco.lom.extensions.newGameEntityOfType
 import java.util.*
 
 object EntityFactory {
     private val random = Random(0xDEADBEEF)
 
-    fun newPlayer(): Entity {
-        return GameEntity(
-                metadata = EntityMetadata(
-                        name = "Player",
-                        tile = GameTileBuilder.PLAYER
-                ),
-                attributes = setOf(
-                        Player,
-                        BlockOccupier
-                )
-        )
+    fun newPlayer() = newGameEntityOfType(Player) {
+        attributes(Player,
+                BlockOccupier,
+                EntityTile(GameTileBuilder.PLAYER))
+
     }
 
-    fun newWall(): Entity {
-        return GameEntity(
-                metadata = EntityMetadata(
-                        name = "Wall",
-                        tile = GameTileBuilder.wall()
-                ),
-                attributes = setOf(Wall,
-                        BlockOccupier,
-                        VisionBlocker)
+    fun newWall() = newGameEntityOfType(Wall) {
+        attributes(BlockOccupier,
+                VisionBlocker,
+                EntityTile(GameTileBuilder.wall())
         )
     }
 }
