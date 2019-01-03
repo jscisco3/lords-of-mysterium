@@ -1,8 +1,8 @@
 package com.jscisco.lom.extensions
 
 import com.jscisco.lom.dungeon.GameContext
-import org.hexworks.amethyst.api.Entity
-import org.hexworks.amethyst.api.EntityType
+import org.hexworks.amethyst.api.entity.Entity
+import org.hexworks.amethyst.api.entity.EntityType
 
 /**
  * Fits any [Entity] type we use.

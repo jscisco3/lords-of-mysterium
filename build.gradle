@@ -16,13 +16,6 @@ buildscript {
 }
 
 ext {
-    zirconVersion = "2018.5.38-PREVIEW"
-    amethystVersion = "2018.0.2-PREVIEW"
-    junitVersion = "4.12"
-    mockitoVersion = "1.10.19"
-    assertjVersion = "3.6.2"
-    slf4jVersion = "1.7.25"
-    squidLibVersion = "3.0.0-b9"
 
     libraries = [
             kotlin_stdlib   : "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion",

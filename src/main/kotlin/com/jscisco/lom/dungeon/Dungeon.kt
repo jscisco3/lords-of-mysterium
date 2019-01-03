@@ -4,8 +4,8 @@ import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.builders.GameBlockFactory
 import com.jscisco.lom.events.MoveEntity
 import com.jscisco.lom.extensions.GameEntity
-import org.hexworks.amethyst.api.Entity
-import org.hexworks.amethyst.api.EntityType
+import org.hexworks.amethyst.api.entity.Entity
+import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.amethyst.api.newEngine
 import org.hexworks.cobalt.datatypes.Identifier
 import org.hexworks.cobalt.datatypes.Maybe

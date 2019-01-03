@@ -2,10 +2,8 @@ package com.jscisco.lom.blocks
 
 import com.jscisco.lom.builders.GameTileBuilder
 import com.jscisco.lom.extensions.GameEntity
-import com.jscisco.lom.extensions.isWall
-import com.jscisco.lom.extensions.occupiesBlock
-import com.jscisco.lom.extensions.tile
-import org.hexworks.amethyst.api.EntityType
+import com.jscisco.lom.extensions.*
+import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.zircon.api.data.BlockSide
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.data.base.BlockBase
