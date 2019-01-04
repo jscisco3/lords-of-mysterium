@@ -1,8 +1,12 @@
 package com.jscisco.lom.builders;
 
+import com.jscisco.lom.attributes.CombatStats
 import com.jscisco.lom.attributes.EntityTile
+import com.jscisco.lom.attributes.Inventory
+import com.jscisco.lom.attributes.ItemStats
 import com.jscisco.lom.attributes.flags.BlockOccupier
 import com.jscisco.lom.attributes.flags.VisionBlocker
+import com.jscisco.lom.attributes.types.Item
 import com.jscisco.lom.attributes.types.Player
 import com.jscisco.lom.attributes.types.Wall
 import com.jscisco.lom.extensions.newGameEntityOfType
@@ -14,6 +18,7 @@ object EntityFactory {
     fun newPlayer() = newGameEntityOfType(Player) {
         attributes(Player,
                 BlockOccupier,
+                Inventory(maxWeight = 100),
                 EntityTile(GameTileBuilder.PLAYER))
 
     }
@@ -23,5 +28,17 @@ object EntityFactory {
                 VisionBlocker,
                 EntityTile(GameTileBuilder.wall())
         )
+    }
+
+    fun newSword() = newGameEntityOfType(Item) {
+        attributes(
+                CombatStats(
+                        power = 5,
+                        toHit = 5),
+                ItemStats(
+                        weight = 1,
+                        cost = 10
+                ),
+                EntityTile(GameTileBuilder.sword()))
     }
 }

@@ -8,6 +8,7 @@ class EmptyDungeonStrategy(private val size: Size3D) : GenerationStrategy(size) 
     override fun generateDungeon(): MutableMap<Position3D, GameBlock> {
         initializeFloors()
         createOutsideWalls()
+        createItems()
         return blocks
     }
 }

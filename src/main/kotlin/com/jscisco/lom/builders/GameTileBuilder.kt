@@ -26,6 +26,14 @@ object GameTileBuilder {
                 .buildCharacterTile()
     }
 
+    fun sword(): CharacterTile {
+        return Tiles.newBuilder()
+                .withCharacter(')')
+                .withForegroundColor(DEFAULT_FOREGROUND)
+                .withBackgroundColor(DEFAULT_BACKGROUND)
+                .buildCharacterTile()
+    }
+
     val PLAYER: CharacterTile = Tiles.newBuilder()
             .withCharacter('@')
             .withForegroundColor(TileColors.fromString("#FF0000"))
