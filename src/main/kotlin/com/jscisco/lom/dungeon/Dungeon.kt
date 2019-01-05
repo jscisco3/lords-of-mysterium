@@ -1,14 +1,18 @@
 package com.jscisco.lom.dungeon
 
+import com.jscisco.lom.attributes.types.Item
 import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.builders.GameBlockFactory
+import com.jscisco.lom.commands.PickItemUp
 import com.jscisco.lom.events.MoveEntity
 import com.jscisco.lom.extensions.GameEntity
+import com.jscisco.lom.extensions.filterType
+import org.hexworks.amethyst.api.Engines.newEngine
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.amethyst.api.entity.EntityType
-import org.hexworks.amethyst.api.newEngine
 import org.hexworks.cobalt.datatypes.Identifier
 import org.hexworks.cobalt.datatypes.Maybe
+import org.hexworks.cobalt.datatypes.extensions.fold
 import org.hexworks.cobalt.datatypes.extensions.map
 import org.hexworks.cobalt.events.api.subscribe
 import org.hexworks.cobalt.logging.api.Logger
@@ -65,6 +69,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
                 's' -> entityPositionLookup[hero.id]!!.withRelativeY(1)
                 'a' -> entityPositionLookup[hero.id]!!.withRelativeX(-1)
                 'd' -> entityPositionLookup[hero.id]!!.withRelativeX(1)
+                ',' -> hero.executeCommand(PickItemUp(context = GameContext(), source = hero, position = entityPositionLookup[hero.id]!!))
                 else -> {
                     entityPositionLookup[hero.id]!!
                 }
@@ -146,6 +151,13 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         }
     }
 
+    fun removeEntity(entity: GameEntity<EntityType>) {
+        engine.removeEntity(entity)
+        entityPositionLookup.remove(entity.id)?.let { pos ->
+            fetchBlockAt(pos).map { it.removeEntity(entity) }
+        }
+    }
+
     /**
      * Move an [Entity] to the desired [Postion3D]
      * @return true if the [Entity] was moved
@@ -165,6 +177,16 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         } else {
             false
         }
+    }
+
+    fun fetchEntitiesAt(pos: Position3D): List<GameEntity<EntityType>> {
+        return fetchBlockAt(pos).fold(whenEmpty = { kotlin.collections.listOf() }, whenPresent = {
+            it.entities.toList()
+        })
+    }
+
+    fun findItemsAt(pos: Position3D): List<GameEntity<Item>> {
+        return fetchEntitiesAt(pos).filterType()
     }
 
     companion object {
