@@ -69,7 +69,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
                 's' -> entityPositionLookup[hero.id]!!.withRelativeY(1)
                 'a' -> entityPositionLookup[hero.id]!!.withRelativeX(-1)
                 'd' -> entityPositionLookup[hero.id]!!.withRelativeX(1)
-                ',' -> hero.executeCommand(PickItemUp(context = GameContext(), source = hero, position = entityPositionLookup[hero.id]!!))
+//                ',' -> hero.executeCommand(PickItemUp(context = GameContext(), source = hero, position = entityPositionLookup[hero.id]!!))
                 else -> {
                     entityPositionLookup[hero.id]!!
                 }

@@ -10,6 +10,7 @@ import com.jscisco.lom.attributes.types.Item
 import com.jscisco.lom.attributes.types.Player
 import com.jscisco.lom.attributes.types.Wall
 import com.jscisco.lom.extensions.newGameEntityOfType
+import com.jscisco.lom.systems.ItemPicker
 import java.util.*
 
 object EntityFactory {
@@ -20,6 +21,7 @@ object EntityFactory {
                 BlockOccupier,
                 Inventory(maxWeight = 100),
                 EntityTile(GameTileBuilder.PLAYER))
+        facets(ItemPicker)
 
     }
 

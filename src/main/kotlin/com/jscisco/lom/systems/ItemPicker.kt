@@ -16,9 +16,8 @@ object ItemPicker : BaseFacet<GameContext>() {
         val dungeon = context.dungeon
         dungeon.findItemsAt(position).whenHasItems { items ->
             val item = items.last()
-            if (itemHolder.inventory.addItem(item)) {
-                dungeon.removeEntity(item)
-            }
+            itemHolder.inventory.addItem(item)
+            dungeon.removeEntity(item)
         }
         Consumed
     }
