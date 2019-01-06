@@ -19,19 +19,6 @@ class TestInventory {
     }
 
     @Test
-    fun testInventoryAddItemButInventoryIsFull() {
-        val player = EntityFactory.newPlayer()
-
-        player.whenHasAttribute<Inventory> {
-            while (it.currentWeight < it.maxWeight) {
-                it.addItem(EntityFactory.newSword())
-            }
-            val itemAdded = it.addItem(EntityFactory.newSword())
-            Assertions.assertThat(itemAdded).isFalse()
-        }
-    }
-
-    @Test
     fun testInventoryRemoveItemAfterAddingIt() {
         val player = EntityFactory.newPlayer()
 

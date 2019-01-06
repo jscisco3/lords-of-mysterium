@@ -20,17 +20,18 @@ data class Inventory(val maxWeight: Int) : Attribute {
     val currentWeight: Int
         get() = currentItems.map { it.weight }.sum()
 
+    val overencumbered: Boolean
+        get() = currentWeight > maxWeight
+
     fun findItemById(id: Identifier): Maybe<GameEntity<Item>> {
         return Maybe.ofNullable(items.firstOrNull { it.id == id })
     }
 
     /**
-     * Try to add an item to the current inventory. Return false if not added
+     * Add an [Item] to the current [Inventory]
      */
-    fun addItem(item: GameEntity<Item>): Boolean {
-        return if (((currentWeight + item.weight) > maxWeight).not()) {
-            currentItems.add(item)
-        } else false
+    fun addItem(item: GameEntity<Item>) {
+        currentItems.add(item)
     }
 
     /**
@@ -40,6 +41,4 @@ data class Inventory(val maxWeight: Int) : Attribute {
     fun removeItem(item: GameEntity<Item>): Boolean {
         return currentItems.remove(item)
     }
-
-
 }
