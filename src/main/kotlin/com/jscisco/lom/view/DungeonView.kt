@@ -2,6 +2,7 @@ package com.jscisco.lom.view
 
 import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.dungeon.Dungeon
+import com.jscisco.lom.dungeon.GameContext
 import com.jscisco.lom.events.GameLogEvent
 import org.hexworks.cobalt.events.api.subscribe
 import org.hexworks.cobalt.logging.api.Logger
@@ -19,9 +20,7 @@ import org.hexworks.zircon.internal.Zircon
 class DungeonView(tileGrid: TileGrid, dungeon: Dungeon) : BaseView(tileGrid) {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
-
     private val logAreaHeight = screen.size.height - dungeon.visibleSize().yLength
-
 
     init {
 
@@ -29,6 +28,12 @@ class DungeonView(tileGrid: TileGrid, dungeon: Dungeon) : BaseView(tileGrid) {
          * Input crap
          */
         screen.onInput {
+            dungeon.handleInput(GameContext(
+                    dungeon = dungeon,
+                    screen = screen,
+                    input = it,
+                    player = dungeon.player
+            ))
 //            dungeon.handleInput(it)
 //            dungeon.updateFOV()
         }

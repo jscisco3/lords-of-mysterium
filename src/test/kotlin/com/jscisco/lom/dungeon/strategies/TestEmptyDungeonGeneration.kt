@@ -1,5 +1,6 @@
 package com.jscisco.lom.dungeon.strategies
 
+import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.dungeon.DungeonBuilder
 import org.assertj.core.api.Assertions
 import org.hexworks.zircon.api.data.impl.Position3D
@@ -12,7 +13,8 @@ class TestEmptyDungeonGeneration {
     fun testEmptyDungeonCreated() {
         val dungeonSize: Size3D = Size3D.create(100, 100, 1)
         val dungeon = DungeonBuilder(dungeonSize = dungeonSize,
-                strategy = EmptyDungeonStrategy(dungeonSize)).build(dungeonSize, dungeonSize)
+                strategy = EmptyDungeonStrategy(dungeonSize),
+                player = EntityFactory.newPlayer()).build(dungeonSize, dungeonSize)
 
         val topLeftCorner = dungeon.fetchBlockAt(Position3D.create(0, 0, 0))
 

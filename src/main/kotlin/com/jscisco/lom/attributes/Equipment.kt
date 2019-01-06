@@ -20,13 +20,9 @@ class Equipment(val eligibleSlots: List<EquipmentSlot>, val initialEquipment: Mu
         // If the equipment can't handle the slot we are trying to equip, do nothing
         if (eligibleSlots.contains(slot).not()) {
             return
-        }
-        val oldItem: GameEntity<Item>? = slots[slot]
-        slots[slot] = newEquipment
-        inventory.removeItem(newEquipment)
-
-        if (oldItem != null) {
-            inventory.addItem(oldItem)
+        } else {
+            unequipItem(inventory, slot)
+            slots[slot] = newEquipment
         }
     }
 

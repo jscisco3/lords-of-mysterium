@@ -34,8 +34,7 @@ class StartView(tileGrid: TileGrid) : BaseView(tileGrid) {
             val dungeonSize = Size3D.create(GameConfiguration.WINDOW_WIDTH, GameConfiguration.WINDOW_HEIGHT, 1)
             val visibleSize = Sizes.create3DSize(tileGrid.width / 5 * 4, tileGrid.height / 6 * 5, 1)
 
-
-            val dungeon = DungeonBuilder(dungeonSize, strategy = EmptyDungeonStrategy(dungeonSize))
+            val dungeon = DungeonBuilder(dungeonSize, strategy = EmptyDungeonStrategy(dungeonSize), player = EntityFactory.newPlayer())
                     .build(visibleSize, dungeonSize)
 
             DungeonView(tileGrid, dungeon).dock()

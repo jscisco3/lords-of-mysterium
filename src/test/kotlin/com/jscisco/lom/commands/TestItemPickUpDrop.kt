@@ -29,7 +29,8 @@ class TestItemPickUpDrop {
         val dungeonSize: Size3D = Size3D.create(100, 100, 1)
         val dungeonBuilder: DungeonBuilder = DungeonBuilder(
                 dungeonSize = dungeonSize,
-                strategy = EmptyDungeonStrategy(dungeonSize)
+                strategy = EmptyDungeonStrategy(dungeonSize),
+                player = player
         )
         val dungeon = dungeonBuilder.build(dungeonSize, dungeonSize)
 
@@ -58,7 +59,8 @@ class TestItemPickUpDrop {
         val dungeonSize: Size3D = Size3D.create(100, 100, 1)
         val dungeonBuilder: DungeonBuilder = DungeonBuilder(
                 dungeonSize = dungeonSize,
-                strategy = EmptyDungeonStrategy(dungeonSize)
+                strategy = EmptyDungeonStrategy(dungeonSize),
+                player = player
         )
         val dungeon = dungeonBuilder.build(dungeonSize, dungeonSize)
 
@@ -89,7 +91,8 @@ class TestItemPickUpDrop {
         val dungeonSize: Size3D = Size3D.create(100, 100, 1)
         val dungeonBuilder: DungeonBuilder = DungeonBuilder(
                 dungeonSize = dungeonSize,
-                strategy = EmptyDungeonStrategy(dungeonSize)
+                strategy = EmptyDungeonStrategy(dungeonSize),
+                player = player
         )
         val dungeon = dungeonBuilder.build(dungeonSize, dungeonSize)
 

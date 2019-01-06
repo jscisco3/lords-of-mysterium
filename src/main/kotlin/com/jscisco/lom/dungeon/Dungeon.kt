@@ -1,8 +1,10 @@
 package com.jscisco.lom.dungeon
 
 import com.jscisco.lom.attributes.types.Item
+import com.jscisco.lom.attributes.types.Player
 import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.builders.GameBlockFactory
+import com.jscisco.lom.commands.PickItemUp
 import com.jscisco.lom.events.MoveEntity
 import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.filterType
@@ -22,12 +24,14 @@ import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.data.impl.Position3D
 import org.hexworks.zircon.api.data.impl.Size3D
 import org.hexworks.zircon.api.game.GameArea
+import org.hexworks.zircon.api.kotlin.whenKeyStroke
 import org.hexworks.zircon.internal.Zircon
 
 
 class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
               private val visibleSize: Size3D,
-              private val actualSize: Size3D) : GameArea<Tile, GameBlock> by GameAreaBuilder<Tile, GameBlock>()
+              private val actualSize: Size3D,
+              val player: GameEntity<Player>) : GameArea<Tile, GameBlock> by GameAreaBuilder<Tile, GameBlock>()
         .withVisibleSize(visibleSize)
         .withActualSize(actualSize)
         .withDefaultBlock(DEFAULT_BLOCK)
@@ -46,51 +50,53 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
             }
         }
 
+        addEntity(player, this.findEmptyLocationWithin(Position3D.defaultPosition(), actualSize).get())
+
         Zircon.eventBus.subscribe<MoveEntity> { (entity, position) ->
             moveEntity(entity, position)
         }
-
-//        updateCamera()
-
+        updateCamera()
     }
 
-//    fun handleInput(input: Input) {
-//        input.whenKeyStroke { ks ->
-//            val newPos = when (ks.getCharacter()) {
-//                'w' -> entityPositionLookup[hero.id]!!.withRelativeY(-1)
-//                's' -> entityPositionLookup[hero.id]!!.withRelativeY(1)
-//                'a' -> entityPositionLookup[hero.id]!!.withRelativeX(-1)
-//                'd' -> entityPositionLookup[hero.id]!!.withRelativeX(1)
-////                ',' -> hero.executeCommand(PickItemUp(context = GameContext(), source = hero, position = entityPositionLookup[hero.id]!!))
-//                else -> {
-//                    entityPositionLookup[hero.id]!!
-//                }
-//            }
-//            if (fetchBlockAt(newPos).get().isOccupied.not()) {
-//                Zircon.eventBus.publish(MoveEntity(hero, newPos))
-//            }
-//        }
-//        // Update camera position to be ~centered~ on the hero
-//        updateCamera()
-//    }
+    fun handleInput(context: GameContext) {
+        context.input.whenKeyStroke { ks ->
+            val newPos = when (ks.getCharacter()) {
+                'w' -> entityPositionLookup[player.id]!!.withRelativeY(-1)
+                's' -> entityPositionLookup[player.id]!!.withRelativeY(1)
+                'a' -> entityPositionLookup[player.id]!!.withRelativeX(-1)
+                'd' -> entityPositionLookup[player.id]!!.withRelativeX(1)
+                else -> {
+                    entityPositionLookup[player.id]!!
+                }
+            }
+            if (fetchBlockAt(newPos).get().isOccupied.not()) {
+                Zircon.eventBus.publish(MoveEntity(player, newPos))
+            }
+            when (ks.getCharacter()) {
+                ',' -> player.executeCommand(PickItemUp(context = context, source = player, position = entityPositionLookup[player.id]!!))
+            }
+        }
+        // Update camera position to be ~centered~ on the hero
+        updateCamera()
+    }
 
-//    private fun updateCamera() {
-//        val screenPosition = findPositionOf(hero).get() - visibleOffset()
-//        val halfHeight = visibleSize.yLength / 2
-//        val halfWidth = visibleSize.xLength / 2
-//        if (screenPosition.y > halfHeight) {
-//            scrollForwardBy(screenPosition.y - halfHeight)
-//        }
-//        if (screenPosition.y < halfHeight) {
-//            scrollBackwardBy(halfHeight - screenPosition.y)
-//        }
-//        if (screenPosition.x > halfWidth) {
-//            scrollRightBy(screenPosition.x - halfWidth)
-//        }
-//        if (screenPosition.x < halfWidth) {
-//            scrollLeftBy(halfWidth - screenPosition.x)
-//        }
-//    }
+    private fun updateCamera() {
+        val screenPosition = findPositionOf(player).get() - visibleOffset()
+        val halfHeight = visibleSize.yLength / 2
+        val halfWidth = visibleSize.xLength / 2
+        if (screenPosition.y > halfHeight) {
+            scrollForwardBy(screenPosition.y - halfHeight)
+        }
+        if (screenPosition.y < halfHeight) {
+            scrollBackwardBy(halfHeight - screenPosition.y)
+        }
+        if (screenPosition.x > halfWidth) {
+            scrollRightBy(screenPosition.x - halfWidth)
+        }
+        if (screenPosition.x < halfWidth) {
+            scrollLeftBy(halfWidth - screenPosition.x)
+        }
+    }
 
     /**
      * Finds the [Position3D] of the given [Entity].

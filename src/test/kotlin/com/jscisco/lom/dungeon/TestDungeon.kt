@@ -14,12 +14,13 @@ class TestDungeon {
 
     val dungeonSize: Size3D = Size3D.create(100, 100, 1)
     val visibleSize: Size3D = Size3D.create(25, 25, 1)
-    val hero: GameEntity<Player> = EntityFactory.newPlayer()
+    val player: GameEntity<Player> = EntityFactory.newPlayer()
     val strategy: GenerationStrategy = GenericDungeonStrategy(dungeonSize = dungeonSize)
 
     val dungeonBuilder: DungeonBuilder = DungeonBuilder(
             dungeonSize = dungeonSize,
-            strategy = strategy
+            strategy = strategy,
+            player = player
     )
     val dungeon = dungeonBuilder.build(visibleSize, dungeonSize)
 
@@ -43,26 +44,26 @@ class TestDungeon {
 
     @Test
     fun testMoveEntitySuccessfully() {
-        dungeon.addEntity(hero, Position3D.defaultPosition())
+        dungeon.addEntity(player, Position3D.defaultPosition())
 
         val newPosition = Position3D.create(20, 20, 0)
-        val entityMoved = dungeon.moveEntity(hero, newPosition)
+        val entityMoved = dungeon.moveEntity(player, newPosition)
 
         Assertions.assertThat(entityMoved).isTrue()
-        Assertions.assertThat(dungeon.findPositionOf(hero).get()).isEqualTo(newPosition)
+        Assertions.assertThat(dungeon.findPositionOf(player).get()).isEqualTo(newPosition)
     }
 
     @Test
     fun testMoveEntityFailed() {
-        dungeon.addEntity(hero, Position3D.defaultPosition())
+        dungeon.addEntity(player, Position3D.defaultPosition())
 
-        val currentPosition = dungeon.findPositionOf(hero).get()
+        val currentPosition = dungeon.findPositionOf(player).get()
         val newPosition = Position3D.create(-1, -1, 0)
 
 
-        val entityMoved = dungeon.moveEntity(hero, newPosition)
+        val entityMoved = dungeon.moveEntity(player, newPosition)
         Assertions.assertThat(entityMoved).isFalse()
-        Assertions.assertThat(dungeon.findPositionOf(hero).get()).isEqualTo(currentPosition)
+        Assertions.assertThat(dungeon.findPositionOf(player).get()).isEqualTo(currentPosition)
 
 
     }
