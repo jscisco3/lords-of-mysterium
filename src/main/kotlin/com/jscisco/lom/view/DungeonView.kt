@@ -29,7 +29,7 @@ class DungeonView(tileGrid: TileGrid, dungeon: Dungeon) : BaseView(tileGrid) {
          * Input crap
          */
         screen.onInput {
-            dungeon.handleInput(it)
+//            dungeon.handleInput(it)
 //            dungeon.updateFOV()
         }
 

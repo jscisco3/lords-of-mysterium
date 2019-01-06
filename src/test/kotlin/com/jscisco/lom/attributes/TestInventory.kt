@@ -1,7 +1,7 @@
 package com.jscisco.lom.attributes
 
+import com.jscisco.lom.attributes.types.inventory
 import com.jscisco.lom.builders.EntityFactory
-import com.jscisco.lom.extensions.whenHasAttribute
 import org.assertj.core.api.Assertions
 import org.junit.Test
 
@@ -9,35 +9,27 @@ class TestInventory {
 
     @Test
     fun testInventoryAddItem() {
-        val entity = EntityFactory.newPlayer()
+        val player = EntityFactory.newPlayer()
         val sword = EntityFactory.newSword()
-
-        entity.whenHasAttribute<Inventory> {
-            it.addItem(sword)
-            Assertions.assertThat(it.currentWeight).isNotEqualTo(0)
-        }
+        player.inventory.addItem(sword)
+        Assertions.assertThat(player.inventory.items.size).isEqualTo(1)
     }
 
     @Test
     fun testInventoryRemoveItemAfterAddingIt() {
         val player = EntityFactory.newPlayer()
-
-        player.whenHasAttribute<Inventory> {
-            val sword = EntityFactory.newSword()
-            it.addItem(sword)
-            val removed = it.removeItem(sword)
-            Assertions.assertThat(removed).isTrue()
-        }
+        val sword = EntityFactory.newSword()
+        player.inventory.addItem(sword)
+        Assertions.assertThat(player.inventory.items.size).isEqualTo(1)
+        val removed = player.inventory.removeItem(sword)
+        Assertions.assertThat(removed).isTrue()
     }
 
     @Test
     fun testInventoryRemoveItemButIsNotPresent() {
         val player = EntityFactory.newPlayer()
-
-        player.whenHasAttribute<Inventory> {
-            val removed = it.removeItem(EntityFactory.newSword())
-            Assertions.assertThat(removed).isFalse()
-        }
+        val removed = player.inventory.removeItem(EntityFactory.newSword())
+        Assertions.assertThat(removed).isFalse()
     }
 
 }

@@ -19,13 +19,12 @@ class TestDungeon {
 
     val dungeonBuilder: DungeonBuilder = DungeonBuilder(
             dungeonSize = dungeonSize,
-            hero = hero,
             strategy = strategy
     )
+    val dungeon = dungeonBuilder.build(visibleSize, dungeonSize)
 
     @Test
     fun testAddEntityAtPosition() {
-        val dungeon = dungeonBuilder.build(visibleSize, dungeonSize)
         val sword = EntityFactory.newSword()
         val position = Position3D.create(15, 15, 0)
         dungeon.addEntity(sword, position)
@@ -44,20 +43,22 @@ class TestDungeon {
 
     @Test
     fun testMoveEntitySuccessfully() {
-        val dungeon = dungeonBuilder.build(visibleSize, dungeonSize)
-        val currentPosition = dungeon.findPositionOf(hero).get()
-        val newPosition = Position3D.create(20, 20, 0)
+        dungeon.addEntity(hero, Position3D.defaultPosition())
 
+        val newPosition = Position3D.create(20, 20, 0)
         val entityMoved = dungeon.moveEntity(hero, newPosition)
+
         Assertions.assertThat(entityMoved).isTrue()
         Assertions.assertThat(dungeon.findPositionOf(hero).get()).isEqualTo(newPosition)
     }
 
     @Test
     fun testMoveEntityFailed() {
-        val dungeon = dungeonBuilder.build(visibleSize, dungeonSize)
+        dungeon.addEntity(hero, Position3D.defaultPosition())
+
         val currentPosition = dungeon.findPositionOf(hero).get()
         val newPosition = Position3D.create(-1, -1, 0)
+
 
         val entityMoved = dungeon.moveEntity(hero, newPosition)
         Assertions.assertThat(entityMoved).isFalse()
