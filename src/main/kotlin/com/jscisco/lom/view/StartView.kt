@@ -9,14 +9,14 @@ import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Sizes
 import org.hexworks.zircon.api.data.impl.Size3D
 import org.hexworks.zircon.api.graphics.BoxType
-import org.hexworks.zircon.api.grid.TileGrid
-import org.hexworks.zircon.api.kotlin.onMouseClicked
+import org.hexworks.zircon.api.kotlin.onMouseReleased
+import org.hexworks.zircon.api.mvc.base.BaseView
 
-class StartView(tileGrid: TileGrid) : BaseView(tileGrid) {
+class StartView() : BaseView() {
 
     private val logger = LoggerFactory.getLogger(StartView::class.java)
 
-    init {
+    override fun onDock() {
         val panel = Components.panel()
                 .wrapWithBox(wrapWithBox = true)
                 .withTitle(title = "Lords of Mysterium")
@@ -30,18 +30,17 @@ class StartView(tileGrid: TileGrid) : BaseView(tileGrid) {
                 .wrapWithBox()
                 .build()
 
-        jumpIntoDungeon.onMouseClicked {
+        jumpIntoDungeon.onMouseReleased {
             val dungeonSize = Size3D.create(GameConfiguration.WINDOW_WIDTH, GameConfiguration.WINDOW_HEIGHT, 1)
-            val visibleSize = Sizes.create3DSize(tileGrid.width / 5 * 4, tileGrid.height / 6 * 5, 1)
+            val visibleSize = Sizes.create3DSize(screen.width / 5 * 4, screen.height / 6 * 5, 1)
 
             val dungeon = DungeonBuilder(dungeonSize, strategy = EmptyDungeonStrategy(dungeonSize), player = EntityFactory.newPlayer())
                     .build(visibleSize, dungeonSize)
 
-            DungeonView(tileGrid, dungeon).dock()
+            replaceWith(DungeonView(dungeon))
+            close()
         }
-
         panel.addComponent(jumpIntoDungeon)
-
         screen.addComponent(panel)
     }
 

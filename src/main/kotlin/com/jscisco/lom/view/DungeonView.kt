@@ -13,20 +13,21 @@ import org.hexworks.zircon.api.Sizes
 import org.hexworks.zircon.api.component.ComponentAlignment
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.game.ProjectionMode
-import org.hexworks.zircon.api.grid.TileGrid
 import org.hexworks.zircon.api.kotlin.onInput
+import org.hexworks.zircon.api.mvc.base.BaseView
 import org.hexworks.zircon.internal.Zircon
 
-class DungeonView(tileGrid: TileGrid, dungeon: Dungeon) : BaseView(tileGrid) {
+class DungeonView(private val dungeon: Dungeon) : BaseView() {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
-    private val logAreaHeight = screen.size.height - dungeon.visibleSize().yLength
 
-    init {
-
+    override fun onDock() {
         /**
          * Input crap
          */
+        val logAreaHeight = screen.size.height - dungeon.visibleSize().yLength
+
+
         screen.onInput {
             dungeon.handleInput(GameContext(
                     dungeon = dungeon,

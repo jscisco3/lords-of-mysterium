@@ -5,5 +5,6 @@ import com.jscisco.lom.view.StartView
 import org.hexworks.zircon.api.SwingApplications
 
 fun main(args: Array<String>) {
-    StartView(SwingApplications.startTileGrid(GameConfiguration.buildAppConfig())).dock()
+    val application = SwingApplications.startApplication(GameConfiguration.buildAppConfig())
+    application.dock(StartView())
 }
