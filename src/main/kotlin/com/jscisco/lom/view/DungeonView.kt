@@ -35,7 +35,6 @@ class DungeonView(private val dungeon: Dungeon) : BaseView() {
                     input = it,
                     player = dungeon.player
             ))
-//            dungeon.handleInput(it)
 //            dungeon.updateFOV()
         }
 

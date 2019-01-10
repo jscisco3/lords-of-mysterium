@@ -2,8 +2,10 @@ package com.jscisco.lom.dungeon
 
 import com.jscisco.lom.attributes.types.Item
 import com.jscisco.lom.attributes.types.Player
+import com.jscisco.lom.attributes.types.inventory
 import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.builders.GameBlockFactory
+import com.jscisco.lom.commands.DropItem
 import com.jscisco.lom.commands.PickItemUp
 import com.jscisco.lom.events.MoveEntity
 import com.jscisco.lom.extensions.GameEntity
@@ -61,10 +63,10 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     fun handleInput(context: GameContext) {
         context.input.whenKeyStroke { ks ->
             val newPos = when (ks.getCharacter()) {
-                'w' -> entityPositionLookup[player.id]!!.withRelativeY(-1)
-                's' -> entityPositionLookup[player.id]!!.withRelativeY(1)
-                'a' -> entityPositionLookup[player.id]!!.withRelativeX(-1)
-                'd' -> entityPositionLookup[player.id]!!.withRelativeX(1)
+                'j' -> entityPositionLookup[player.id]!!.withRelativeY(-1)
+                'k' -> entityPositionLookup[player.id]!!.withRelativeY(1)
+                'h' -> entityPositionLookup[player.id]!!.withRelativeX(-1)
+                'l' -> entityPositionLookup[player.id]!!.withRelativeX(1)
                 else -> {
                     entityPositionLookup[player.id]!!
                 }
@@ -74,6 +76,9 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
             }
             when (ks.getCharacter()) {
                 ',' -> player.executeCommand(PickItemUp(context = context, source = player, position = entityPositionLookup[player.id]!!))
+                'd' -> if (player.inventory.items.lastOrNull() != null) {
+                    player.executeCommand(DropItem(context, context.player, player.inventory.items.last(), entityPositionLookup[player.id]!!))
+                }
             }
         }
         // Update camera position to be ~centered~ on the hero
