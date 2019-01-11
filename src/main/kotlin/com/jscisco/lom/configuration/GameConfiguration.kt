@@ -4,6 +4,7 @@ import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.AppConfigs
 import org.hexworks.zircon.api.CP437TilesetResources
+import org.hexworks.zircon.api.ColorThemes
 import org.hexworks.zircon.api.Sizes
 import org.hexworks.zircon.api.application.AppConfig
 import java.awt.GraphicsEnvironment
@@ -24,6 +25,8 @@ object GameConfiguration {
     val WINDOW_HEIGHT = SCREEN_SIZE.height.div(TILESET.height).times(SCREEN_SIZE_PERCENT).toInt()
 
     val DUNGEON_SIZE = Sizes.create3DSize(WINDOW_WIDTH * 1, WINDOW_HEIGHT * 1, 1)
+
+    val THEME = ColorThemes.adriftInDreams()
 
     fun buildAppConfig(): AppConfig {
         logger.info("WINDOW_WIDTH: %s | WINDOW_HEIGHT: %s | DUNGEON_SIZE: %s".format(WINDOW_WIDTH, WINDOW_HEIGHT, DUNGEON_SIZE))
