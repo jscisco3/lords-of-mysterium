@@ -7,6 +7,7 @@ import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.newGameEntityOfType
 import org.hexworks.cobalt.databinding.api.createPropertyFrom
 import org.hexworks.cobalt.databinding.api.property.Property
+import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.cobalt.datatypes.extensions.map
 import org.hexworks.cobalt.datatypes.factory.IdentifierFactory
 import org.hexworks.zircon.api.Components
@@ -19,6 +20,16 @@ class ItemListFragment(inventory: Inventory, width: Int) : Fragment {
     val selectedItem: Property<GameEntity<Item>> = createPropertyFrom(NO_ITEM)
 
     private val rgb: RadioButtonGroup
+
+    fun fetchSelectedItem(): Maybe<GameEntity<Item>> {
+        return Maybe.ofNullable(if (selectedItem.value == NO_ITEM) null else selectedItem.value)
+    }
+
+    fun removeSelectedItem() {
+        rgb.fetchSelectedOption().map {
+            rgb.removeOption(it)
+        }
+    }
 
     override val root = Components.panel()
             .withSize(width, inventory.items.size + 2)
