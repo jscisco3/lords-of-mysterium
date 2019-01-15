@@ -14,9 +14,13 @@ object Wall : BaseEntityType(
         name = "wall"
 )
 
-object Item : BaseEntityType(
-        name = "item"
-)
+object Sword : BaseEntityType(
+        name = "sword"
+), Item
+
+object NoItem : BaseEntityType(
+        name = "Select an item"
+), Item
 
 val GameEntity<Item>.power: Int
     get() = attribute<CombatStats>().power

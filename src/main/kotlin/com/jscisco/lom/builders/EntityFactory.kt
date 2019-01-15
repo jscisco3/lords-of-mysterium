@@ -6,8 +6,8 @@ import com.jscisco.lom.attributes.Inventory
 import com.jscisco.lom.attributes.ItemStats
 import com.jscisco.lom.attributes.flags.BlockOccupier
 import com.jscisco.lom.attributes.flags.VisionBlocker
-import com.jscisco.lom.attributes.types.Item
 import com.jscisco.lom.attributes.types.Player
+import com.jscisco.lom.attributes.types.Sword
 import com.jscisco.lom.attributes.types.Wall
 import com.jscisco.lom.extensions.newGameEntityOfType
 import com.jscisco.lom.systems.ItemDropper
@@ -34,7 +34,7 @@ object EntityFactory {
         )
     }
 
-    fun newSword() = newGameEntityOfType(Item) {
+    fun newSword() = newGameEntityOfType(Sword) {
         attributes(
                 CombatStats(
                         power = 5,

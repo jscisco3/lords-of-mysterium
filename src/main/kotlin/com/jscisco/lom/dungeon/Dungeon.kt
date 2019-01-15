@@ -10,6 +10,7 @@ import com.jscisco.lom.commands.PickItemUp
 import com.jscisco.lom.events.MoveEntity
 import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.filterType
+import com.jscisco.lom.view.dialog.InventoryDialog
 import org.hexworks.amethyst.api.Engines.newEngine
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.amethyst.api.entity.EntityType
@@ -76,6 +77,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
             }
             when (ks.getCharacter()) {
                 ',' -> player.executeCommand(PickItemUp(context = context, source = player, position = entityPositionLookup[player.id]!!))
+                'i' -> context.screen.openModal(InventoryDialog(context))
                 'd' -> if (player.inventory.items.lastOrNull() != null) {
                     player.executeCommand(DropItem(context, context.player, player.inventory.items.last(), entityPositionLookup[player.id]!!))
                 }
