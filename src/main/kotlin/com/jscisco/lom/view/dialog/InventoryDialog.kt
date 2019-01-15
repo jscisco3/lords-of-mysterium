@@ -3,6 +3,7 @@ package com.jscisco.lom.view.dialog
 import com.jscisco.lom.attributes.types.inventory
 import com.jscisco.lom.commands.DropItem
 import com.jscisco.lom.dungeon.GameContext
+import com.jscisco.lom.extensions.position
 import com.jscisco.lom.view.dialog.fragment.ItemListFragment
 import org.hexworks.cobalt.datatypes.extensions.map
 import org.hexworks.zircon.api.Components
@@ -35,7 +36,7 @@ class InventoryDialog(gameContext: GameContext) : Dialog(screen = gameContext.sc
                                     player.executeCommand(DropItem(gameContext,
                                             player,
                                             item,
-                                            Position3D.create(1, 1, 0)))
+                                            player.position))
                                 }
                             }
                         }

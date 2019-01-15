@@ -1,5 +1,6 @@
 package com.jscisco.lom.extensions
 
+import com.jscisco.lom.attributes.EntityPosition
 import com.jscisco.lom.attributes.EntityTile
 import com.jscisco.lom.attributes.flags.BlockOccupier
 import com.jscisco.lom.attributes.flags.VisionBlocker
@@ -12,7 +13,18 @@ import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.cobalt.datatypes.extensions.map
 import org.hexworks.cobalt.datatypes.extensions.orElseThrow
 import org.hexworks.zircon.api.data.Tile
+import org.hexworks.zircon.api.data.impl.Position3D
 import kotlin.reflect.full.isSuperclassOf
+
+var AnyGameEntity.position: Position3D
+    get() = attribute(EntityPosition::class).orElseThrow {
+        IllegalArgumentException("This entity has no position!")
+    }.position
+    set(value) {
+        attribute(EntityPosition::class).map {
+            it.position = value
+        }
+    }
 
 val AnyGameEntity.tile: Tile
     get() = this.attribute<EntityTile>().tile

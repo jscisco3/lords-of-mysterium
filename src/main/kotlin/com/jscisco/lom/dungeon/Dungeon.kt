@@ -10,6 +10,7 @@ import com.jscisco.lom.commands.PickItemUp
 import com.jscisco.lom.events.MoveEntity
 import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.filterType
+import com.jscisco.lom.extensions.position
 import com.jscisco.lom.view.dialog.InventoryDialog
 import org.hexworks.amethyst.api.Engines.newEngine
 import org.hexworks.amethyst.api.entity.Entity
@@ -50,6 +51,8 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
             setBlockAt(pos, block)
             block.entities.forEach {
                 entityPositionLookup[it.id] = pos
+                engine.addEntity(it)
+                it.position = pos
             }
         }
 
@@ -154,6 +157,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
                 it.addEntity(entity)
             }
         }
+        entity.position = position
     }
 
     fun removeEntity(entity: GameEntity<EntityType>) {
@@ -177,6 +181,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
                     newBlock.addEntity(entity)
                 }
                 entityPositionLookup[entity.id] = position
+                entity.position = position
                 true
             } ?: false
         } else {
