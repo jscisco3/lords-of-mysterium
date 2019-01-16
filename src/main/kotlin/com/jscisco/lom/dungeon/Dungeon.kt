@@ -28,6 +28,7 @@ import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.data.impl.Position3D
 import org.hexworks.zircon.api.data.impl.Size3D
 import org.hexworks.zircon.api.game.GameArea
+import org.hexworks.zircon.api.input.InputType
 import org.hexworks.zircon.api.kotlin.whenKeyStroke
 import org.hexworks.zircon.internal.Zircon
 
@@ -66,11 +67,11 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
 
     fun handleInput(context: GameContext) {
         context.input.whenKeyStroke { ks ->
-            val newPos = when (ks.getCharacter()) {
-                'j' -> entityPositionLookup[player.id]!!.withRelativeY(-1)
-                'k' -> entityPositionLookup[player.id]!!.withRelativeY(1)
-                'h' -> entityPositionLookup[player.id]!!.withRelativeX(-1)
-                'l' -> entityPositionLookup[player.id]!!.withRelativeX(1)
+            val newPos = when (ks.inputType()) {
+                InputType.ArrowUp -> entityPositionLookup[player.id]!!.withRelativeY(-1)
+                InputType.ArrowDown -> entityPositionLookup[player.id]!!.withRelativeY(1)
+                InputType.ArrowLeft -> entityPositionLookup[player.id]!!.withRelativeX(-1)
+                InputType.ArrowRight -> entityPositionLookup[player.id]!!.withRelativeX(1)
                 else -> {
                     entityPositionLookup[player.id]!!
                 }
