@@ -8,7 +8,7 @@ import org.hexworks.amethyst.api.base.BaseEntityType
 
 object Player : BaseEntityType(
         name = "player"
-), ItemHolder
+), ItemHolder, Combatant
 
 object Wall : BaseEntityType(
         name = "wall"

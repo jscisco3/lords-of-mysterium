@@ -5,9 +5,14 @@ import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.dungeon.strategies.GenerationStrategy
 import com.jscisco.lom.dungeon.strategies.GenericDungeonStrategy
 import com.jscisco.lom.extensions.GameEntity
+import com.jscisco.lom.extensions.position
 import org.assertj.core.api.Assertions
+import org.hexworks.zircon.api.Screens
+import org.hexworks.zircon.api.builder.grid.TileGridBuilder
 import org.hexworks.zircon.api.data.impl.Position3D
 import org.hexworks.zircon.api.data.impl.Size3D
+import org.hexworks.zircon.api.input.InputType
+import org.hexworks.zircon.api.input.KeyStroke
 import org.junit.Test
 
 class TestDungeon {
@@ -64,8 +69,78 @@ class TestDungeon {
         val entityMoved = dungeon.moveEntity(player, newPosition)
         Assertions.assertThat(entityMoved).isFalse()
         Assertions.assertThat(dungeon.findPositionOf(player).get()).isEqualTo(currentPosition)
+    }
 
+    @Test
+    fun testHandleInputMovementDown() {
+        dungeon.addEntity(player, Position3D.create(1, 1, 0))
 
+        val keystroke = KeyStroke(
+                type = InputType.ArrowDown
+        )
+
+        val context = GameContext(
+                dungeon = dungeon,
+                screen = Screens.createScreenFor(TileGridBuilder.newBuilder().build()),
+                input = keystroke,
+                player = player
+        )
+        dungeon.handleInput(context)
+        Assertions.assertThat(player.position).isEqualTo(Position3D.create(1, 2, 0))
+    }
+
+    @Test
+    fun testHandleInputMovementUp() {
+        dungeon.addEntity(player, Position3D.create(1, 5, 0))
+
+        val keystroke = KeyStroke(
+                type = InputType.ArrowUp
+        )
+
+        val context = GameContext(
+                dungeon = dungeon,
+                screen = Screens.createScreenFor(TileGridBuilder.newBuilder().build()),
+                input = keystroke,
+                player = player
+        )
+        dungeon.handleInput(context)
+        Assertions.assertThat(player.position).isEqualTo(Position3D.create(1, 4, 0))
+    }
+
+    @Test
+    fun testHandleInputMovementLeft() {
+        dungeon.addEntity(player, Position3D.create(5, 4, 0))
+
+        val keystroke = KeyStroke(
+                type = InputType.ArrowLeft
+        )
+
+        val context = GameContext(
+                dungeon = dungeon,
+                screen = Screens.createScreenFor(TileGridBuilder.newBuilder().build()),
+                input = keystroke,
+                player = player
+        )
+        dungeon.handleInput(context)
+        Assertions.assertThat(player.position).isEqualTo(Position3D.create(4, 4, 0))
+    }
+
+    @Test
+    fun testHandleInputMovementRight() {
+        dungeon.addEntity(player, Position3D.create(1, 1, 0))
+
+        val keystroke = KeyStroke(
+                type = InputType.ArrowRight
+        )
+
+        val context = GameContext(
+                dungeon = dungeon,
+                screen = Screens.createScreenFor(TileGridBuilder.newBuilder().build()),
+                input = keystroke,
+                player = player
+        )
+        dungeon.handleInput(context)
+        Assertions.assertThat(player.position).isEqualTo(Position3D.create(2, 1, 0))
     }
 
 

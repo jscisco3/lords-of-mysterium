@@ -68,10 +68,10 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     fun handleInput(context: GameContext) {
         context.input.whenKeyStroke { ks ->
             val newPos = when (ks.inputType()) {
-                InputType.ArrowUp -> entityPositionLookup[player.id]!!.withRelativeY(-1)
-                InputType.ArrowDown -> entityPositionLookup[player.id]!!.withRelativeY(1)
-                InputType.ArrowLeft -> entityPositionLookup[player.id]!!.withRelativeX(-1)
-                InputType.ArrowRight -> entityPositionLookup[player.id]!!.withRelativeX(1)
+                InputType.ArrowUp -> player.position.withRelativeY(-1)
+                InputType.ArrowDown -> player.position.withRelativeY(1)
+                InputType.ArrowLeft -> player.position.withRelativeX(-1)
+                InputType.ArrowRight -> player.position.withRelativeX(1)
                 else -> {
                     entityPositionLookup[player.id]!!
                 }
