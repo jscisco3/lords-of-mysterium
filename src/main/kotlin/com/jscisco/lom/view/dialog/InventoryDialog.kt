@@ -9,7 +9,6 @@ import org.hexworks.cobalt.datatypes.extensions.map
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.ComponentAlignment
 import org.hexworks.zircon.api.component.Container
-import org.hexworks.zircon.api.data.impl.Position3D
 import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.kotlin.onMouseReleased
 
