@@ -7,6 +7,7 @@ import com.jscisco.lom.attributes.types.Player
 import com.jscisco.lom.attributes.types.Sword
 import com.jscisco.lom.attributes.types.Wall
 import com.jscisco.lom.extensions.newGameEntityOfType
+import com.jscisco.lom.systems.FieldOfViewSystem
 import com.jscisco.lom.systems.ItemDropper
 import com.jscisco.lom.systems.ItemPicker
 import java.util.*
@@ -19,9 +20,11 @@ object EntityFactory {
                 BlockOccupier,
                 Inventory(maxWeight = 100),
                 EntityTile(GameTileBuilder.PLAYER),
-                EntityPosition())
+                EntityPosition(),
+                FieldOfView())
         facets(ItemPicker,
-                ItemDropper)
+                ItemDropper,
+                FieldOfViewSystem)
 
     }
 

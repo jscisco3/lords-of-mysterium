@@ -47,6 +47,8 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     private val engine = newEngine<GameContext>()
     private val entityPositionLookup = mutableMapOf<Identifier, Position3D>()
 
+    val resistanceMap = Array(actualSize.xLength, { DoubleArray(actualSize.yLength) })
+
     init {
         blocks.forEach { pos, block ->
             setBlockAt(pos, block)
@@ -57,12 +59,24 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
             }
         }
 
+        initializeResistanceMap(resistanceMap)
+
         addEntity(player, this.findEmptyLocationWithin(Position3D.defaultPosition(), actualSize).get())
 
         Zircon.eventBus.subscribe<MoveEntity> { (entity, position) ->
             moveEntity(entity, position)
         }
         updateCamera()
+    }
+
+    fun initializeResistanceMap(resistanceMap: Array<DoubleArray>) {
+        blocks.forEach { pos, block ->
+            if (block.blocksVision) {
+                resistanceMap[pos.x][pos.y] = 1.0
+            } else {
+                resistanceMap[pos.x][pos.y] = 0.0
+            }
+        }
     }
 
     fun handleInput(context: GameContext) {

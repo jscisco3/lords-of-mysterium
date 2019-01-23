@@ -1,7 +1,6 @@
 package com.jscisco.lom.blocks
 
 import com.jscisco.lom.builders.GameTileBuilder
-import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.*
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.zircon.api.data.BlockSide
@@ -27,6 +26,11 @@ class GameBlock(private var defaultTile: Tile = GameTileBuilder.floor(),
     val isWall: Boolean
         get() = currentEntities.any {
             it.isWall
+        }
+
+    val blocksVision: Boolean
+        get() = currentEntities.any {
+            it.blocksVision
         }
 
     val entities: Iterable<GameEntity<EntityType>>

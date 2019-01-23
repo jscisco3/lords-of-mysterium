@@ -17,7 +17,7 @@ import org.junit.Test
 
 class TestDungeon {
 
-    val dungeonSize: Size3D = Size3D.create(100, 100, 1)
+    val dungeonSize: Size3D = Size3D.create(100, 60, 1)
     val visibleSize: Size3D = Size3D.create(25, 25, 1)
     val player: GameEntity<Player> = EntityFactory.newPlayer()
     val strategy: GenerationStrategy = GenericDungeonStrategy(dungeonSize = dungeonSize)
@@ -143,5 +143,11 @@ class TestDungeon {
         Assertions.assertThat(player.position).isEqualTo(Position3D.create(2, 1, 0))
     }
 
+    @Test
+    fun testInitializeFOV() {
+        Assertions.assertThat(dungeon.resistanceMap[0][0]).isEqualTo(1.0)
+        Assertions.assertThat(dungeon.resistanceMap[1][1]).isEqualTo(0.0)
+        Assertions.assertThat(dungeon.resistanceMap[99][59]).isEqualTo(1.0)
+    }
 
 }
