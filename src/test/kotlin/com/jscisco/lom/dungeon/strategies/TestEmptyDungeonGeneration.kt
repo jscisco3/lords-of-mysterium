@@ -5,7 +5,7 @@ import com.jscisco.lom.dungeon.DungeonBuilder
 import org.assertj.core.api.Assertions
 import org.hexworks.zircon.api.data.impl.Position3D
 import org.hexworks.zircon.api.data.impl.Size3D
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestEmptyDungeonGeneration {
 

@@ -5,7 +5,7 @@ import com.jscisco.lom.attributes.types.Item
 import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.extensions.GameEntity
 import org.assertj.core.api.Assertions
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestEquipment {
 

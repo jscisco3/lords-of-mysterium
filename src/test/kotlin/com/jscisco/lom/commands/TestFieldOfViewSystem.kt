@@ -14,7 +14,7 @@ import org.hexworks.zircon.api.SwingApplications
 import org.hexworks.zircon.api.data.impl.Position3D
 import org.hexworks.zircon.api.data.impl.Size3D
 import org.hexworks.zircon.api.input.KeyStroke
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestFieldOfViewSystem {
 

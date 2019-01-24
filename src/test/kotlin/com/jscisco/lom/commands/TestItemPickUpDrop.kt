@@ -9,13 +9,12 @@ import com.jscisco.lom.dungeon.GameContext
 import com.jscisco.lom.dungeon.strategies.EmptyDungeonStrategy
 import com.jscisco.lom.extensions.attribute
 import org.assertj.core.api.Assertions
-import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.zircon.api.Screens
 import org.hexworks.zircon.api.SwingApplications
 import org.hexworks.zircon.api.data.impl.Position3D
 import org.hexworks.zircon.api.data.impl.Size3D
 import org.hexworks.zircon.api.input.KeyStroke
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestItemPickUpDrop {
 

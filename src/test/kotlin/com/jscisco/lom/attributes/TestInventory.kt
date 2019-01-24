@@ -3,7 +3,7 @@ package com.jscisco.lom.attributes
 import com.jscisco.lom.attributes.types.inventory
 import com.jscisco.lom.builders.EntityFactory
 import org.assertj.core.api.Assertions
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestInventory {
 
