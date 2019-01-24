@@ -67,12 +67,37 @@ jar {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 }
 
+jacoco {
+    toolVersion = '0.7.9'
+    reportsDir = file("$buildDir/reports")
+}
 
 jacocoTestReport {
+    group = "Reporting"
+    description = "Generate Jacoco coverage report."
+    classDirectories = fileTree(
+            dir: "$buildDir/classes/kotlin/main"
+    )
+    def coverageSourceDirs = [
+            "src/main/kotlin"
+    ]
+    additionalSourceDirs = files(coverageSourceDirs)
+    sourceDirectories = files(coverageSourceDirs)
+    executionData = files("$buildDir/jacoco/jacoco.exec")
     reports {
-        xml.enabled false
-        csv.enabled false
-        html.destination file("${buildDir}/jacocoHtml")
+        xml.enabled = true
+        html.enabled = true
+        csv.enabled = true
+    }
+
+}
+
+test {
+    useJUnitPlatform()
+    jacoco {
+        append = false
+        destinationFile = file("$buildDir/jacoco/test.exec")
+        includeNoLocationClasses = true
     }
 }
 

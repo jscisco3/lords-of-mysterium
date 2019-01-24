@@ -2,5 +2,4 @@
 build/
 .idea
 out/
-gradle/
 .attach_pid*
