@@ -21,7 +21,7 @@ object EventRegistration {
     }
 
     private fun registerDamageEvent() {
-        Zircon.eventBus.subscribe<DamageEvent> { (source, target, amount) ->
+        Zircon.eventBus.subscribe<DamageEvent> { (context, source, target, amount) ->
             // target.hp -= amount
             logger.info("%s dealt %s damage to %s".format(source, amount, target))
             Zircon.eventBus.publish(GameLogEvent("%s damage dealt to %s by %s".format(amount, target, source)))
@@ -29,21 +29,22 @@ object EventRegistration {
             logger.info("%s has %s health remaining.".format(target, target.health.hp))
             target.health.whenShouldBeDestroyed {
                 Zircon.eventBus.publish(GameLogEvent("%s should be destroyed....".format(target)))
+                context.dungeon.removeEntity(target)
             }
         }
     }
 
     private fun registerOnHitEvent() {
-        Zircon.eventBus.subscribe<OnHitEvent> { (source, target) ->
+        Zircon.eventBus.subscribe<OnHitEvent> { (context, source, target) ->
             logger.info("%s hit %s!".format(source, target))
-            Zircon.eventBus.publish(DamageEvent(source, target, 10))
+            Zircon.eventBus.publish(DamageEvent(context, source, target, 10))
         }
     }
 
     private fun registerInstigateCombatEvent() {
-        Zircon.eventBus.subscribe<InstigateCombatEvent> { (source, target) ->
+        Zircon.eventBus.subscribe<InstigateCombatEvent> { (context, source, target) ->
             logger.info("%s instigated combat against %s.".format(source, target))
-            Zircon.eventBus.publish(OnHitEvent(source, target))
+            Zircon.eventBus.publish(OnHitEvent(context, source, target))
             Zircon.eventBus.publish(GameLogEvent("%s instigated combat against %s.".format(source, target)))
         }
     }

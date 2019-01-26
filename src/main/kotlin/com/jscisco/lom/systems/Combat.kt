@@ -1,7 +1,5 @@
 package com.jscisco.lom.systems
 
-import com.jscisco.lom.attributes.types.combatStats
-import com.jscisco.lom.attributes.types.equipment
 import com.jscisco.lom.commands.Attack
 import com.jscisco.lom.dungeon.GameContext
 import com.jscisco.lom.events.InstigateCombatEvent
@@ -16,13 +14,13 @@ import org.hexworks.zircon.internal.Zircon
 object Combat : BaseFacet<GameContext>() {
 
     override fun executeCommand(command: GameCommand<out EntityType>): Response = command.responseWhenCommandIs<Attack> { (context: GameContext, attacker, target) ->
-//        val attackerEquipment = attacker.equipment
+        //        val attackerEquipment = attacker.equipment
 //        val attackerStats = attacker.combatStats
 //
 //        val targetEquipment = target.equipment
 //        val targetStats = target.combatStats
 
-        Zircon.eventBus.publish(InstigateCombatEvent(attacker, target))
+        Zircon.eventBus.publish(InstigateCombatEvent(context, attacker, target))
 
         Consumed
     }

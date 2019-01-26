@@ -64,7 +64,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
 
 //        addEntity(player, this.findEmptyLocationWithin(Position3D.defaultPosition(), actualSize).get())
         addEntity(player, Position3D.create(12, 12, 0))
-        Zircon.eventBus.subscribe<MoveEntity> { (entity, position) ->
+        Zircon.eventBus.subscribe<MoveEntity> { (context, entity, position) ->
             logger.info("%s moved to %s.".format(entity, position))
             moveEntity(entity, position)
         }
@@ -94,7 +94,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
             }
             val block = fetchBlockAt(newPos).get()
             if (fetchBlockAt(newPos).get().isOccupied.not()) {
-                Zircon.eventBus.publish(MoveEntity(player, newPos))
+                Zircon.eventBus.publish(MoveEntity(context, player, newPos))
             } else {
                 player.tryActionsOn(context, block.occupier);
             }
