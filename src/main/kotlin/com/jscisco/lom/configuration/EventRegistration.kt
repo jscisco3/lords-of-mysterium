@@ -18,7 +18,7 @@ object EventRegistration {
     }
 
     private fun registerDamageEvent() {
-        Zircon.eventBus.subscribe<DamageEvent> { (target, source, amount) ->
+        Zircon.eventBus.subscribe<DamageEvent> { (source, target, amount) ->
             // target.hp -= amount
             logger.info("%s dealt %s damage to %s".format(source, target, amount))
             Zircon.eventBus.publish(GameLogEvent("%s damage dealt to %s by %s".format(amount, target, source)))
@@ -26,7 +26,7 @@ object EventRegistration {
     }
 
     private fun registerOnHitEvent() {
-        Zircon.eventBus.subscribe<OnHitEvent> { (target, source) ->
+        Zircon.eventBus.subscribe<OnHitEvent> { (source, target) ->
             logger.info("%s hit %s!".format(source, target))
             Zircon.eventBus.publish(DamageEvent(target, source, 10))
         }
