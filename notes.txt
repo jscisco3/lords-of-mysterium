@@ -1,10 +1,24 @@
-How do we handle the game area stuff?
+What events exist and how does everything work together?
+- DamageEvent ([Target] takes [Amount] of damage from [Source])
+- OnHitEvent ([Target] hit by [Source])
+- CombatInstigated ([Source] instigates combat against [Target])
 
-1. The "World" is just the container for ECS stuff, not the dungeon. Duh :-p
-2. That means we need some other objec that contains the world - here comes the Game ;)
-3. At some point, do I just try Artemis ODB again?
-4. I really don't think I need systems, etc. I just really want attributes.
+Should there be an Attack object?
+    - Power
+    - Damage Type(s)
+    - Source?
+    - Target?
 
-1. The Dungeon is essentially a 3D space, where each Z area is a floor (duh ;)
-2. How does it get drawn?
-    Since it is a game area, it is a list of Tiles (which inherit(?) from Block which is 3D)
+How should items work?
+    - Modifiers that grant constant attribute bonuses
+        - e.g. +5 Strength
+    - Modifiers that grant event-based bonuses
+        - e.g. +5 damage to Goblins
+    - Base [CombatStats] -> Rename to weapon?
+        ToHit, Power
+    - Base [Armor]
+        AC, EV
+    - Stackable (Quantity)
+        - Arrows, weapons in general?
+    - Consumable?
+        - Potions, etc

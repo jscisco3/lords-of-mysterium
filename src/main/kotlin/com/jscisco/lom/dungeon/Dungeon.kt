@@ -64,6 +64,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         addEntity(player, this.findEmptyLocationWithin(Position3D.defaultPosition(), actualSize).get())
 
         Zircon.eventBus.subscribe<MoveEntity> { (entity, position) ->
+            logger.info("%s moved to %s.".format(entity, position))
             moveEntity(entity, position)
         }
         updateCamera()

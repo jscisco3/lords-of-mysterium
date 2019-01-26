@@ -12,6 +12,10 @@ object Player : BaseEntityType(
         name = "player"
 ), ItemHolder, Combatant
 
+object NPC : BaseEntityType(
+        name = "npc"
+), ItemHolder, Combatant
+
 object Wall : BaseEntityType(
         name = "wall"
 )

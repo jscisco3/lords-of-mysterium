@@ -3,10 +3,12 @@ package com.jscisco.lom.builders;
 import com.jscisco.lom.attributes.*
 import com.jscisco.lom.attributes.flags.BlockOccupier
 import com.jscisco.lom.attributes.flags.VisionBlocker
+import com.jscisco.lom.attributes.types.NPC
 import com.jscisco.lom.attributes.types.Player
 import com.jscisco.lom.attributes.types.Sword
 import com.jscisco.lom.attributes.types.Wall
 import com.jscisco.lom.extensions.newGameEntityOfType
+import com.jscisco.lom.systems.Combat
 import com.jscisco.lom.systems.FieldOfViewSystem
 import com.jscisco.lom.systems.ItemDropper
 import com.jscisco.lom.systems.ItemPicker
@@ -24,8 +26,15 @@ object EntityFactory {
                 FieldOfView())
         facets(ItemPicker,
                 ItemDropper,
-                FieldOfViewSystem)
+                FieldOfViewSystem,
+                Combat)
 
+    }
+
+    fun newGoblin() = newGameEntityOfType(NPC) {
+        attributes(BlockOccupier,
+                EntityPosition())
+        facets(Combat)
     }
 
     fun newWall() = newGameEntityOfType(Wall) {

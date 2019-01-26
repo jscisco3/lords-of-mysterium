@@ -111,6 +111,7 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 
 tasks.withType(Test) {
     testLogging {
+        showStandardStreams(true)
         events("passed", "skipped", "failed")
     }
 }
