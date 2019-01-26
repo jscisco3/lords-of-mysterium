@@ -2,6 +2,7 @@ package com.jscisco.lom.configuration
 
 import com.jscisco.lom.events.DamageEvent
 import com.jscisco.lom.events.GameLogEvent
+import com.jscisco.lom.events.InstigateCombatEvent
 import com.jscisco.lom.events.OnHitEvent
 import org.hexworks.cobalt.events.api.subscribe
 import org.hexworks.cobalt.logging.api.Logger
@@ -15,6 +16,7 @@ object EventRegistration {
     fun registerEvents() {
         registerDamageEvent()
         registerOnHitEvent()
+        registerInstigateCombatEvent()
     }
 
     private fun registerDamageEvent() {
@@ -29,6 +31,12 @@ object EventRegistration {
         Zircon.eventBus.subscribe<OnHitEvent> { (source, target) ->
             logger.info("%s hit %s!".format(source, target))
             Zircon.eventBus.publish(DamageEvent(target, source, 10))
+        }
+    }
+
+    private fun registerInstigateCombatEvent() {
+        Zircon.eventBus.subscribe<InstigateCombatEvent> { (source, target) ->
+            logger.info("%s instigated combat against %s.".format(source, target))
         }
     }
 }
