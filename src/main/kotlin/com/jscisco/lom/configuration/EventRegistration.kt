@@ -1,5 +1,6 @@
 package com.jscisco.lom.configuration
 
+import com.jscisco.lom.attributes.types.health
 import com.jscisco.lom.events.DamageEvent
 import com.jscisco.lom.events.GameLogEvent
 import com.jscisco.lom.events.InstigateCombatEvent
@@ -24,6 +25,11 @@ object EventRegistration {
             // target.hp -= amount
             logger.info("%s dealt %s damage to %s".format(source, amount, target))
             Zircon.eventBus.publish(GameLogEvent("%s damage dealt to %s by %s".format(amount, target, source)))
+            target.health.hpProperty.value -= amount
+            logger.info("%s has %s health remaining.".format(target, target.health.hp))
+            target.health.whenShouldBeDestroyed {
+                Zircon.eventBus.publish(GameLogEvent("%s should be destroyed....".format(target)))
+            }
         }
     }
 

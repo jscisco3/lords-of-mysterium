@@ -2,6 +2,7 @@ package com.jscisco.lom.attributes.types
 
 import com.jscisco.lom.attributes.CombatStats
 import com.jscisco.lom.attributes.Equipment
+import com.jscisco.lom.attributes.Health
 import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.attribute
 import org.hexworks.amethyst.api.entity.EntityType
@@ -14,3 +15,6 @@ val GameEntity<Combatant>.combatStats: CombatStats
 
 val GameEntity<Combatant>.equipment: Maybe<Equipment>
     get() = attribute(Equipment::class)
+
+val GameEntity<Combatant>.health: Health
+    get() = attribute()

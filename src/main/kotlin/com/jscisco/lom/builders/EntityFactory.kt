@@ -20,6 +20,7 @@ object EntityFactory {
 
     fun newPlayer() = newGameEntityOfType(Player) {
         attributes(Player,
+                Health.create(100),
                 BlockOccupier,
                 Inventory(maxWeight = 100),
                 EntityTile(GameTileBuilder.PLAYER),
@@ -35,6 +36,7 @@ object EntityFactory {
 
     fun newGoblin() = newGameEntityOfType(NPC) {
         attributes(EntityTile(GameTileBuilder.GOBLIN),
+                Health.create(20),
                 BlockOccupier,
                 EntityPosition())
         facets(Combat)
