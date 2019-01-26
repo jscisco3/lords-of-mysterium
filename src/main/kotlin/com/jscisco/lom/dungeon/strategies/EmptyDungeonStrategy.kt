@@ -9,6 +9,7 @@ class EmptyDungeonStrategy(private val dungeonSize: Size3D) : GenerationStrategy
         initializeFloors()
         createOutsideWalls()
         createItems()
+        createNPCs()
         return blocks
     }
 }

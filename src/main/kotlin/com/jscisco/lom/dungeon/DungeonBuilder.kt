@@ -18,7 +18,6 @@ class DungeonBuilder(private val dungeonSize: Size3D,
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     private var blocks: MutableMap<Position3D, GameBlock> = mutableMapOf()
-//    private var dungeonSize = Size3D.create(GameConfiguration.WINDOW_WIDTH, GameConfiguration.WINDOW_HEIGHT, 5)
 
     init {
         blocks = strategy.generateDungeon()

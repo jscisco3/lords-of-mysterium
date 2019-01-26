@@ -7,6 +7,7 @@ import com.jscisco.lom.attributes.types.NPC
 import com.jscisco.lom.attributes.types.Player
 import com.jscisco.lom.attributes.types.Sword
 import com.jscisco.lom.attributes.types.Wall
+import com.jscisco.lom.commands.Attack
 import com.jscisco.lom.extensions.newGameEntityOfType
 import com.jscisco.lom.systems.Combat
 import com.jscisco.lom.systems.FieldOfViewSystem
@@ -23,7 +24,8 @@ object EntityFactory {
                 Inventory(maxWeight = 100),
                 EntityTile(GameTileBuilder.PLAYER),
                 EntityPosition(),
-                FieldOfView())
+                FieldOfView(),
+                EntityActions(Attack::class))
         facets(ItemPicker,
                 ItemDropper,
                 FieldOfViewSystem,
@@ -32,7 +34,8 @@ object EntityFactory {
     }
 
     fun newGoblin() = newGameEntityOfType(NPC) {
-        attributes(BlockOccupier,
+        attributes(EntityTile(GameTileBuilder.GOBLIN),
+                BlockOccupier,
                 EntityPosition())
         facets(Combat)
     }

@@ -1,5 +1,6 @@
 package com.jscisco.lom.extensions
 
+import com.jscisco.lom.attributes.EntityActions
 import com.jscisco.lom.attributes.EntityPosition
 import com.jscisco.lom.attributes.EntityTile
 import com.jscisco.lom.attributes.flags.BlockOccupier
@@ -8,6 +9,7 @@ import com.jscisco.lom.attributes.types.Player
 import com.jscisco.lom.attributes.types.Wall
 import com.jscisco.lom.dungeon.GameContext
 import org.hexworks.amethyst.api.Attribute
+import org.hexworks.amethyst.api.Consumed
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.cobalt.datatypes.extensions.map
@@ -53,4 +55,14 @@ inline fun <reified T : Attribute> AnyGameEntity.whenHasAttribute(crossinline fn
 @Suppress("UNCHECKED_CAST")
 inline fun <reified T : EntityType> Iterable<AnyGameEntity>.filterType(): List<Entity<T, GameContext>> {
     return filter { T::class.isSuperclassOf(it.type::class) }.toList() as List<Entity<T, GameContext>>
+}
+
+fun AnyGameEntity.tryActionsOn(context: GameContext, target: AnyGameEntity) {
+    attribute<EntityActions>()
+            .createActionsFor(context, this, target)
+            .forEach { action ->
+                if (target.executeCommand(action) is Consumed) {
+                    return@forEach
+                }
+            }
 }

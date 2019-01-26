@@ -18,6 +18,11 @@ class GameBlock(private var defaultTile: Tile = GameTileBuilder.floor(),
         return GameTileBuilder.EMPTY
     }
 
+    val occupier: GameEntity<EntityType>
+        get() = currentEntities.firstOrNull { it.occupiesBlock }
+                ?: throw NoSuchElementException("This block is no occupied!")
+
+
     val isOccupied: Boolean
         get() = currentEntities.any {
             it.occupiesBlock

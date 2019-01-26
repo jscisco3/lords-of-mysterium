@@ -40,6 +40,11 @@ object GameTileBuilder {
             .withBackgroundColor(DEFAULT_BACKGROUND)
             .buildCharacterTile()
 
+    val GOBLIN: CharacterTile = Tiles.newBuilder()
+            .withCharacter('g')
+            .withForegroundColor(TileColors.fromString("#00FF00"))
+            .buildCharacterTile()
+
     val DEFAULT: CharacterTile = Tiles.newBuilder()
             .withBackgroundColor(FLOOR_BACKGROUND)
             .buildCharacterTile()

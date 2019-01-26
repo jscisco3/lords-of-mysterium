@@ -14,15 +14,15 @@ object EventRegistration {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     fun registerEvents() {
-        registerDamageEvent()
-        registerOnHitEvent()
         registerInstigateCombatEvent()
+        registerOnHitEvent()
+        registerDamageEvent()
     }
 
     private fun registerDamageEvent() {
         Zircon.eventBus.subscribe<DamageEvent> { (source, target, amount) ->
             // target.hp -= amount
-            logger.info("%s dealt %s damage to %s".format(source, target, amount))
+            logger.info("%s dealt %s damage to %s".format(source, amount, target))
             Zircon.eventBus.publish(GameLogEvent("%s damage dealt to %s by %s".format(amount, target, source)))
         }
     }
@@ -30,13 +30,15 @@ object EventRegistration {
     private fun registerOnHitEvent() {
         Zircon.eventBus.subscribe<OnHitEvent> { (source, target) ->
             logger.info("%s hit %s!".format(source, target))
-            Zircon.eventBus.publish(DamageEvent(target, source, 10))
+            Zircon.eventBus.publish(DamageEvent(source, target, 10))
         }
     }
 
     private fun registerInstigateCombatEvent() {
         Zircon.eventBus.subscribe<InstigateCombatEvent> { (source, target) ->
             logger.info("%s instigated combat against %s.".format(source, target))
+            Zircon.eventBus.publish(OnHitEvent(source, target))
+            Zircon.eventBus.publish(GameLogEvent("%s instigated combat against %s.".format(source, target)))
         }
     }
 }

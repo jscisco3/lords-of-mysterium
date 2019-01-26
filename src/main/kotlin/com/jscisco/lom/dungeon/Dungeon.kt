@@ -11,6 +11,7 @@ import com.jscisco.lom.events.MoveEntity
 import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.filterType
 import com.jscisco.lom.extensions.position
+import com.jscisco.lom.extensions.tryActionsOn
 import com.jscisco.lom.view.dialog.InventoryDialog
 import org.hexworks.amethyst.api.Engines.newEngine
 import org.hexworks.amethyst.api.entity.Entity
@@ -61,8 +62,8 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
 
         initializeResistanceMap(resistanceMap)
 
-        addEntity(player, this.findEmptyLocationWithin(Position3D.defaultPosition(), actualSize).get())
-
+//        addEntity(player, this.findEmptyLocationWithin(Position3D.defaultPosition(), actualSize).get())
+        addEntity(player, Position3D.create(12, 12, 0))
         Zircon.eventBus.subscribe<MoveEntity> { (entity, position) ->
             logger.info("%s moved to %s.".format(entity, position))
             moveEntity(entity, position)
@@ -91,8 +92,11 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
                     entityPositionLookup[player.id]!!
                 }
             }
+            val block = fetchBlockAt(newPos).get()
             if (fetchBlockAt(newPos).get().isOccupied.not()) {
                 Zircon.eventBus.publish(MoveEntity(player, newPos))
+            } else {
+                player.tryActionsOn(context, block.occupier);
             }
             when (ks.getCharacter()) {
                 ',' -> player.executeCommand(PickItemUp(context = context, source = player, position = entityPositionLookup[player.id]!!))

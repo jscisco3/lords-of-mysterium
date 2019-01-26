@@ -4,7 +4,7 @@ import com.jscisco.lom.attributes.types.combatStats
 import com.jscisco.lom.attributes.types.equipment
 import com.jscisco.lom.commands.Attack
 import com.jscisco.lom.dungeon.GameContext
-import com.jscisco.lom.events.OnHitEvent
+import com.jscisco.lom.events.InstigateCombatEvent
 import com.jscisco.lom.extensions.GameCommand
 import com.jscisco.lom.extensions.responseWhenCommandIs
 import org.hexworks.amethyst.api.Consumed
@@ -16,13 +16,13 @@ import org.hexworks.zircon.internal.Zircon
 object Combat : BaseFacet<GameContext>() {
 
     override fun executeCommand(command: GameCommand<out EntityType>): Response = command.responseWhenCommandIs<Attack> { (context: GameContext, attacker, target) ->
-        val attackerEquipment = attacker.equipment
-        val attackerStats = attacker.combatStats
+//        val attackerEquipment = attacker.equipment
+//        val attackerStats = attacker.combatStats
+//
+//        val targetEquipment = target.equipment
+//        val targetStats = target.combatStats
 
-        val targetEquipment = target.equipment
-        val targetStats = target.combatStats
-
-        Zircon.eventBus.publish(OnHitEvent(target, attacker))
+        Zircon.eventBus.publish(InstigateCombatEvent(attacker, target))
 
         Consumed
     }
