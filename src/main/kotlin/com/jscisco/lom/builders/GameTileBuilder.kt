@@ -34,9 +34,16 @@ object GameTileBuilder {
                 .buildCharacterTile()
     }
 
-    fun door(): CharacterTile {
+    fun closedDoor(): CharacterTile {
         return Tiles.newBuilder()
                 .withCharacter('+')
+                .withForegroundColor(TileColors.fromString("#603c27"))
+                .buildCharacterTile()
+    }
+
+    fun openDoor(): CharacterTile {
+        return Tiles.newBuilder()
+                .withCharacter('/')
                 .withForegroundColor(TileColors.fromString("#603c27"))
                 .buildCharacterTile()
     }

@@ -68,3 +68,8 @@ HealthPotion
         // TODO
         Stackable
         Consumable
+
+How should doors work?
+    - When OpenDoor event is thrown, remove the ClosedDoor entity and replace with open door entity
+    - When CloseDoor event is thrown, remove OpenDoor entity and replace with closed door entity
+    - What about LockedDoors? TBD

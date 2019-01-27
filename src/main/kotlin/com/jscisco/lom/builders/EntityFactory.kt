@@ -2,14 +2,13 @@ package com.jscisco.lom.builders;
 
 import com.jscisco.lom.attributes.*
 import com.jscisco.lom.attributes.flags.BlockOccupier
+import com.jscisco.lom.attributes.flags.Openable
 import com.jscisco.lom.attributes.flags.VisionBlocker
 import com.jscisco.lom.attributes.types.*
 import com.jscisco.lom.commands.Attack
+import com.jscisco.lom.commands.ToggleDoorCommand
 import com.jscisco.lom.extensions.newGameEntityOfType
-import com.jscisco.lom.systems.Combat
-import com.jscisco.lom.systems.FieldOfViewSystem
-import com.jscisco.lom.systems.ItemDropper
-import com.jscisco.lom.systems.ItemPicker
+import com.jscisco.lom.systems.*
 import java.util.*
 
 object EntityFactory {
@@ -23,7 +22,7 @@ object EntityFactory {
                 EntityTile(GameTileBuilder.PLAYER),
                 EntityPosition(),
                 FieldOfView(),
-                EntityActions(Attack::class))
+                EntityActions(Attack::class, ToggleDoorCommand::class))
         facets(ItemPicker,
                 ItemDropper,
                 FieldOfViewSystem,
@@ -47,10 +46,19 @@ object EntityFactory {
         )
     }
 
-    fun newDoor() = newGameEntityOfType(Door) {
+    fun newOpenDoor() = newGameEntityOfType(Door) {
         attributes(EntityPosition(),
-                EntityTile(GameTileBuilder.door()),
-                Openable())
+                EntityTile(GameTileBuilder.openDoor()),
+                Openable)
+    }
+
+    fun newClosedDoor() = newGameEntityOfType(Door) {
+        attributes(VisionBlocker,
+                BlockOccupier,
+                EntityPosition(),
+                EntityTile(GameTileBuilder.closedDoor()),
+                Openable)
+        facets(ToggleDoor)
     }
 
     fun newSword() = newGameEntityOfType(Sword) {
