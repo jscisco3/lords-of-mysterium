@@ -3,10 +3,7 @@ package com.jscisco.lom.builders;
 import com.jscisco.lom.attributes.*
 import com.jscisco.lom.attributes.flags.BlockOccupier
 import com.jscisco.lom.attributes.flags.VisionBlocker
-import com.jscisco.lom.attributes.types.NPC
-import com.jscisco.lom.attributes.types.Player
-import com.jscisco.lom.attributes.types.Sword
-import com.jscisco.lom.attributes.types.Wall
+import com.jscisco.lom.attributes.types.*
 import com.jscisco.lom.commands.Attack
 import com.jscisco.lom.extensions.newGameEntityOfType
 import com.jscisco.lom.systems.Combat
@@ -48,6 +45,12 @@ object EntityFactory {
                 EntityPosition(),
                 EntityTile(GameTileBuilder.wall())
         )
+    }
+
+    fun newDoor() = newGameEntityOfType(Door) {
+        attributes(EntityPosition(),
+                EntityTile(GameTileBuilder.door()),
+                Openable())
     }
 
     fun newSword() = newGameEntityOfType(Sword) {

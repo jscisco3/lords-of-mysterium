@@ -15,6 +15,9 @@ object EventRegistration {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     fun registerEvents() {
+        // Movement Events
+
+        // Combat Events
         registerInstigateCombatEvent()
         registerOnHitEvent()
         registerDamageEvent()

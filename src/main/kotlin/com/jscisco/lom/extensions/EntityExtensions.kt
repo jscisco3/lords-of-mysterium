@@ -57,6 +57,7 @@ inline fun <reified T : EntityType> Iterable<AnyGameEntity>.filterType(): List<E
     return filter { T::class.isSuperclassOf(it.type::class) }.toList() as List<Entity<T, GameContext>>
 }
 
+
 fun AnyGameEntity.tryActionsOn(context: GameContext, target: AnyGameEntity) {
     attribute<EntityActions>()
             .createActionsFor(context, this, target)

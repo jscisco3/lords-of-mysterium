@@ -28,6 +28,10 @@ object NoItem : BaseEntityType(
         name = "Select an item"
 ), Item
 
+object Door : BaseEntityType(
+        name = "Door"
+), Toggleable
+
 val GameEntity<Item>.power: Int
     get() = attribute<CombatStats>().power
 

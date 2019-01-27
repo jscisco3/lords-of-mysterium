@@ -34,6 +34,13 @@ object GameTileBuilder {
                 .buildCharacterTile()
     }
 
+    fun door(): CharacterTile {
+        return Tiles.newBuilder()
+                .withCharacter('+')
+                .withForegroundColor(TileColors.fromString("#603c27"))
+                .buildCharacterTile()
+    }
+
     val PLAYER: CharacterTile = Tiles.newBuilder()
             .withCharacter('@')
             .withForegroundColor(TileColors.fromString("#FF0000"))

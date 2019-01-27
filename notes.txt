@@ -22,3 +22,49 @@ How should items work?
         - Arrows, weapons in general?
     - Consumable?
         - Potions, etc
+
+There should be triggers on certain events/conditions
+    - Effect (intrinsic effect or triggered)
+    - Condition (target meets certain criteria, source meets certain criteria)
+
+THERE SHOULD BE TRIGGERS THAT TRIGGER ON EVENT::CLASS
+    - e.g. Triggers[DamageEvent::Class]. Figure it out from entity actions.
+
+
+What goes in to an entity?
+Player:
+    Types:
+        Combatant
+        ItemHolder
+    Attributes:
+        PlayerFlag
+        Health
+        BlockOccupier (can't move through this)
+        Inventory
+        Equipment
+        EntityPosition
+        EntityTile (tile used to draw in game)
+        FieldOfView
+        EntityActions
+            - Attack
+            - Open Door
+        // TODO
+        Mana
+        Energy (for turn system?)
+        Experience
+        Stats
+    Systems:
+        ItemPicker (pick up item)
+        ItemDropper (drop item)
+        FieldOfViewSystem (Update FOV)
+        CombatSystem
+
+HealthPotion
+    Types:
+        Item
+    Attributes:
+        EntityTile
+        EntityPosition (conditionally)
+        // TODO
+        Stackable
+        Consumable
