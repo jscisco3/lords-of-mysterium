@@ -68,7 +68,7 @@ jar {
 }
 
 jacoco {
-    toolVersion = '0.7.9'
+    toolVersion = '0.8.2'
     reportsDir = file("$buildDir/reports")
 }
 
@@ -99,6 +99,7 @@ test {
         destinationFile = file("$buildDir/jacoco/test.exec")
         includeNoLocationClasses = true
     }
+    finalizedBy(jacocoTestReport)
 }
 
 mainClassName = 'com.jscisco.lom.MainKt'
