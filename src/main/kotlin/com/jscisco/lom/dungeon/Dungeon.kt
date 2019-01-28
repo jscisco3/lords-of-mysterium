@@ -4,6 +4,7 @@ import com.jscisco.lom.attributes.types.Item
 import com.jscisco.lom.attributes.types.Player
 import com.jscisco.lom.attributes.types.inventory
 import com.jscisco.lom.blocks.GameBlock
+import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.builders.GameBlockFactory
 import com.jscisco.lom.commands.DropItem
 import com.jscisco.lom.commands.PickItemUp
@@ -61,13 +62,14 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
 
         logger.info("Registering dungeon events...")
         DungeonEvents.registerEvents()
-        initializeResistanceMap(resistanceMap)
+        calculateResistanceMap(resistanceMap)
 
         addEntity(player, Position3D.create(12, 12, 0))
+        addDungeonEntity(EntityFactory.newFogOfWar(this, player, actualSize))
         updateCamera()
     }
 
-    fun initializeResistanceMap(resistanceMap: Array<DoubleArray>) {
+    fun calculateResistanceMap(resistanceMap: Array<DoubleArray>) {
         blocks.forEach { pos, block ->
             if (block.blocksVision) {
                 resistanceMap[pos.x][pos.y] = 1.0
@@ -102,6 +104,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
                 }
             }
         }
+        engine.update(context)
     }
 
     fun updateCamera() {

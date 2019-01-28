@@ -32,6 +32,8 @@ object Door : BaseEntityType(
         name = "Door"
 ), Toggleable
 
+object FogOfWarType : BaseEntityType()
+
 val GameEntity<Item>.power: Int
     get() = attribute<CombatStats>().power
 

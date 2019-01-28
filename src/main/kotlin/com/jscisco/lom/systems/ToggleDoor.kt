@@ -15,6 +15,7 @@ object ToggleDoor : BaseFacet<GameContext>() {
     override fun executeCommand(command: GameCommand<out EntityType>): Response = command.responseWhenCommandIs<ToggleDoorCommand> { (context, source, target) ->
         context.dungeon.removeEntity(target)
         context.dungeon.addEntity(EntityFactory.newOpenDoor(), target.position)
+        context.dungeon.calculateResistanceMap(context.dungeon.resistanceMap)
         Consumed
     }
 }

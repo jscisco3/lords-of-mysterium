@@ -64,4 +64,9 @@ object GameTileBuilder {
             .buildCharacterTile()
 
     val EMPTY: CharacterTile = Tiles.empty()
+
+    val UNREVEALED: CharacterTile = Tiles.newBuilder()
+            .withBackgroundColor(DEFAULT_BACKGROUND)
+            .withCharacter(' ')
+            .buildCharacterTile()
 }

@@ -7,12 +7,21 @@ import com.jscisco.lom.attributes.flags.VisionBlocker
 import com.jscisco.lom.attributes.types.*
 import com.jscisco.lom.commands.Attack
 import com.jscisco.lom.commands.ToggleDoorCommand
+import com.jscisco.lom.dungeon.Dungeon
+import com.jscisco.lom.entities.FogOfWar
+import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.newGameEntityOfType
-import com.jscisco.lom.systems.*
+import com.jscisco.lom.systems.Combat
+import com.jscisco.lom.systems.ItemDropper
+import com.jscisco.lom.systems.ItemPicker
+import com.jscisco.lom.systems.ToggleDoor
+import org.hexworks.zircon.api.data.impl.Size3D
 import java.util.*
 
 object EntityFactory {
     private val random = Random(0xDEADBEEF)
+
+    fun newFogOfWar(dungeon: Dungeon, player: GameEntity<Player>, size: Size3D) = FogOfWar(dungeon, player, size)
 
     fun newPlayer() = newGameEntityOfType(Player) {
         attributes(Player,
@@ -25,7 +34,6 @@ object EntityFactory {
                 EntityActions(Attack::class, ToggleDoorCommand::class))
         facets(ItemPicker,
                 ItemDropper,
-                FieldOfViewSystem,
                 Combat)
 
     }
