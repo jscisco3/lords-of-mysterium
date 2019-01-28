@@ -6,7 +6,9 @@ import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.extensions.GameEntity
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TestEquipment {
 
     @Test

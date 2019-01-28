@@ -1,26 +1,33 @@
-package com.jscisco.lom.configuration
+package com.jscisco.lom.dungeon
 
 import com.jscisco.lom.attributes.types.health
-import com.jscisco.lom.events.DamageEvent
-import com.jscisco.lom.events.GameLogEvent
-import com.jscisco.lom.events.InstigateCombatEvent
-import com.jscisco.lom.events.OnHitEvent
+import com.jscisco.lom.events.*
 import org.hexworks.cobalt.events.api.subscribe
+import org.hexworks.cobalt.events.internal.ApplicationScope
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.internal.Zircon
 
-object EventRegistration {
+object DungeonEvents {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     fun registerEvents() {
         // Movement Events
+        registerMovementEvent()
 
         // Combat Events
         registerInstigateCombatEvent()
         registerOnHitEvent()
         registerDamageEvent()
+    }
+
+    private fun registerMovementEvent() {
+        Zircon.eventBus.subscribe<MoveEntityEvent> { (context, entity, position) ->
+            logger.info("%s moved to %s.".format(entity, position))
+            context.dungeon.moveEntity(entity, position)
+            context.dungeon.updateCamera()
+        }
     }
 
     private fun registerDamageEvent() {

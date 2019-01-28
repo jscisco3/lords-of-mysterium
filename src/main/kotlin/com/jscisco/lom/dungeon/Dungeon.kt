@@ -7,7 +7,7 @@ import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.builders.GameBlockFactory
 import com.jscisco.lom.commands.DropItem
 import com.jscisco.lom.commands.PickItemUp
-import com.jscisco.lom.events.MoveEntity
+import com.jscisco.lom.events.MoveEntityEvent
 import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.filterType
 import com.jscisco.lom.extensions.position
@@ -20,7 +20,6 @@ import org.hexworks.cobalt.datatypes.Identifier
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.cobalt.datatypes.extensions.fold
 import org.hexworks.cobalt.datatypes.extensions.map
-import org.hexworks.cobalt.events.api.subscribe
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.Positions
@@ -60,14 +59,11 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
             }
         }
 
+        logger.info("Registering dungeon events...")
+        DungeonEvents.registerEvents()
         initializeResistanceMap(resistanceMap)
 
-//        addEntity(player, this.findEmptyLocationWithin(Position3D.defaultPosition(), actualSize).get())
         addEntity(player, Position3D.create(12, 12, 0))
-        Zircon.eventBus.subscribe<MoveEntity> { (context, entity, position) ->
-            logger.info("%s moved to %s.".format(entity, position))
-            moveEntity(entity, position)
-        }
         updateCamera()
     }
 
@@ -94,7 +90,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
             }
             val block = fetchBlockAt(newPos).get()
             if (fetchBlockAt(newPos).get().isOccupied.not()) {
-                Zircon.eventBus.publish(MoveEntity(context, player, newPos))
+                Zircon.eventBus.publish(MoveEntityEvent(context, player, newPos))
             } else {
                 player.tryActionsOn(context, block.occupier);
             }
@@ -106,11 +102,9 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
                 }
             }
         }
-        // Update camera position to be ~centered~ on the hero
-        updateCamera()
     }
 
-    private fun updateCamera() {
+    fun updateCamera() {
         val screenPosition = findPositionOf(player).get() - visibleOffset()
         val halfHeight = visibleSize.yLength / 2
         val halfWidth = visibleSize.xLength / 2

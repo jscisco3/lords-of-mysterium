@@ -7,12 +7,14 @@ import com.jscisco.lom.dungeon.strategies.GenericDungeonStrategy
 import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.position
 import org.assertj.core.api.Assertions
+import org.hexworks.cobalt.events.internal.ApplicationScope
 import org.hexworks.zircon.api.Screens
 import org.hexworks.zircon.api.builder.grid.TileGridBuilder
 import org.hexworks.zircon.api.data.impl.Position3D
 import org.hexworks.zircon.api.data.impl.Size3D
 import org.hexworks.zircon.api.input.InputType
 import org.hexworks.zircon.api.input.KeyStroke
+import org.hexworks.zircon.internal.Zircon
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -21,17 +23,26 @@ import org.junit.jupiter.api.TestInstance
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TestDungeon {
 
-    val dungeonSize: Size3D = Size3D.create(100, 60, 1)
-    val visibleSize: Size3D = Size3D.create(25, 25, 1)
-    val player: GameEntity<Player> = EntityFactory.newPlayer()
-    val strategy: GenerationStrategy = GenericDungeonStrategy(dungeonSize = dungeonSize)
+    val player: GameEntity<Player>
+    val dungeon: Dungeon
 
-    val dungeonBuilder: DungeonBuilder = DungeonBuilder(
-            dungeonSize = dungeonSize,
-            strategy = strategy,
-            player = player
-    )
-    val dungeon = dungeonBuilder.build(visibleSize, dungeonSize)
+    init {
+        // Make sue we have no events subscriibed
+        Zircon.eventBus.cancelScope(ApplicationScope)
+
+        val dungeonSize: Size3D = Size3D.create(100, 60, 1)
+        val visibleSize: Size3D = Size3D.create(25, 25, 1)
+        player = EntityFactory.newPlayer()
+        val strategy: GenerationStrategy = GenericDungeonStrategy(dungeonSize = dungeonSize)
+
+        val dungeonBuilder: DungeonBuilder = DungeonBuilder(
+                dungeonSize = dungeonSize,
+                strategy = strategy,
+                player = player
+        )
+        dungeon = dungeonBuilder.build(visibleSize, dungeonSize)
+
+    }
 
     @Nested
     inner class DungeonMovement {
@@ -56,7 +67,8 @@ class TestDungeon {
                     player = player
             )
             dungeon.handleInput(context)
-            Assertions.assertThat(player.position).isEqualTo(initialPosition.withRelativeY(1))
+            val expectedPosition = initialPosition.withRelativeY(1)
+            Assertions.assertThat(player.position).isEqualTo(expectedPosition)
         }
 
         @Test
@@ -72,7 +84,8 @@ class TestDungeon {
                     player = player
             )
             dungeon.handleInput(context)
-            Assertions.assertThat(player.position).isEqualTo(initialPosition.withRelativeY(-1))
+            val expectedPosition = initialPosition.withRelativeY(-1)
+            Assertions.assertThat(player.position).isEqualTo(expectedPosition)
         }
 
         @Test
@@ -88,7 +101,8 @@ class TestDungeon {
                     player = player
             )
             dungeon.handleInput(context)
-            Assertions.assertThat(player.position).isEqualTo(initialPosition.withRelativeX(-1))
+            val expectedPosition = initialPosition.withRelativeX(-1)
+            Assertions.assertThat(player.position).isEqualTo(expectedPosition)
         }
 
         @Test
@@ -104,7 +118,8 @@ class TestDungeon {
                     player = player
             )
             dungeon.handleInput(context)
-            Assertions.assertThat(player.position).isEqualTo(initialPosition.withRelativeX(1))
+            val expectedPosition = initialPosition.withRelativeX(1)
+            Assertions.assertThat(player.position).isEqualTo(expectedPosition)
         }
 
         @Test
@@ -138,7 +153,6 @@ class TestDungeon {
 
     @Test
     fun testAddDungeonEntity() {
-        val dungeon = dungeonBuilder.build(visibleSize, dungeonSize)
         val sword = EntityFactory.newSword()
         dungeon.addDungeonEntity(sword)
         Assertions.assertThat(dungeon.findPositionOf(sword).isPresent).isFalse()

@@ -1,7 +1,6 @@
 package com.jscisco.lom.view
 
 import com.jscisco.lom.blocks.GameBlock
-import com.jscisco.lom.configuration.EventRegistration
 import com.jscisco.lom.dungeon.Dungeon
 import com.jscisco.lom.dungeon.GameContext
 import com.jscisco.lom.events.GameLogEvent
@@ -59,13 +58,11 @@ class DungeonView(private val dungeon: Dungeon) : BaseView() {
 
 
         /**
-         * Subscribe events
+         * Subscribe events that are specific for the DungeonView
          */
         Zircon.eventBus.subscribe<GameLogEvent> { (text) ->
             logArea.addParagraph(text, withNewLine = false)
         }
-
-        EventRegistration.registerEvents()
 
         /**
          * Combine all components to make the screen
