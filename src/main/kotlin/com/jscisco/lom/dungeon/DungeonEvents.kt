@@ -2,8 +2,9 @@ package com.jscisco.lom.dungeon
 
 import com.jscisco.lom.attributes.types.health
 import com.jscisco.lom.events.*
+import com.jscisco.lom.extensions.isPlayer
+import com.jscisco.lom.extensions.tryActionsOn
 import org.hexworks.cobalt.events.api.subscribe
-import org.hexworks.cobalt.events.internal.ApplicationScope
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.internal.Zircon
@@ -24,9 +25,17 @@ object DungeonEvents {
 
     private fun registerMovementEvent() {
         Zircon.eventBus.subscribe<MoveEntityEvent> { (context, entity, position) ->
-            logger.info("%s moved to %s.".format(entity, position))
-            context.dungeon.moveEntity(entity, position)
-            context.dungeon.updateCamera()
+            logger.info("%s is trying to move to %s.".format(entity, position))
+            val toBlock = context.dungeon.fetchBlockAt(position).get()
+            if (toBlock.isOccupied) {
+                entity.tryActionsOn(context, toBlock.occupier)
+            } else {
+                context.dungeon.moveEntity(entity, position)
+                if (entity.isPlayer) {
+                    // Only update the camera if the player moves
+                    context.dungeon.updateCamera()
+                }
+            }
         }
     }
 

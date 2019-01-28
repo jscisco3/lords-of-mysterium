@@ -12,7 +12,6 @@ import com.jscisco.lom.events.MoveEntityEvent
 import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.filterType
 import com.jscisco.lom.extensions.position
-import com.jscisco.lom.extensions.tryActionsOn
 import com.jscisco.lom.view.dialog.InventoryDialog
 import org.hexworks.amethyst.api.Engines.newEngine
 import org.hexworks.amethyst.api.entity.Entity
@@ -81,20 +80,12 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
 
     fun handleInput(context: GameContext) {
         context.input.whenKeyStroke { ks ->
-            val newPos = when (ks.inputType()) {
-                InputType.ArrowUp -> player.position.withRelativeY(-1)
-                InputType.ArrowDown -> player.position.withRelativeY(1)
-                InputType.ArrowLeft -> player.position.withRelativeX(-1)
-                InputType.ArrowRight -> player.position.withRelativeX(1)
-                else -> {
-                    entityPositionLookup[player.id]!!
-                }
-            }
-            val block = fetchBlockAt(newPos).get()
-            if (fetchBlockAt(newPos).get().isOccupied.not()) {
-                Zircon.eventBus.publish(MoveEntityEvent(context, player, newPos))
-            } else {
-                player.tryActionsOn(context, block.occupier);
+            when (ks.inputType()) {
+                InputType.ArrowUp -> Zircon.eventBus.publish(MoveEntityEvent(context, player, player.position.withRelativeY(-1)))
+                InputType.ArrowDown -> Zircon.eventBus.publish(MoveEntityEvent(context, player, player.position.withRelativeY(1)))
+                InputType.ArrowLeft -> Zircon.eventBus.publish(MoveEntityEvent(context, player, player.position.withRelativeX(-1)))
+                InputType.ArrowRight -> Zircon.eventBus.publish(MoveEntityEvent(context, player, player.position.withRelativeX(1)))
+                else -> Unit
             }
             when (ks.getCharacter()) {
                 ',' -> player.executeCommand(PickItemUp(context = context, source = player, position = entityPositionLookup[player.id]!!))

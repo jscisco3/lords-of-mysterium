@@ -41,7 +41,6 @@ class FogOfWar(val dungeon: Dungeon, val player: GameEntity<Player>, val size: S
     private fun updateFOW() {
         player.fov.fov = fieldOfViewCalculator.calculateFOV(dungeon.resistanceMap, player.position.x, player.position.y, player.fov.radius)
         val fov = player.fov.fov
-        logger.info("FoV dimensions: %s x %s".format(fov.size, fov[0].size))
         for (x in 0 until fov.size) {
             for (y in 0 until fov[x].size) {
                 if (fov[x][y] > 0) {
