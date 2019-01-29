@@ -69,4 +69,9 @@ object GameTileBuilder {
             .withBackgroundColor(DEFAULT_BACKGROUND)
             .withCharacter(' ')
             .buildCharacterTile()
+
+    val SEEN_OUT_OF_SIGHT: CharacterTile = Tiles.newBuilder()
+            .withBackgroundColor(TileColors.create(131, 132, 135, 192))
+            .withCharacter(' ')
+            .buildCharacterTile()
 }

@@ -9,14 +9,26 @@ import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.data.base.BlockBase
 
 class GameBlock(private var defaultTile: Tile = GameTileBuilder.floor(),
-                private var currentEntities: MutableList<GameEntity<EntityType>> = mutableListOf()) : BlockBase<Tile>() {
+                private var currentEntities: MutableList<GameEntity<EntityType>> = mutableListOf(),
+                var seen: Boolean = false,
+                var inFov: Boolean = false,
+                var lastSeen: Tile = GameTileBuilder.floor()) : BlockBase<Tile>() {
 
     // We have decided that there are only two layers per block: defaultTile (floor),
     // or the last non-item, or the last item (if no non-item is present)
     override val layers: MutableList<Tile>
-        get() = mutableListOf(defaultTile, currentEntities.filter { !it.hasAttribute<Item>() }.map { it.tile }.lastOrNull()
-                ?: currentEntities.filter { it.hasAttribute<Item>() }.map { it.tile }.lastOrNull()
-                ?: GameTileBuilder.EMPTY)
+        get() {
+            if (inFov) {
+                return mutableListOf(defaultTile, currentEntities.filter { !it.hasAttribute<Item>() }.map { it.tile }.lastOrNull()
+                        ?: currentEntities.filter { it.hasAttribute<Item>() }.map { it.tile }.lastOrNull()
+                        ?: GameTileBuilder.EMPTY)
+            } else {
+                if (seen) {
+                    return mutableListOf(defaultTile, lastSeen)
+                }
+            }
+            return mutableListOf(defaultTile, defaultTile)
+        }
 
     override fun fetchSide(side: BlockSide): Tile {
         return GameTileBuilder.EMPTY

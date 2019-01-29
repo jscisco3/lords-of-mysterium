@@ -63,7 +63,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         DungeonEvents.registerEvents()
         calculateResistanceMap(resistanceMap)
 
-        addEntity(player, Position3D.create(12, 12, 0))
+        addEntity(player, Position3D.create(29, 29, 0))
         addDungeonEntity(EntityFactory.newFogOfWar(this, player, actualSize))
         updateCamera()
     }
@@ -92,6 +92,9 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
                 'i' -> context.screen.openModal(InventoryDialog(context))
                 'd' -> if (player.inventory.items.lastOrNull() != null) {
                     player.executeCommand(DropItemCommand(context, context.player, player.inventory.items.last(), entityPositionLookup[player.id]!!))
+                }
+                'g' -> fetchEntitiesAt(Position3D.create(10, 10, 0)).map {
+                    Zircon.eventBus.publish(MoveEntityEvent(context, it, Position3D.create(30, 30, 0)))
                 }
             }
         }
