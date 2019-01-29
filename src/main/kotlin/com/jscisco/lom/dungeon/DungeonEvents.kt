@@ -1,8 +1,10 @@
 package com.jscisco.lom.dungeon
 
 import com.jscisco.lom.attributes.types.health
+import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.events.*
 import com.jscisco.lom.extensions.isPlayer
+import com.jscisco.lom.extensions.position
 import com.jscisco.lom.extensions.tryActionsOn
 import org.hexworks.cobalt.events.api.subscribe
 import org.hexworks.cobalt.logging.api.Logger
@@ -16,6 +18,7 @@ object DungeonEvents {
     fun registerEvents() {
         // Movement Events
         registerMovementEvent()
+        registerOpenDoorEvent()
 
         // Combat Events
         registerInstigateCombatEvent()
@@ -65,6 +68,15 @@ object DungeonEvents {
             logger.info("%s instigated combat against %s.".format(source, target))
             Zircon.eventBus.publish(OnHitEvent(context, source, target))
             Zircon.eventBus.publish(GameLogEvent("%s instigated combat against %s.".format(source, target)))
+        }
+    }
+
+    private fun registerOpenDoorEvent() {
+        Zircon.eventBus.subscribe<OpenDoorEvent> { (context, source, door) ->
+            logger.info("%s opened the %s".format(source, door))
+            context.dungeon.removeEntity(door)
+            context.dungeon.addEntity(EntityFactory.newOpenDoor(), door.position)
+            context.dungeon.calculateResistanceMap(context.dungeon.resistanceMap)
         }
     }
 }

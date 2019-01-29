@@ -44,6 +44,8 @@ class FogOfWar(val dungeon: Dungeon, val player: GameEntity<Player>, val size: S
         for (x in 0 until fov.size) {
             for (y in 0 until fov[x].size) {
                 if (fov[x][y] > 0) {
+                    // An empty tile essentially removes the overlay here
+                    // Is this even how I want to handle it?
                     fowPerLevel[player.position.z]?.setTileAt(Position.create(x, y), GameTileBuilder.EMPTY)
                 } else {
                     fowPerLevel[player.position.z]?.setTileAt(Position.create(x, y), GameTileBuilder.UNREVEALED)

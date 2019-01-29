@@ -14,7 +14,7 @@ import com.jscisco.lom.extensions.newGameEntityOfType
 import com.jscisco.lom.systems.Combat
 import com.jscisco.lom.systems.ItemDropper
 import com.jscisco.lom.systems.ItemPicker
-import com.jscisco.lom.systems.ToggleDoor
+import com.jscisco.lom.systems.OpenDoorSystem
 import org.hexworks.zircon.api.data.impl.Size3D
 import java.util.*
 
@@ -66,7 +66,7 @@ object EntityFactory {
                 EntityPosition(),
                 EntityTile(GameTileBuilder.closedDoor()),
                 Openable)
-        facets(ToggleDoor)
+        facets(OpenDoorSystem)
     }
 
     fun newSword() = newGameEntityOfType(Sword) {
