@@ -10,7 +10,7 @@ import org.hexworks.amethyst.api.Consumed
 import org.hexworks.amethyst.api.base.BaseFacet
 import org.hexworks.amethyst.api.entity.EntityType
 
-object ItemPicker : BaseFacet<GameContext>() {
+object ItemPickerSystem : BaseFacet<GameContext>() {
 
     override fun executeCommand(command: GameCommand<out EntityType>) = command.responseWhenCommandIs<PickItemUp> { (context, itemHolder, position) ->
         val dungeon = context.dungeon

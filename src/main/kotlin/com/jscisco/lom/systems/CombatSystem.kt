@@ -11,7 +11,7 @@ import org.hexworks.amethyst.api.base.BaseFacet
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.zircon.internal.Zircon
 
-object Combat : BaseFacet<GameContext>() {
+object CombatSystem : BaseFacet<GameContext>() {
 
     override fun executeCommand(command: GameCommand<out EntityType>): Response = command.responseWhenCommandIs<Attack> { (context: GameContext, attacker, target) ->
         //        val attackerEquipment = attacker.equipment

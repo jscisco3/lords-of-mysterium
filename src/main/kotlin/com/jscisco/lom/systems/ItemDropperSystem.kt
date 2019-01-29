@@ -11,7 +11,7 @@ import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
 
-object ItemDropper : BaseFacet<GameContext>() {
+object ItemDropperSystem : BaseFacet<GameContext>() {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 

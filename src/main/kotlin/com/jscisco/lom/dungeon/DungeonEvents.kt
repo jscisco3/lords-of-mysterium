@@ -20,7 +20,7 @@ object DungeonEvents {
         registerMovementEvent()
         registerOpenDoorEvent()
 
-        // Combat Events
+        // CombatSystem Events
         registerInstigateCombatEvent()
         registerOnHitEvent()
         registerDamageEvent()
