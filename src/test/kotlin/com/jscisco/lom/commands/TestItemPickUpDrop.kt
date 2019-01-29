@@ -45,7 +45,7 @@ class TestItemPickUpDrop {
         dungeon.addEntity(sword, swordPosition)
         dungeon.addEntity(player, swordPosition)
 
-        player.executeCommand(PickItemUp(gameContext, player, swordPosition))
+        player.executeCommand(PickItemUpCommand(gameContext, player, swordPosition))
 
         Assertions.assertThat(player.attribute<Inventory>().items.size).isEqualTo(1)
     }
@@ -76,7 +76,7 @@ class TestItemPickUpDrop {
 
         Assertions.assertThat(player.inventory.items.size).isEqualTo(1)
 
-        player.executeCommand(DropItem(gameContext, player, sword, swordPosition))
+        player.executeCommand(DropItemCommand(gameContext, player, sword, swordPosition))
 
         Assertions.assertThat(dungeon.findPositionOf(sword).get()).isEqualTo(swordPosition)
         Assertions.assertThat(player.inventory.items.size).isEqualTo(0)
@@ -105,7 +105,7 @@ class TestItemPickUpDrop {
         )
 
         Assertions.assertThat(player.inventory.items.size).isEqualTo(0)
-        player.executeCommand(DropItem(gameContext, player, sword, swordPosition))
+        player.executeCommand(DropItemCommand(gameContext, player, sword, swordPosition))
 
         Assertions.assertThat(dungeon.findPositionOf(sword).isEmpty()).isTrue()
 

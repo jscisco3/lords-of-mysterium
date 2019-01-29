@@ -6,8 +6,8 @@ import com.jscisco.lom.attributes.types.inventory
 import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.builders.GameBlockFactory
-import com.jscisco.lom.commands.DropItem
-import com.jscisco.lom.commands.PickItemUp
+import com.jscisco.lom.commands.DropItemCommand
+import com.jscisco.lom.commands.PickItemUpCommand
 import com.jscisco.lom.events.MoveEntityEvent
 import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.filterType
@@ -88,10 +88,10 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
                 else -> Unit
             }
             when (ks.getCharacter()) {
-                ',' -> player.executeCommand(PickItemUp(context = context, source = player, position = entityPositionLookup[player.id]!!))
+                ',' -> player.executeCommand(PickItemUpCommand(context = context, source = player, position = entityPositionLookup[player.id]!!))
                 'i' -> context.screen.openModal(InventoryDialog(context))
                 'd' -> if (player.inventory.items.lastOrNull() != null) {
-                    player.executeCommand(DropItem(context, context.player, player.inventory.items.last(), entityPositionLookup[player.id]!!))
+                    player.executeCommand(DropItemCommand(context, context.player, player.inventory.items.last(), entityPositionLookup[player.id]!!))
                 }
             }
         }

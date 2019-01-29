@@ -5,7 +5,7 @@ import com.jscisco.lom.attributes.flags.BlockOccupier
 import com.jscisco.lom.attributes.flags.Openable
 import com.jscisco.lom.attributes.flags.VisionBlocker
 import com.jscisco.lom.attributes.types.*
-import com.jscisco.lom.commands.Attack
+import com.jscisco.lom.commands.AttackCommand
 import com.jscisco.lom.commands.ToggleDoorCommand
 import com.jscisco.lom.dungeon.Dungeon
 import com.jscisco.lom.entities.FogOfWar
@@ -31,7 +31,7 @@ object EntityFactory {
                 EntityTile(GameTileBuilder.PLAYER),
                 EntityPosition(),
                 FieldOfView(),
-                EntityActions(Attack::class, ToggleDoorCommand::class))
+                EntityActions(AttackCommand::class, ToggleDoorCommand::class))
         facets(ItemPickerSystem,
                 ItemDropperSystem,
                 CombatSystem)

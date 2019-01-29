@@ -6,6 +6,6 @@ import com.jscisco.lom.extensions.GameCommand
 import com.jscisco.lom.extensions.GameEntity
 import org.hexworks.zircon.api.data.impl.Position3D
 
-data class PickItemUp(override val context: GameContext,
-                      override val source: GameEntity<ItemHolder>,
-                      val position: Position3D) : GameCommand<ItemHolder>
+data class PickItemUpCommand(override val context: GameContext,
+                             override val source: GameEntity<ItemHolder>,
+                             val position: Position3D) : GameCommand<ItemHolder>

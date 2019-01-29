@@ -1,7 +1,7 @@
 package com.jscisco.lom.view.dialog
 
 import com.jscisco.lom.attributes.types.inventory
-import com.jscisco.lom.commands.DropItem
+import com.jscisco.lom.commands.DropItemCommand
 import com.jscisco.lom.dungeon.GameContext
 import com.jscisco.lom.extensions.position
 import com.jscisco.lom.view.dialog.fragment.ItemListFragment
@@ -32,7 +32,7 @@ class InventoryDialog(gameContext: GameContext) : Dialog(screen = gameContext.sc
                             onMouseReleased {
                                 itemListFragment.fetchSelectedItem().map { item ->
                                     itemListFragment.removeSelectedItem()
-                                    player.executeCommand(DropItem(gameContext,
+                                    player.executeCommand(DropItemCommand(gameContext,
                                             player,
                                             item,
                                             player.position))

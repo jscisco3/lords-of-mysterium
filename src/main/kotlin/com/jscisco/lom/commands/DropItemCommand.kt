@@ -8,7 +8,7 @@ import com.jscisco.lom.extensions.GameEntity
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.zircon.api.data.impl.Position3D
 
-data class DropItem(override val context: GameContext,
-                    override val source: GameEntity<ItemHolder>,
-                    val item: GameEntity<Item>,
-                    val position: Position3D) : GameCommand<EntityType>
+data class DropItemCommand(override val context: GameContext,
+                           override val source: GameEntity<ItemHolder>,
+                           val item: GameEntity<Item>,
+                           val position: Position3D) : GameCommand<EntityType>
