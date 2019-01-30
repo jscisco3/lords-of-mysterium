@@ -1,6 +1,6 @@
 package com.jscisco.lom.attributes
 
-import com.jscisco.lom.attributes.types.EquipmentSlot
+import com.jscisco.lom.attributes.Equipment.EquipmentSlot
 import com.jscisco.lom.attributes.types.Item
 import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.extensions.GameEntity

@@ -8,6 +8,8 @@ import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.position
 import org.assertj.core.api.Assertions
 import org.hexworks.cobalt.events.internal.ApplicationScope
+import org.hexworks.cobalt.logging.api.Logger
+import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.Screens
 import org.hexworks.zircon.api.builder.grid.TileGridBuilder
 import org.hexworks.zircon.api.data.impl.Position3D
@@ -22,6 +24,8 @@ import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TestDungeon {
+
+    private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     val player: GameEntity<Player>
     val dungeon: Dungeon

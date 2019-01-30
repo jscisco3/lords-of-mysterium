@@ -42,7 +42,6 @@ class FogOfWar(val dungeon: Dungeon, val player: GameEntity<Player>, val size: S
     private fun updateFOW() {
         player.fov.fov = fieldOfViewCalculator.calculateFOV(dungeon.resistanceMap, player.position.x, player.position.y, player.fov.radius)
         val fov = player.fov.fov
-        val blocks = dungeon.fetchBlocksAtLevel(player.position.z)
         for (x in 0 until fov.size) {
             for (y in 0 until fov[x].size) {
                 // If the tile is in FOV, then the overlay should be EMPTY

@@ -1,6 +1,5 @@
 package com.jscisco.lom.attributes
 
-import com.jscisco.lom.attributes.types.EquipmentSlot
 import com.jscisco.lom.attributes.types.Item
 import com.jscisco.lom.extensions.GameEntity
 import org.hexworks.amethyst.api.Attribute
@@ -36,5 +35,17 @@ class Equipment(val eligibleSlots: List<EquipmentSlot>, val initialEquipment: Mu
             inventory.addItem(oldItem)
             slots[slot] = null
         }
+    }
+
+    enum class EquipmentSlot {
+        ONE_HAND,
+        TWO_HAND,
+        OFF_HAND,
+        HEAD,
+        BODY,
+        LEFT_RIGHT,
+        RIGHT_RING,
+        AMULET,
+        TOOL
     }
 }
