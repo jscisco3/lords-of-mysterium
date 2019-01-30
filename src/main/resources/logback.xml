@@ -1,4 +1,4 @@
-<configuration debug="true">
+<configuration debug="false">
 
     <property name="defaultPattern"
               value="%d{HH:mm:ss.SSS} session_id=${session.id} %-5level %logger{36} - %msg%n" />
@@ -28,7 +28,10 @@
         <appender-ref ref="FILE" />
     </root>
 
-    <logger name="com.jscisco.lom" level="info" additivity="true">
+    <logger name="com.jscisco.lom" level="INFO" additivity="true">
+        <appender-ref ref="STDOUT" />
+    </logger>
+    <logger name="org.hexworks" level="WARN" additivity="true">
         <appender-ref ref="STDOUT" />
     </logger>
 

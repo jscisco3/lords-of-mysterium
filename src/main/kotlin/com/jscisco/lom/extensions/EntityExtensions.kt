@@ -3,6 +3,7 @@ package com.jscisco.lom.extensions
 import com.jscisco.lom.attributes.EntityActions
 import com.jscisco.lom.attributes.EntityPosition
 import com.jscisco.lom.attributes.EntityTile
+import com.jscisco.lom.attributes.NameAttribute
 import com.jscisco.lom.attributes.flags.BlockOccupier
 import com.jscisco.lom.attributes.flags.VisionBlocker
 import com.jscisco.lom.attributes.types.Player
@@ -43,6 +44,8 @@ val AnyGameEntity.isPlayer: Boolean
 val AnyGameEntity.isWall: Boolean
     get() = this.type == Wall
 
+val AnyGameEntity.nameAttribute: NameAttribute
+    get() = attribute()
 
 inline fun <reified T : Attribute> AnyGameEntity.attribute(): T = attribute(T::class).orElseThrow {
     NoSuchElementException("Entity '$this' has no property with type '${T::class.simpleName}'.")

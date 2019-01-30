@@ -1,4 +1,4 @@
-package com.jscisco.lom.view.dialog.fragment
+package com.jscisco.lom.view.fragment
 
 import com.jscisco.lom.attributes.Inventory
 import com.jscisco.lom.attributes.types.Item

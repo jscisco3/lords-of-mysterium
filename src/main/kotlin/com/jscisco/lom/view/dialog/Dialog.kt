@@ -1,7 +1,7 @@
 package com.jscisco.lom.view.dialog
 
 import com.jscisco.lom.configuration.GameConfiguration
-import com.jscisco.lom.view.dialog.fragment.CloseButtonFragment
+import com.jscisco.lom.view.fragment.CloseButtonFragment
 import org.hexworks.zircon.api.builder.component.ModalBuilder
 import org.hexworks.zircon.api.component.Container
 import org.hexworks.zircon.api.component.modal.Modal

@@ -4,7 +4,7 @@ import com.jscisco.lom.attributes.types.inventory
 import com.jscisco.lom.commands.DropItemCommand
 import com.jscisco.lom.dungeon.GameContext
 import com.jscisco.lom.extensions.position
-import com.jscisco.lom.view.dialog.fragment.ItemListFragment
+import com.jscisco.lom.view.fragment.ItemListFragment
 import org.hexworks.cobalt.datatypes.extensions.map
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.ComponentAlignment

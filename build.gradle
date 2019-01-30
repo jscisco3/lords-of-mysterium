@@ -44,6 +44,8 @@ dependencies {
     compile "org.hexworks.zircon:zircon.core-jvm:$zirconVersion"
     compile "org.hexworks.zircon:zircon.jvm.swing:$zirconVersion"
 
+    compile "org.hexworks.cobalt:cobalt.logging:$cobaltVersion"
+
     compile "com.squidpony:squidlib-util:$squidLibVersion"
 
     testCompile "org.junit.jupiter:junit-jupiter-api:$junitVersion"

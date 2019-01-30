@@ -1,9 +1,14 @@
 package com.jscisco.lom.view
 
 import com.jscisco.lom.blocks.GameBlock
+import com.jscisco.lom.configuration.GameConfiguration.LOG_AREA_HEIGHT
+import com.jscisco.lom.configuration.GameConfiguration.SIDEBAR_WIDTH
+import com.jscisco.lom.configuration.GameConfiguration.WINDOW_HEIGHT
+import com.jscisco.lom.configuration.GameConfiguration.WINDOW_WIDTH
 import com.jscisco.lom.dungeon.Dungeon
 import com.jscisco.lom.dungeon.GameContext
 import com.jscisco.lom.events.GameLogEvent
+import com.jscisco.lom.view.fragment.PlayerStatsFragment
 import org.hexworks.cobalt.events.api.subscribe
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
@@ -38,6 +43,13 @@ class DungeonView(private val dungeon: Dungeon) : BaseView() {
 //            dungeon.updateFOV()
         }
 
+        val sidebar = Components.panel()
+                // WINDOW_HEIGHT - 2 to handle wrapWithBox nicer
+                .withSize(SIDEBAR_WIDTH, WINDOW_HEIGHT - 2)
+                .wrapWithBox()
+                .build()
+        sidebar.addFragment(PlayerStatsFragment(dungeon.player))
+
         val gameComponent = GameComponents.newGameComponentBuilder<Tile, GameBlock>()
                 .withGameArea(dungeon)
                 .withVisibleSize(dungeon.visibleSize())
@@ -46,16 +58,16 @@ class DungeonView(private val dungeon: Dungeon) : BaseView() {
                 .build()
 
         val logPanel = Components.panel()
-                .withSize(Sizes.create(dungeon.visibleSize().xLength, logAreaHeight))
+                .withSize(WINDOW_WIDTH - SIDEBAR_WIDTH, LOG_AREA_HEIGHT)
                 .withAlignmentWithin(screen, ComponentAlignment.BOTTOM_RIGHT)
-                .wrapWithBox()
-                .withTitle("Journal")
                 .build()
         val logArea = Components.logArea()
-                .withSize(logPanel.size - Sizes.create(2, 2))
+                .withSize(logPanel.width, LOG_AREA_HEIGHT - 2)
+                .wrapWithBox()
+                .withAlignmentWithin(logPanel, ComponentAlignment.TOP_LEFT)
+                .withTitle("Journal")
                 .build()
         logPanel.addComponent(logArea)
-
 
         /**
          * Subscribe events that are specific for the DungeonView
@@ -67,6 +79,7 @@ class DungeonView(private val dungeon: Dungeon) : BaseView() {
         /**
          * Combine all components to make the screen
          */
+        screen.addComponent(sidebar)
         screen.addComponent(gameComponent)
         screen.addComponent(logPanel)
     }

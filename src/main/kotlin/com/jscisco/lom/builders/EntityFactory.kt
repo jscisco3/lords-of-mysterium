@@ -25,7 +25,15 @@ object EntityFactory {
 
     fun newPlayer() = newGameEntityOfType(Player) {
         attributes(Player,
-                Health.create(100),
+                NameAttribute("The Greatest Thief in the Multiverse"),
+                StatBlockAttribute(
+                        strength = 10,
+                        intelligence = 8,
+                        constitution = 12,
+                        agility = 5,
+                        perception = 6
+                ),
+                HealthAttribute.create(100),
                 BlockOccupier,
                 Inventory(maxWeight = 100),
                 EntityTile(GameTileBuilder.PLAYER),
@@ -40,7 +48,7 @@ object EntityFactory {
 
     fun newGoblin() = newGameEntityOfType(NPC) {
         attributes(EntityTile(GameTileBuilder.GOBLIN),
-                Health.create(20),
+                HealthAttribute.create(20),
                 BlockOccupier,
                 EntityPosition())
         facets(CombatSystem)

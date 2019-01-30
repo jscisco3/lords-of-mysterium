@@ -2,6 +2,10 @@ package com.jscisco.lom.view
 
 import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.configuration.GameConfiguration
+import com.jscisco.lom.configuration.GameConfiguration.VISIBLE_DUNGEON_HEIGHT
+import com.jscisco.lom.configuration.GameConfiguration.VISIBLE_DUNGEON_WIDTH
+import com.jscisco.lom.configuration.GameConfiguration.WINDOW_HEIGHT
+import com.jscisco.lom.configuration.GameConfiguration.WINDOW_WIDTH
 import com.jscisco.lom.dungeon.DungeonBuilder
 import com.jscisco.lom.dungeon.strategies.EmptyDungeonStrategy
 import org.hexworks.cobalt.logging.api.Logger
@@ -21,7 +25,7 @@ class StartView() : BaseView() {
         val panel = Components.panel()
                 .wrapWithBox(wrapWithBox = true)
                 .withTitle(title = "Lords of Mysterium")
-                .withSize(size = Sizes.create(30, 30))
+                .withSize(size = Sizes.create(WINDOW_WIDTH, WINDOW_HEIGHT - 2))
                 .build()
 
         var jumpIntoDungeon = Components.button()
@@ -32,8 +36,8 @@ class StartView() : BaseView() {
                 .build()
 
         jumpIntoDungeon.onMouseReleased {
-            val dungeonSize = Size3D.create(GameConfiguration.WINDOW_WIDTH, GameConfiguration.WINDOW_HEIGHT, 1)
-            val visibleSize = Sizes.create3DSize(screen.width / 5 * 4, screen.height / 6 * 5, 1)
+            val dungeonSize = Size3D.create(WINDOW_WIDTH, WINDOW_HEIGHT, 1)
+            val visibleSize = Size3D.create(VISIBLE_DUNGEON_WIDTH, VISIBLE_DUNGEON_HEIGHT, 1)
 
             val dungeon = DungeonBuilder(dungeonSize, strategy = EmptyDungeonStrategy(dungeonSize), player = EntityFactory.newPlayer())
                     .build(visibleSize, dungeonSize)

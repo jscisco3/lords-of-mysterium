@@ -1,4 +1,4 @@
-package com.jscisco.lom.view.dialog.fragment
+package com.jscisco.lom.view.fragment
 
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.ComponentAlignment
