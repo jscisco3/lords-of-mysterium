@@ -20,6 +20,10 @@ buildscript {
     }
 }
 
+configurations.all {
+    exclude group: "org.slf4j", module: "slf4j-simple"
+}
+
 repositories {
     mavenCentral()
     mavenLocal()
@@ -53,6 +57,7 @@ dependencies {
 
 sourceSets {
     main.java.srcDirs += 'src/main/kotlin'
+    main.resources.srcDirs += 'src/main/resources'
     test.java.srcDirs += 'src/test/kotlin'
 }
 

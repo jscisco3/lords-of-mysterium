@@ -4,6 +4,7 @@ import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.configuration.GameConfiguration
 import com.jscisco.lom.dungeon.DungeonBuilder
 import com.jscisco.lom.dungeon.strategies.EmptyDungeonStrategy
+import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Sizes
@@ -14,7 +15,7 @@ import org.hexworks.zircon.api.mvc.base.BaseView
 
 class StartView() : BaseView() {
 
-    private val logger = LoggerFactory.getLogger(StartView::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     override fun onDock() {
         val panel = Components.panel()

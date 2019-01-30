@@ -28,7 +28,8 @@ object DungeonEvents {
 
     private fun registerMovementEvent() {
         Zircon.eventBus.subscribe<MoveEntityEvent> { (context, entity, position) ->
-            logger.info("%s is trying to move to %s.".format(entity, position))
+            logger.debug("%s is trying to move to %s.".format(entity, position))
+            logger.info("Is debug enabled? %s".format(logger.isDebugEnabled()))
             val toBlock = context.dungeon.fetchBlockAt(position).get()
             if (toBlock.isOccupied) {
                 entity.tryActionsOn(context, toBlock.occupier)
