@@ -64,7 +64,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         DungeonEvents.registerEvents()
         calculateResistanceMap(resistanceMap)
 
-        addEntity(player, Position3D.create(29, 29, 0))
+        addEntity(player, Position3D.create(12, 12, 0))
         addDungeonEntity(EntityFactory.newFogOfWar(this, player, actualSize))
         updateCamera()
     }

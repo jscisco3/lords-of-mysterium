@@ -1,10 +1,13 @@
 package com.jscisco.lom.dungeon
 
+import com.jscisco.lom.attributes.EntityTile
+import com.jscisco.lom.attributes.flags.BlockOccupier
+import com.jscisco.lom.attributes.flags.VisionBlocker
 import com.jscisco.lom.attributes.types.health
-import com.jscisco.lom.builders.EntityFactory
+import com.jscisco.lom.builders.GameTileBuilder
 import com.jscisco.lom.events.*
+import com.jscisco.lom.extensions.attribute
 import com.jscisco.lom.extensions.isPlayer
-import com.jscisco.lom.extensions.position
 import com.jscisco.lom.extensions.tryActionsOn
 import org.hexworks.cobalt.events.api.subscribe
 import org.hexworks.cobalt.logging.api.Logger
@@ -74,8 +77,9 @@ object DungeonEvents {
     private fun registerOpenDoorEvent() {
         Zircon.eventBus.subscribe<OpenDoorEvent> { (context, source, door) ->
             logger.info("%s opened the %s".format(source, door))
-            context.dungeon.removeEntity(door)
-            context.dungeon.addEntity(EntityFactory.newOpenDoor(), door.position)
+            door.removeAttribute(VisionBlocker)
+            door.removeAttribute(BlockOccupier)
+            door.attribute<EntityTile>().tile = GameTileBuilder.openDoor()
             context.dungeon.calculateResistanceMap(context.dungeon.resistanceMap)
         }
     }

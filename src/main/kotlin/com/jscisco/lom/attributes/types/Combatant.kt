@@ -14,7 +14,7 @@ val GameEntity<Combatant>.combatStats: CombatStats
     get() = attribute()
 
 val GameEntity<Combatant>.equipment: Maybe<Equipment>
-    get() = attribute(Equipment::class)
+    get() = findAttribute(Equipment::class)
 
 val GameEntity<Combatant>.health: HealthAttribute
     get() = attribute()
