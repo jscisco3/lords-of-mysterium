@@ -2,9 +2,8 @@ package com.jscisco.lom.view.dialog.fragment
 
 import com.jscisco.lom.attributes.Inventory
 import com.jscisco.lom.attributes.types.Item
-import com.jscisco.lom.attributes.types.NoItem
+import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.extensions.GameEntity
-import com.jscisco.lom.extensions.newGameEntityOfType
 import org.hexworks.cobalt.databinding.api.createPropertyFrom
 import org.hexworks.cobalt.databinding.api.property.Property
 import org.hexworks.cobalt.datatypes.Maybe
@@ -17,12 +16,12 @@ import org.hexworks.zircon.api.kotlin.onSelection
 
 class ItemListFragment(inventory: Inventory, width: Int) : Fragment {
 
-    val selectedItem: Property<GameEntity<Item>> = createPropertyFrom(NO_ITEM)
+    val selectedItem: Property<GameEntity<Item>> = createPropertyFrom(EntityFactory.noItem())
 
     private val rgb: RadioButtonGroup
 
     fun fetchSelectedItem(): Maybe<GameEntity<Item>> {
-        return Maybe.ofNullable(if (selectedItem.value == NO_ITEM) null else selectedItem.value)
+        return Maybe.ofNullable(if (selectedItem.value == EntityFactory.noItem()) null else selectedItem.value)
     }
 
     fun removeSelectedItem() {
@@ -52,10 +51,10 @@ class ItemListFragment(inventory: Inventory, width: Int) : Fragment {
             }
 
 
-    companion object {
-        private val NO_ITEM = newGameEntityOfType(NoItem) {
-            attributes()
-        }
-    }
+//    companion object {
+//        private val NO_ITEM = newGameEntityOfType(NoItem) {
+//            attributes()
+//        }
+//    }
 
 }

@@ -1,9 +1,9 @@
 package com.jscisco.lom.attributes
 
 import com.jscisco.lom.attributes.Equipment.EquipmentSlot
-import com.jscisco.lom.attributes.types.Item
+import com.jscisco.lom.attributes.Equipment.EquipmentType
+import com.jscisco.lom.attributes.types.NoItem
 import com.jscisco.lom.builders.EntityFactory
-import com.jscisco.lom.extensions.GameEntity
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -13,69 +13,67 @@ class TestEquipment {
 
     @Test
     fun testInitializeEquipmentNoInitialEquipment() {
-        val eligibleSlots = listOf(EquipmentSlot.ONE_HAND, EquipmentSlot.OFF_HAND, EquipmentSlot.HEAD)
-        val equipment: Equipment = Equipment(eligibleSlots, mutableMapOf())
+        val eligibleSlots = listOf(
+                EquipmentSlot(EquipmentType.HAND),
+                EquipmentSlot(EquipmentType.HEAD)
+        )
+        val equipment: Equipment = Equipment(eligibleSlots)
 
-        Assertions.assertThat(equipment.getItemBySlot(EquipmentSlot.ONE_HAND)).isNull()
-        Assertions.assertThat(equipment.getItemBySlot(EquipmentSlot.BODY)).isNull()
+        Assertions.assertThat(equipment.getItemsByType(EquipmentType.HAND).get(0).type).isEqualTo(NoItem)
+        Assertions.assertThat(equipment.getItemsByType(EquipmentType.BODY).size).isEqualTo(0)
     }
 
     @Test
     fun testInitializeEquipmentWithInitialEquipment() {
-        val eligibleSlots = listOf(EquipmentSlot.ONE_HAND, EquipmentSlot.OFF_HAND, EquipmentSlot.HEAD)
-        val initialEquipment: MutableMap<EquipmentSlot, GameEntity<Item>?> = mutableMapOf()
         val sword = EntityFactory.newSword()
-        initialEquipment[EquipmentSlot.ONE_HAND] = sword
 
-        val equipment: Equipment = Equipment(eligibleSlots, initialEquipment)
-        Assertions.assertThat(equipment.getItemBySlot(EquipmentSlot.ONE_HAND)).isEqualTo(sword)
+        val eligibleSlots = listOf(
+                EquipmentSlot(EquipmentType.HAND).also {
+                    it.equippedItem = sword
+                },
+                EquipmentSlot(EquipmentType.HEAD)
+        )
+
+        val equipment: Equipment = Equipment(eligibleSlots)
+        Assertions.assertThat(equipment.getItemsByType(EquipmentType.HAND).get(0)).isEqualTo(sword)
     }
 
     @Test
     fun testEquipItem() {
-        val eligibleSlots = listOf(EquipmentSlot.ONE_HAND, EquipmentSlot.OFF_HAND, EquipmentSlot.HEAD)
-        val equipment = Equipment(eligibleSlots, mutableMapOf())
+        val eligibleSlots = listOf(
+                EquipmentSlot(EquipmentType.HAND),
+                EquipmentSlot(EquipmentType.HEAD)
+        )
+        val equipment: Equipment = Equipment(eligibleSlots)
         val sword = EntityFactory.newSword()
 
         val inventory = Inventory(100)
 
-        equipment.equipItem(inventory, EquipmentSlot.ONE_HAND, sword)
+        equipment.equipItem(inventory, EquipmentType.HAND, sword)
 
-        Assertions.assertThat(equipment.getItemBySlot(EquipmentSlot.ONE_HAND)).isEqualTo(sword)
+        Assertions.assertThat(equipment.getSlotsByType(EquipmentType.HAND)[0].equippedItem).isEqualTo(sword)
     }
 
     @Test
     fun testEquipItemIfItemAlreadyEquipped() {
-        val eligibleSlots = listOf(EquipmentSlot.ONE_HAND, EquipmentSlot.OFF_HAND, EquipmentSlot.HEAD)
-        val equipment = Equipment(eligibleSlots, mutableMapOf())
+        val eligibleSlots = listOf(
+                EquipmentSlot(EquipmentType.HAND),
+                EquipmentSlot(EquipmentType.HEAD)
+        )
+        val equipment = Equipment(eligibleSlots)
         val sword1 = EntityFactory.newSword()
         val sword2 = EntityFactory.newSword()
 
         val inventory = Inventory(100)
 
-        equipment.equipItem(inventory, EquipmentSlot.ONE_HAND, sword1)
+        equipment.equipItem(inventory, EquipmentType.HAND, sword1)
         Assertions.assertThat(inventory.items.size).isEqualTo(0)
-        Assertions.assertThat(equipment.getItemBySlot(EquipmentSlot.ONE_HAND)).isEqualTo(sword1)
+        Assertions.assertThat(equipment.getItemsByType(EquipmentType.HAND)[0]).isEqualTo(sword1)
 
-        equipment.equipItem(inventory, EquipmentSlot.ONE_HAND, sword2)
+        equipment.equipItem(inventory, EquipmentType.HAND, sword2)
+        // The sword should be put back in to the inventory
         Assertions.assertThat(inventory.items.size).isEqualTo(1)
-        Assertions.assertThat(equipment.getItemBySlot(EquipmentSlot.ONE_HAND)).isEqualTo(sword2)
+        Assertions.assertThat(equipment.getItemsByType(EquipmentType.HAND)[0]).isEqualTo(sword2)
         Assertions.assertThat(inventory.items.last()).isEqualTo(sword1)
     }
-
-    @Test
-    fun testUnequipItem() {
-        val equipment = Equipment(listOf(EquipmentSlot.ONE_HAND), mutableMapOf())
-        val sword = EntityFactory.newSword()
-        val inventory = Inventory(100)
-
-        equipment.equipItem(inventory, EquipmentSlot.ONE_HAND, sword)
-        Assertions.assertThat(equipment.getItemBySlot(EquipmentSlot.ONE_HAND)).isEqualTo(sword)
-
-        equipment.unequipItem(inventory, EquipmentSlot.ONE_HAND)
-        Assertions.assertThat(inventory.items.size).isEqualTo(1)
-        Assertions.assertThat(equipment.getItemBySlot(EquipmentSlot.ONE_HAND)).isEqualTo(null)
-
-    }
-
 }

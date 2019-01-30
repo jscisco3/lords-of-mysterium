@@ -4,17 +4,4 @@ import com.jscisco.lom.attributes.Equipment.EquipmentSlot
 
 import org.hexworks.amethyst.api.Attribute
 
-data class Equippable(val validSlots: Array<EquipmentSlot>) : Attribute {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is Equippable) return false
-
-        if (!validSlots.contentEquals(other.validSlots)) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        return validSlots.contentHashCode()
-    }
-}
+data class Equippable(val slot: EquipmentSlot) : Attribute

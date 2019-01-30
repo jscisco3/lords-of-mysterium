@@ -1,50 +1,66 @@
 package com.jscisco.lom.attributes
 
+import com.jscisco.lom.attributes.Equipment.EquipmentSlot
+import com.jscisco.lom.attributes.Equipment.EquipmentType
 import com.jscisco.lom.attributes.types.Item
+import com.jscisco.lom.attributes.types.NoItem
+import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.extensions.GameEntity
+import com.jscisco.lom.extensions.newGameEntityOfType
 import org.hexworks.amethyst.api.Attribute
+import org.hexworks.cobalt.datatypes.extensions.map
+import org.hexworks.zircon.internal.extensions.getIfPresent
 
-class Equipment(val eligibleSlots: List<EquipmentSlot>, val initialEquipment: MutableMap<EquipmentSlot, GameEntity<Item>?>) : Attribute {
+/**
+ * eligibleSlots: The list of [EquipmentType] that an [Entity] can equip
+ * initialEquipment: The list of [EquipmentSlot] that are already equipped.
+ */
+class Equipment(val equipment: List<Equipment.EquipmentSlot>) : Attribute {
 
-    private var slots: MutableMap<EquipmentSlot, GameEntity<Item>?> = initialEquipment
 
-    fun getItemBySlot(slot: EquipmentSlot): GameEntity<Item>? {
-        if (eligibleSlots.contains(slot).not()) {
-            return null
-        }
-        return slots[slot]
-    }
-
-    fun equipItem(inventory: Inventory, slot: EquipmentSlot, newEquipment: GameEntity<Item>) {
-        // If the equipment can't handle the slot we are trying to equip, do nothing
-        if (eligibleSlots.contains(slot).not()) {
-            return
-        } else {
-            unequipItem(inventory, slot)
-            slots[slot] = newEquipment
+    fun getItemsByType(type: EquipmentType): List<GameEntity<Item>> {
+        return equipment.filter {
+            it.type == type
+        }.map {
+            it.equippedItem
         }
     }
 
-    fun unequipItem(inventory: Inventory, slot: EquipmentSlot) {
-        // If the equipment can't support the slot we are trying to unequip, do nothing
-        if (eligibleSlots.contains(slot).not()) {
-            return
+    fun getSlotsByType(type: EquipmentType): List<EquipmentSlot> {
+        return equipment.filter { it.type == type }
+    }
+
+    fun equipItem(inventory: Inventory, type: EquipmentType, item: GameEntity<Item>) {
+        getSlotsByType(type).getIfPresent(0).map {
+            val oldItem = it.equippedItem
+            if (oldItem.type == NoItem) {
+                it.equippedItem = item
+            } else {
+                unequip(inventory, it)
+                it.equippedItem = item
+            }
         }
-        val oldItem: GameEntity<Item>? = slots[slot]
-        if (oldItem != null) {
+    }
+
+    fun unequip(inventory: Inventory, equipmentSlot: EquipmentSlot) {
+        val oldItem: GameEntity<Item> = equipmentSlot.equippedItem
+        if (oldItem.type != NoItem) {
             inventory.addItem(oldItem)
-            slots[slot] = null
+            equipmentSlot.equippedItem = EntityFactory.noItem()
         }
     }
 
-    enum class EquipmentSlot {
-        ONE_HAND,
+    data class EquipmentSlot(var type: EquipmentType) {
+        var disabled: Boolean = false
+        var equippedItem: GameEntity<Item> = newGameEntityOfType(NoItem) { attributes() }
+    }
+
+    enum class EquipmentType {
+        HAND,
         TWO_HAND,
-        OFF_HAND,
         HEAD,
         BODY,
-        LEFT_RIGHT,
-        RIGHT_RING,
+        RING,
         AMULET,
         TOOL
     }

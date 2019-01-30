@@ -81,4 +81,8 @@ object EntityFactory {
                 EntityTile(GameTileBuilder.sword()),
                 EntityPosition())
     }
+
+    fun noItem() = newGameEntityOfType(NoItem) {
+        attributes()
+    }
 }
