@@ -1,7 +1,11 @@
 <configuration debug="true">
+
+    <property name="defaultPattern"
+              value="%d{HH:mm:ss.SSS} session_id=${session.id} %-5level %logger{36} - %msg%n" />
+
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <pattern>${defaultPattern}</pattern>
         </encoder>
     </appender>
 
@@ -16,12 +20,16 @@
             <maxFileSize>10MB</maxFileSize>
         </triggeringPolicy>
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <pattern>${defaultPattern}</pattern>
         </encoder>
     </appender>
 
     <root level="DEBUG">
         <appender-ref ref="FILE" />
     </root>
+
+    <logger name="com.jscisco.lom" level="info" additivity="true">
+        <appender-ref ref="STDOUT" />
+    </logger>
 
 </configuration>
