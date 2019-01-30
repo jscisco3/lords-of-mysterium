@@ -30,15 +30,13 @@ class Equipment(val equipment: List<Equipment.EquipmentSlot>) : Attribute {
         return equipment.filter { it.type == type }
     }
 
-    fun equipItem(inventory: Inventory, type: EquipmentType, item: GameEntity<Item>) {
-        getSlotsByType(type).getIfPresent(0).map {
-            val oldItem = it.equippedItem
-            if (oldItem.type == NoItem) {
-                it.equippedItem = item
-            } else {
-                unequip(inventory, it)
-                it.equippedItem = item
-            }
+    fun equipItem(inventory: Inventory, slot: EquipmentSlot, item: GameEntity<Item>) {
+        val oldItem = slot.equippedItem
+        if (oldItem.type == NoItem) {
+            slot.equippedItem = item
+        } else {
+            unequip(inventory, slot)
+            slot.equippedItem = item
         }
     }
 

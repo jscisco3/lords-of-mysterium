@@ -49,7 +49,7 @@ class TestEquipment {
 
         val inventory = Inventory(100)
 
-        equipment.equipItem(inventory, EquipmentType.HAND, sword)
+        equipment.equipItem(inventory, eligibleSlots.filter { it.type == EquipmentType.HAND }[0], sword)
 
         Assertions.assertThat(equipment.getSlotsByType(EquipmentType.HAND)[0].equippedItem).isEqualTo(sword)
     }
@@ -66,11 +66,11 @@ class TestEquipment {
 
         val inventory = Inventory(100)
 
-        equipment.equipItem(inventory, EquipmentType.HAND, sword1)
+        equipment.equipItem(inventory, equipment.equipment.filter { it.type == EquipmentType.HAND }[0], sword1)
         Assertions.assertThat(inventory.items.size).isEqualTo(0)
         Assertions.assertThat(equipment.getItemsByType(EquipmentType.HAND)[0]).isEqualTo(sword1)
 
-        equipment.equipItem(inventory, EquipmentType.HAND, sword2)
+        equipment.equipItem(inventory, equipment.equipment.filter { it.type == EquipmentType.HAND }[0], sword2)
         // The sword should be put back in to the inventory
         Assertions.assertThat(inventory.items.size).isEqualTo(1)
         Assertions.assertThat(equipment.getItemsByType(EquipmentType.HAND)[0]).isEqualTo(sword2)
