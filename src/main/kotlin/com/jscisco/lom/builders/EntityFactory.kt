@@ -11,10 +11,7 @@ import com.jscisco.lom.dungeon.Dungeon
 import com.jscisco.lom.entities.FogOfWar
 import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.newGameEntityOfType
-import com.jscisco.lom.systems.CombatSystem
-import com.jscisco.lom.systems.ItemDropperSystem
-import com.jscisco.lom.systems.ItemPickerSystem
-import com.jscisco.lom.systems.OpenDoorSystem
+import com.jscisco.lom.systems.*
 import org.hexworks.zircon.api.data.impl.Size3D
 import java.util.*
 
@@ -42,7 +39,9 @@ object EntityFactory {
                 EntityActions(AttackCommand::class, ToggleDoorCommand::class))
         facets(ItemPickerSystem,
                 ItemDropperSystem,
-                CombatSystem)
+                CombatSystem,
+                MoveSystem,
+                OpenDoorSystem)
 
     }
 
@@ -59,7 +58,8 @@ object EntityFactory {
                 HealthAttribute.create(20),
                 BlockOccupier,
                 EntityPosition())
-        facets(CombatSystem)
+        facets(CombatSystem,
+                MoveSystem)
     }
 
     fun newWall() = newGameEntityOfType(Wall) {

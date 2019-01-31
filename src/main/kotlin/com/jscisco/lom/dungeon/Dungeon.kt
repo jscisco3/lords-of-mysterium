@@ -7,11 +7,14 @@ import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.builders.GameBlockFactory
 import com.jscisco.lom.commands.DropItemCommand
+import com.jscisco.lom.commands.MoveCommand
 import com.jscisco.lom.commands.PickItemUpCommand
+import com.jscisco.lom.events.DoorOpenedEvent
+import com.jscisco.lom.events.EntityMovedEvent
 import com.jscisco.lom.events.GameLogEvent
-import com.jscisco.lom.events.MoveEntityEvent
 import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.filterType
+import com.jscisco.lom.extensions.isPlayer
 import com.jscisco.lom.extensions.position
 import com.jscisco.lom.view.dialog.InventoryDialog
 import org.hexworks.amethyst.api.Engines.newEngine
@@ -21,6 +24,7 @@ import org.hexworks.cobalt.datatypes.Identifier
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.cobalt.datatypes.extensions.fold
 import org.hexworks.cobalt.datatypes.extensions.map
+import org.hexworks.cobalt.events.api.subscribe
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.Positions
@@ -61,12 +65,24 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         }
 
         logger.info("Registering dungeon events...")
-        DungeonEvents.registerEvents()
+        registerEvents()
         calculateResistanceMap(resistanceMap)
 
         addEntity(player, Position3D.create(12, 12, 0))
         addDungeonEntity(EntityFactory.newFogOfWar(this, player, actualSize))
         updateCamera()
+    }
+
+    private fun registerEvents() {
+        Zircon.eventBus.subscribe<EntityMovedEvent> { (entity, position) ->
+            if (entity.isPlayer) {
+                updateCamera()
+            }
+        }
+
+        Zircon.eventBus.subscribe<DoorOpenedEvent>() {
+            calculateResistanceMap(resistanceMap)
+        }
     }
 
     fun calculateResistanceMap(resistanceMap: Array<DoubleArray>) {
@@ -82,20 +98,20 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     fun handleInput(context: GameContext) {
         context.input.whenKeyStroke { ks ->
             when (ks.inputType()) {
-                InputType.ArrowUp -> Zircon.eventBus.publish(MoveEntityEvent(context, player, player.position.withRelativeY(-1)))
-                InputType.ArrowDown -> Zircon.eventBus.publish(MoveEntityEvent(context, player, player.position.withRelativeY(1)))
-                InputType.ArrowLeft -> Zircon.eventBus.publish(MoveEntityEvent(context, player, player.position.withRelativeX(-1)))
-                InputType.ArrowRight -> Zircon.eventBus.publish(MoveEntityEvent(context, player, player.position.withRelativeX(1)))
+                InputType.ArrowUp -> player.executeCommand(MoveCommand(context, player, player.position.withRelativeY(-1)))
+                InputType.ArrowDown -> player.executeCommand(MoveCommand(context, player, player.position.withRelativeY(1)))
+                InputType.ArrowLeft -> player.executeCommand(MoveCommand(context, player, player.position.withRelativeX(-1)))
+                InputType.ArrowRight -> player.executeCommand(MoveCommand(context, player, player.position.withRelativeX(1)))
                 else -> Unit
             }
             when (ks.getCharacter()) {
                 ',' -> player.executeCommand(PickItemUpCommand(context = context, source = player, position = entityPositionLookup[player.id]!!))
                 'i' -> context.screen.openModal(InventoryDialog(context))
                 'd' -> if (player.inventory.items.lastOrNull() != null) {
-                    player.executeCommand(DropItemCommand(context, context.player, player.inventory.items.last(), entityPositionLookup[player.id]!!))
+                    player.executeCommand(DropItemCommand(context, player, player.inventory.items.last(), entityPositionLookup[player.id]!!))
                 }
                 'g' -> fetchEntitiesAt(Position3D.create(10, 10, 0)).map {
-                    Zircon.eventBus.publish(MoveEntityEvent(context, it, Position3D.create(30, 30, 0)))
+                    player.executeCommand(MoveCommand(context, it, Position3D.create(30, 30, 0)))
                 }
                 'z' -> Zircon.eventBus.publish(GameLogEvent("a really really really really really really really really long log message"))
             }
@@ -103,7 +119,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         engine.update(context)
     }
 
-    fun updateCamera() {
+    private fun updateCamera() {
         val screenPosition = findPositionOf(player).get() - visibleOffset()
         val halfHeight = visibleSize.yLength / 2
         val halfWidth = visibleSize.xLength / 2

@@ -14,7 +14,6 @@ import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.GameComponents
-import org.hexworks.zircon.api.Sizes
 import org.hexworks.zircon.api.component.ComponentAlignment
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.game.ProjectionMode
@@ -27,11 +26,6 @@ class DungeonView(private val dungeon: Dungeon) : BaseView() {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     override fun onDock() {
-        /**
-         * Input crap
-         */
-        val logAreaHeight = screen.size.height - dungeon.visibleSize().yLength
-
 
         screen.onInput {
             dungeon.handleInput(GameContext(
@@ -40,7 +34,6 @@ class DungeonView(private val dungeon: Dungeon) : BaseView() {
                     input = it,
                     player = dungeon.player
             ))
-//            dungeon.updateFOV()
         }
 
         val sidebar = Components.panel()

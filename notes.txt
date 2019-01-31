@@ -1,3 +1,9 @@
+Commands are used for state changes
+Events are statements of fact about what change has been made to the state
+There should be a single command handler per command
+Commands can emit any number of Events
+
+
 What events exist and how does everything work together?
 - DamageEvent ([Target] takes [Amount] of damage from [Source])
 - OnHitEvent ([Target] hit by [Source])
