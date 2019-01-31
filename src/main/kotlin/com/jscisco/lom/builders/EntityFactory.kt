@@ -33,6 +33,17 @@ object EntityFactory {
                 HealthAttribute.create(100),
                 BlockOccupier,
                 Inventory(maxWeight = 100),
+                Equipment(listOf(
+                        Equipment.EquipmentSlot(Equipment.EquipmentType.HEAD),
+                        Equipment.EquipmentSlot(Equipment.EquipmentType.AMULET),
+                        Equipment.EquipmentSlot(Equipment.EquipmentType.HAND),
+                        Equipment.EquipmentSlot(Equipment.EquipmentType.HAND),
+                        Equipment.EquipmentSlot(Equipment.EquipmentType.BODY),
+                        Equipment.EquipmentSlot(Equipment.EquipmentType.RING),
+                        Equipment.EquipmentSlot(Equipment.EquipmentType.RING),
+                        Equipment.EquipmentSlot(Equipment.EquipmentType.BOOTS),
+                        Equipment.EquipmentSlot(Equipment.EquipmentType.TOOL)
+                )),
                 EntityTile(GameTileBuilder.PLAYER),
                 EntityPosition(),
                 FieldOfView(),

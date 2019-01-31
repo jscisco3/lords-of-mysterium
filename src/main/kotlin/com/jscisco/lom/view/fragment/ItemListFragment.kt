@@ -49,12 +49,4 @@ class ItemListFragment(inventory: Inventory, width: Int) : Fragment {
                         .withText("Items"))
                 addComponent(rgb)
             }
-
-
-//    companion object {
-//        private val NO_ITEM = newGameEntityOfType(NoItem) {
-//            attributes()
-//        }
-//    }
-
 }

@@ -6,10 +6,9 @@ import com.jscisco.lom.attributes.types.Item
 import com.jscisco.lom.attributes.types.NoItem
 import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.extensions.GameEntity
+import com.jscisco.lom.extensions.entityName
 import com.jscisco.lom.extensions.newGameEntityOfType
 import org.hexworks.amethyst.api.Attribute
-import org.hexworks.cobalt.datatypes.extensions.map
-import org.hexworks.zircon.internal.extensions.getIfPresent
 
 /**
  * eligibleSlots: The list of [EquipmentType] that an [Entity] can equip
@@ -51,15 +50,22 @@ class Equipment(val equipment: List<Equipment.EquipmentSlot>) : Attribute {
     data class EquipmentSlot(var type: EquipmentType) {
         var disabled: Boolean = false
         var equippedItem: GameEntity<Item> = newGameEntityOfType(NoItem) { attributes() }
+
+        override fun toString(): String {
+            return "$type - ${equippedItem.entityName}"
+        }
+
+
     }
 
     enum class EquipmentType {
-        HAND,
-        TWO_HAND,
         HEAD,
+        AMULET,
+        HAND,
         BODY,
         RING,
-        AMULET,
-        TOOL
+        BOOTS,
+        TOOL,
+        TWO_HAND
     }
 }
