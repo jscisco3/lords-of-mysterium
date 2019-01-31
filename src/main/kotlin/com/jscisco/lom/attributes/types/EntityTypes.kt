@@ -8,7 +8,9 @@ import com.jscisco.lom.extensions.attribute
 import org.hexworks.amethyst.api.base.BaseEntityType
 import org.hexworks.amethyst.api.entity.EntityType
 
-object Player : BaseEntityType(), ItemHolder, Combatant
+object Player : BaseEntityType(
+        name = "player"
+), ItemHolder, Combatant
 
 object NPC : BaseEntityType(
         name = "npc"

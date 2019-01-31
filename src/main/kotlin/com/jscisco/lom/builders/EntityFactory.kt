@@ -96,8 +96,11 @@ object EntityFactory {
         facets(OpenDoorSystem)
     }
 
-    fun newSword() = newGameEntityOfType(Sword) {
+    fun newSword() = newGameEntityOfType(EquipmentEntityType) {
         attributes(
+                NameAttribute(
+                        name = "A Cool Sword"
+                ),
                 CombatStats(
                         power = 5,
                         toHit = 5),

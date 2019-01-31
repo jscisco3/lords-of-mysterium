@@ -4,8 +4,7 @@ import com.jscisco.lom.attributes.EquipmentAttribute
 import com.jscisco.lom.attributes.types.ItemHolder
 import com.jscisco.lom.attributes.types.inventory
 import com.jscisco.lom.extensions.GameEntity
-import org.hexworks.cobalt.databinding.api.createPropertyFrom
-import org.hexworks.cobalt.databinding.api.expression.concatWithConvert
+import com.jscisco.lom.view.fragment.converters.AnyGameEntityConverter
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.Components
@@ -45,16 +44,12 @@ class EquipmentFragment(private val entity: GameEntity<ItemHolder>, private val 
                             }
                     )
 
-//                    val eqProp = createPropertyFrom(eq.equippedItem.entityName)
 
                     equipmentNamePanel.addComponent(Components.label()
                             .withSize(width, 1)
                             .withPosition(0, index)
                             .build().also {
-                                it.textProperty.bind(
-                                        createPropertyFrom("")
-                                                .concatWithConvert(eq.equippedItemProperty)
-                                )
+                                it.textProperty.bind(eq.equippedItemProperty, AnyGameEntityConverter())
                                 logger.info("In build.also: " + eq.equippedItemProperty.value)
                             }
                     )
@@ -62,4 +57,5 @@ class EquipmentFragment(private val entity: GameEntity<ItemHolder>, private val 
                 addComponent(equipmentTypePanel)
                 addComponent(equipmentNamePanel)
             }
+
 }

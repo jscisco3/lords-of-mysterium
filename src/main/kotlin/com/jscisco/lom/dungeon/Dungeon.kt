@@ -2,6 +2,7 @@ package com.jscisco.lom.dungeon
 
 import com.jscisco.lom.attributes.types.Item
 import com.jscisco.lom.attributes.types.Player
+import com.jscisco.lom.attributes.types.health
 import com.jscisco.lom.attributes.types.inventory
 import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.builders.EntityFactory
@@ -11,7 +12,6 @@ import com.jscisco.lom.commands.MoveCommand
 import com.jscisco.lom.commands.PickItemUpCommand
 import com.jscisco.lom.events.DoorOpenedEvent
 import com.jscisco.lom.events.EntityMovedEvent
-import com.jscisco.lom.events.GameLogEvent
 import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.filterType
 import com.jscisco.lom.extensions.isPlayer
@@ -115,7 +115,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
                 'g' -> fetchEntitiesAt(Position3D.create(10, 10, 0)).map {
                     player.executeCommand(MoveCommand(context, it, Position3D.create(30, 30, 0)))
                 }
-                'z' -> Zircon.eventBus.publish(GameLogEvent("a really really really really really really really really long log message"))
+                'z' -> player.health.hpProperty.value -= 5
             }
         }
         engine.update(context)

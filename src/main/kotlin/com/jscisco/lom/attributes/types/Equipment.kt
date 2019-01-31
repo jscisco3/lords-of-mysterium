@@ -3,7 +3,9 @@ package com.jscisco.lom.attributes.types
 import com.jscisco.lom.attributes.EquippableAttribute
 import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.attribute
+import com.jscisco.lom.extensions.entityName
 import com.jscisco.lom.extensions.newGameEntityOfType
+import org.hexworks.cobalt.databinding.api.converter.Converter
 import org.hexworks.cobalt.databinding.api.createPropertyFrom
 import org.hexworks.cobalt.databinding.api.property.Property
 
