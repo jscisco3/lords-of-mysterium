@@ -25,8 +25,8 @@ object EntityFactory {
 
     fun newPlayer() = newGameEntityOfType(Player) {
         attributes(Player,
-                NameAttribute("The Greatest Thief in the Multiverse"),
-                StatBlockAttribute(
+                NameAttribute("Generic Hero"),
+                StatBlockAttribute.create(
                         strength = 10,
                         intelligence = 8,
                         constitution = 12,
@@ -48,6 +48,14 @@ object EntityFactory {
 
     fun newGoblin() = newGameEntityOfType(NPC) {
         attributes(EntityTile(GameTileBuilder.GOBLIN),
+                NameAttribute("Snuggle Muffin"),
+                StatBlockAttribute.create(
+                        strength = 10,
+                        intelligence = 8,
+                        constitution = 12,
+                        agility = 5,
+                        perception = 6
+                ),
                 HealthAttribute.create(20),
                 BlockOccupier,
                 EntityPosition())

@@ -1,9 +1,6 @@
 package com.jscisco.lom.extensions
 
-import com.jscisco.lom.attributes.EntityActions
-import com.jscisco.lom.attributes.EntityPosition
-import com.jscisco.lom.attributes.EntityTile
-import com.jscisco.lom.attributes.NameAttribute
+import com.jscisco.lom.attributes.*
 import com.jscisco.lom.attributes.flags.BlockOccupier
 import com.jscisco.lom.attributes.flags.VisionBlocker
 import com.jscisco.lom.attributes.types.Player
@@ -46,6 +43,18 @@ val AnyGameEntity.isWall: Boolean
 
 val AnyGameEntity.nameAttribute: NameAttribute
     get() = attribute()
+
+val AnyGameEntity.statBlock: StatBlockAttribute
+    get() = attribute()
+
+val AnyGameEntity.entityName: String
+    get() {
+        return try {
+            this.nameAttribute.name
+        } catch (e: NoSuchElementException) {
+            this.name
+        }
+    }
 
 inline fun <reified T : Attribute> AnyGameEntity.attribute(): T = findAttribute(T::class).orElseThrow {
     NoSuchElementException("Entity '$this' has no property with type '${T::class.simpleName}'.")

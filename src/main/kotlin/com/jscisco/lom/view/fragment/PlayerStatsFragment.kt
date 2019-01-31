@@ -5,6 +5,7 @@ import com.jscisco.lom.attributes.types.health
 import com.jscisco.lom.configuration.GameConfiguration.SIDEBAR_WIDTH
 import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.nameAttribute
+import com.jscisco.lom.extensions.statBlock
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.Fragment
@@ -21,11 +22,17 @@ class PlayerStatsFragment(player: GameEntity<Player>) : Fragment {
         healthComponent.moveDownBy(componentHeight)
         componentHeight += healthComponent.height
 
+        val statBlockComponent = player.statBlock.toComponent(SIDEBAR_WIDTH)
+        statBlockComponent.moveDownBy(componentHeight)
+        componentHeight += statBlockComponent.height
+
+
         Components.panel()
                 .withSize(SIDEBAR_WIDTH, componentHeight + 2)
                 .build().apply {
                     addComponent(nameComponent)
                     addComponent(healthComponent)
+                    addComponent(statBlockComponent)
                 }
     }
 
