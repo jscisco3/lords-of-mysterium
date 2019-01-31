@@ -34,19 +34,15 @@ object EntityFactory {
                 BlockOccupier,
                 Inventory(maxWeight = 100),
                 EquipmentAttribute(listOf(
-                        EquipmentSlot(EquipmentType.HEAD),
-                        EquipmentSlot(EquipmentType.AMULET),
-                        EquipmentSlot(EquipmentType.HAND).also {
-                            it.equippedItem = newSword()
-                        },
-                        EquipmentSlot(EquipmentType.HAND).also {
-                            it.equippedItem = newSword()
-                        },
-                        EquipmentSlot(EquipmentType.BODY),
-                        EquipmentSlot(EquipmentType.RING),
-                        EquipmentSlot(EquipmentType.RING),
-                        EquipmentSlot(EquipmentType.BOOTS),
-                        EquipmentSlot(EquipmentType.TOOL)
+                        EquipmentSlot.create(EquipmentType.HEAD),
+                        EquipmentSlot.create(EquipmentType.AMULET),
+                        EquipmentSlot.create(EquipmentType.HAND, newSword()),
+                        EquipmentSlot.create(EquipmentType.HAND, newSword()),
+                        EquipmentSlot.create(EquipmentType.BODY),
+                        EquipmentSlot.create(EquipmentType.RING),
+                        EquipmentSlot.create(EquipmentType.RING),
+                        EquipmentSlot.create(EquipmentType.BOOTS),
+                        EquipmentSlot.create(EquipmentType.TOOL)
                 )),
                 EntityTile(GameTileBuilder.PLAYER),
                 EntityPosition(),
@@ -115,6 +111,10 @@ object EntityFactory {
     }
 
     fun noItem() = newGameEntityOfType(NoItem) {
+        attributes()
+    }
+
+    fun noEquipment() = newGameEntityOfType(NoEquipment) {
         attributes()
     }
 }

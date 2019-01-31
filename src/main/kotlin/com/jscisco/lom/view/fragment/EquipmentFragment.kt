@@ -4,7 +4,10 @@ import com.jscisco.lom.attributes.EquipmentAttribute
 import com.jscisco.lom.attributes.types.ItemHolder
 import com.jscisco.lom.attributes.types.inventory
 import com.jscisco.lom.extensions.GameEntity
-import com.jscisco.lom.extensions.entityName
+import org.hexworks.cobalt.databinding.api.createPropertyFrom
+import org.hexworks.cobalt.databinding.api.expression.concatWithConvert
+import org.hexworks.cobalt.logging.api.Logger
+import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.ComponentAlignment
@@ -17,6 +20,7 @@ import org.hexworks.zircon.api.kotlin.onMouseReleased
 class EquipmentFragment(private val entity: GameEntity<ItemHolder>, private val equipmentAttribute: EquipmentAttribute, width: Int) : Fragment {
 
     val height = equipmentAttribute.equipmentSlots.size
+    private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     override val root: Component = Components.panel()
             .withSize(width, height)
@@ -40,10 +44,19 @@ class EquipmentFragment(private val entity: GameEntity<ItemHolder>, private val 
                                 }
                             }
                     )
+
+//                    val eqProp = createPropertyFrom(eq.equippedItem.entityName)
+
                     equipmentNamePanel.addComponent(Components.label()
-                            .withText(eq.equippedItem.entityName)
+                            .withSize(width, 1)
                             .withPosition(0, index)
-                            .build()
+                            .build().also {
+                                it.textProperty.bind(
+                                        createPropertyFrom("")
+                                                .concatWithConvert(eq.equippedItemProperty)
+                                )
+                                logger.info("In build.also: " + eq.equippedItemProperty.value)
+                            }
                     )
                 }
                 addComponent(equipmentTypePanel)

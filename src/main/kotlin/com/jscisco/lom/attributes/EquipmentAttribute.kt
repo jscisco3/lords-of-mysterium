@@ -1,9 +1,6 @@
 package com.jscisco.lom.attributes
 
-import com.jscisco.lom.attributes.types.EquipmentSlot
-import com.jscisco.lom.attributes.types.EquipmentType
-import com.jscisco.lom.attributes.types.Item
-import com.jscisco.lom.attributes.types.NoItem
+import com.jscisco.lom.attributes.types.*
 import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.extensions.GameEntity
 import org.hexworks.amethyst.api.Attribute
@@ -27,9 +24,9 @@ class EquipmentAttribute(val equipmentSlots: List<EquipmentSlot>) : Attribute {
         return equipmentSlots.filter { it.type == type }
     }
 
-    fun equipItemToSlot(inventory: Inventory, slot: EquipmentSlot, item: GameEntity<Item>) {
+    fun equipItemToSlot(inventory: Inventory, slot: EquipmentSlot, item: GameEntity<Equipment>) {
         val oldItem = slot.equippedItem
-        if (oldItem.type == NoItem) {
+        if (oldItem.type == NoEquipment) {
             slot.equippedItem = item
         } else {
             unequip(inventory, slot)
@@ -41,7 +38,7 @@ class EquipmentAttribute(val equipmentSlots: List<EquipmentSlot>) : Attribute {
         val oldItem: GameEntity<Item> = equipmentSlot.equippedItem
         if (oldItem.type != NoItem) {
             inventory.addItem(oldItem)
-            equipmentSlot.equippedItem = EntityFactory.noItem()
+            equipmentSlot.equippedItem = EntityFactory.noEquipment()
         }
     }
 }
