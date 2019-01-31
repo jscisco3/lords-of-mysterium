@@ -10,6 +10,9 @@ data class NameAttribute(val name: String) : DisplayableAttribute {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     override fun toComponent(width: Int): Component {
-        return Components.paragraph().withText(name).build()
+        return Components.textBox()
+                .withContentWidth(width)
+                .addParagraph(name, withNewLine = false)
+                .build()
     }
 }

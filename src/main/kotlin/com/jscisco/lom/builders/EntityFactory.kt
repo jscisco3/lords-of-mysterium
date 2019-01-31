@@ -25,7 +25,7 @@ object EntityFactory {
 
     fun newPlayer() = newGameEntityOfType(Player) {
         attributes(Player,
-                NameAttribute("Generic Hero"),
+                NameAttribute("The Greatest Thief in the Multiverse"),
                 StatBlockAttribute.create(
                         strength = 10,
                         intelligence = 8,
