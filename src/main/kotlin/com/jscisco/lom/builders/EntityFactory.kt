@@ -33,16 +33,20 @@ object EntityFactory {
                 HealthAttribute.create(100),
                 BlockOccupier,
                 Inventory(maxWeight = 100),
-                Equipment(listOf(
-                        Equipment.EquipmentSlot(Equipment.EquipmentType.HEAD),
-                        Equipment.EquipmentSlot(Equipment.EquipmentType.AMULET),
-                        Equipment.EquipmentSlot(Equipment.EquipmentType.HAND),
-                        Equipment.EquipmentSlot(Equipment.EquipmentType.HAND),
-                        Equipment.EquipmentSlot(Equipment.EquipmentType.BODY),
-                        Equipment.EquipmentSlot(Equipment.EquipmentType.RING),
-                        Equipment.EquipmentSlot(Equipment.EquipmentType.RING),
-                        Equipment.EquipmentSlot(Equipment.EquipmentType.BOOTS),
-                        Equipment.EquipmentSlot(Equipment.EquipmentType.TOOL)
+                EquipmentAttribute(listOf(
+                        EquipmentSlot(EquipmentType.HEAD),
+                        EquipmentSlot(EquipmentType.AMULET),
+                        EquipmentSlot(EquipmentType.HAND).also {
+                            it.equippedItem = newSword()
+                        },
+                        EquipmentSlot(EquipmentType.HAND).also {
+                            it.equippedItem = newSword()
+                        },
+                        EquipmentSlot(EquipmentType.BODY),
+                        EquipmentSlot(EquipmentType.RING),
+                        EquipmentSlot(EquipmentType.RING),
+                        EquipmentSlot(EquipmentType.BOOTS),
+                        EquipmentSlot(EquipmentType.TOOL)
                 )),
                 EntityTile(GameTileBuilder.PLAYER),
                 EntityPosition(),
@@ -105,6 +109,7 @@ object EntityFactory {
                         weight = 1,
                         cost = 10
                 ),
+                EquippableAttribute(EquipmentType.HAND),
                 EntityTile(GameTileBuilder.sword()),
                 EntityPosition())
     }

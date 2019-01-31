@@ -12,12 +12,12 @@ class EquipmentDialog(context: GameContext) : Dialog(screen = context.screen) {
     val equipment = context.player.equipment
 
     override val container: Container = Components.panel()
-            .withTitle("Equipment")
-            .withSize(40, equipment.equipment.size + 2)
+            .withTitle("EquipmentAttribute")
+            .withSize(40, equipment.equipmentSlots.size + 2)
             .withBoxType(BoxType.SINGLE)
             .wrapWithBox()
             .build().also { equipmentPanel ->
-                val equipmentFragment = EquipmentFragment(equipment, 30)
+                val equipmentFragment = EquipmentFragment(context.player, equipment, 30)
                 equipmentPanel.addFragment(equipmentFragment)
             }
 }

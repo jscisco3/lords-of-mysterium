@@ -1,24 +1,22 @@
 package com.jscisco.lom.attributes
 
-import com.jscisco.lom.attributes.Equipment.EquipmentSlot
-import com.jscisco.lom.attributes.Equipment.EquipmentType
+import com.jscisco.lom.attributes.types.EquipmentSlot
+import com.jscisco.lom.attributes.types.EquipmentType
 import com.jscisco.lom.attributes.types.Item
 import com.jscisco.lom.attributes.types.NoItem
 import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.extensions.GameEntity
-import com.jscisco.lom.extensions.entityName
-import com.jscisco.lom.extensions.newGameEntityOfType
 import org.hexworks.amethyst.api.Attribute
 
 /**
  * eligibleSlots: The list of [EquipmentType] that an [Entity] can equip
  * initialEquipment: The list of [EquipmentSlot] that are already equipped.
  */
-class Equipment(val equipment: List<Equipment.EquipmentSlot>) : Attribute {
+class EquipmentAttribute(val equipmentSlots: List<EquipmentSlot>) : Attribute {
 
 
     fun getItemsByType(type: EquipmentType): List<GameEntity<Item>> {
-        return equipment.filter {
+        return equipmentSlots.filter {
             it.type == type
         }.map {
             it.equippedItem
@@ -26,10 +24,10 @@ class Equipment(val equipment: List<Equipment.EquipmentSlot>) : Attribute {
     }
 
     fun getSlotsByType(type: EquipmentType): List<EquipmentSlot> {
-        return equipment.filter { it.type == type }
+        return equipmentSlots.filter { it.type == type }
     }
 
-    fun equipItem(inventory: Inventory, slot: EquipmentSlot, item: GameEntity<Item>) {
+    fun equipItemToSlot(inventory: Inventory, slot: EquipmentSlot, item: GameEntity<Item>) {
         val oldItem = slot.equippedItem
         if (oldItem.type == NoItem) {
             slot.equippedItem = item
@@ -45,27 +43,5 @@ class Equipment(val equipment: List<Equipment.EquipmentSlot>) : Attribute {
             inventory.addItem(oldItem)
             equipmentSlot.equippedItem = EntityFactory.noItem()
         }
-    }
-
-    data class EquipmentSlot(var type: EquipmentType) {
-        var disabled: Boolean = false
-        var equippedItem: GameEntity<Item> = newGameEntityOfType(NoItem) { attributes() }
-
-        override fun toString(): String {
-            return "$type - ${equippedItem.entityName}"
-        }
-
-
-    }
-
-    enum class EquipmentType {
-        HEAD,
-        AMULET,
-        HAND,
-        BODY,
-        RING,
-        BOOTS,
-        TOOL,
-        TWO_HAND
     }
 }
