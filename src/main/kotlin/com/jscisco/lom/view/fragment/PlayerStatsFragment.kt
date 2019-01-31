@@ -14,21 +14,23 @@ class PlayerStatsFragment(player: GameEntity<Player>) : Fragment {
 
     override val root: Component by lazy {
         var componentHeight = 0
+        val innerWidth = SIDEBAR_WIDTH - 2
 
-        val nameComponent = player.nameAttribute.toComponent(SIDEBAR_WIDTH)
+        val nameComponent = player.nameAttribute.toComponent(innerWidth)
         componentHeight += nameComponent.height
 
-        val healthComponent = player.health.toComponent(SIDEBAR_WIDTH)
+        val healthComponent = player.health.toComponent(innerWidth)
         healthComponent.moveDownBy(componentHeight)
         componentHeight += healthComponent.height
 
-        val statBlockComponent = player.statBlock.toComponent(SIDEBAR_WIDTH)
+        val statBlockComponent = player.statBlock.toComponent(innerWidth)
         statBlockComponent.moveDownBy(componentHeight)
         componentHeight += statBlockComponent.height
 
 
         Components.panel()
                 .withSize(SIDEBAR_WIDTH, componentHeight + 2)
+                .wrapWithBox()
                 .build().apply {
                     addComponent(nameComponent)
                     addComponent(healthComponent)

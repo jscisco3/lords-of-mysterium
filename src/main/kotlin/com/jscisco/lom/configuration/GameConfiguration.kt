@@ -16,7 +16,7 @@ object GameConfiguration {
     private const val FULL_SCREEN = false
 
     const val SIDEBAR_WIDTH = 18
-    const val LOG_AREA_HEIGHT = 8
+    const val LOG_AREA_HEIGHT = 16
 
     const val WINDOW_HEIGHT = 50
     const val WINDOW_WIDTH = 80

@@ -44,9 +44,7 @@ class DungeonView(private val dungeon: Dungeon) : BaseView() {
         }
 
         val sidebar = Components.panel()
-                // WINDOW_HEIGHT - 2 to handle wrapWithBox nicer
-                .withSize(SIDEBAR_WIDTH, WINDOW_HEIGHT - 2)
-                .wrapWithBox()
+                .withSize(SIDEBAR_WIDTH, WINDOW_HEIGHT)
                 .build()
         sidebar.addFragment(PlayerStatsFragment(dungeon.player))
 
@@ -60,12 +58,12 @@ class DungeonView(private val dungeon: Dungeon) : BaseView() {
         val logPanel = Components.panel()
                 .withSize(WINDOW_WIDTH - SIDEBAR_WIDTH, LOG_AREA_HEIGHT)
                 .withAlignmentWithin(screen, ComponentAlignment.BOTTOM_RIGHT)
+                .wrapWithBox()
+                .withTitle("Journal")
                 .build()
         val logArea = Components.logArea()
-                .withSize(logPanel.width, LOG_AREA_HEIGHT - 2)
-                .wrapWithBox()
+                .withSize(logPanel.width - 2, logPanel.height - 2)
                 .withAlignmentWithin(logPanel, ComponentAlignment.TOP_LEFT)
-                .withTitle("Journal")
                 .build()
         logPanel.addComponent(logArea)
 
