@@ -32,7 +32,9 @@ object EntityFactory {
                 ),
                 HealthAttribute.create(100),
                 BlockOccupier,
-                Inventory(maxWeight = 100),
+                Inventory(maxWeight = 100).also {
+                    it.addItem(newHelmet())
+                },
                 EquipmentAttribute(listOf(
                         EquipmentSlot.create(EquipmentType.HEAD),
                         EquipmentSlot.create(EquipmentType.AMULET),
@@ -52,7 +54,8 @@ object EntityFactory {
                 ItemDropperSystem,
                 CombatSystem,
                 MoveSystem,
-                OpenDoorSystem)
+                OpenDoorSystem,
+                EquipItemSystem)
 
     }
 
@@ -96,7 +99,7 @@ object EntityFactory {
         facets(OpenDoorSystem)
     }
 
-    fun newSword() = newGameEntityOfType(EquipmentEntityType) {
+    fun newSword() = newGameEntityOfType(Item) {
         attributes(
                 NameAttribute(
                         name = "A Cool Sword"
@@ -113,11 +116,36 @@ object EntityFactory {
                 EntityPosition())
     }
 
-    fun noItem() = newGameEntityOfType(NoItem) {
-        attributes()
+    fun newHelmet() = newGameEntityOfType(Item) {
+        attributes(
+                NameAttribute("A Helmet"),
+                EquippableAttribute(EquipmentType.HEAD),
+                EntityTile(GameTileBuilder.sword()),
+                EntityPosition()
+        )
     }
 
-    fun noEquipment() = newGameEntityOfType(NoEquipment) {
-        attributes()
+    fun noItem() = newGameEntityOfType(Item) {
+        attributes(
+                NameAttribute("No Item")
+        )
+    }
+
+    fun noEquipment() = newGameEntityOfType(Item) {
+        attributes(
+                NameAttribute("No Equipment")
+        )
+    }
+
+    val NO_ITEM = newGameEntityOfType(Item) {
+        attributes(
+                NameAttribute("No Item")
+        )
+    }
+
+    val NO_EQUIPMENT = newGameEntityOfType(Item) {
+        attributes(
+                NameAttribute("No Equipment")
+        )
     }
 }

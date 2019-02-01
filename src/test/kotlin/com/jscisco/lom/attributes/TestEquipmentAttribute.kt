@@ -2,24 +2,31 @@ package com.jscisco.lom.attributes
 
 import com.jscisco.lom.attributes.types.EquipmentSlot
 import com.jscisco.lom.attributes.types.EquipmentType
-import com.jscisco.lom.attributes.types.NoItem
+import com.jscisco.lom.attributes.types.Item
 import com.jscisco.lom.builders.EntityFactory
+import com.jscisco.lom.builders.EntityFactory.NO_ITEM
+import com.jscisco.lom.extensions.entityName
+import com.jscisco.lom.extensions.newGameEntityOfType
 import org.assertj.core.api.Assertions
+import org.hexworks.cobalt.logging.api.Logger
+import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TestEquipmentAttribute {
 
+    val logger: Logger = LoggerFactory.getLogger(javaClass)
+
     @Test
     fun testInitializeEquipmentNoInitialEquipment() {
         val eligibleSlots = listOf(
-                EquipmentSlot(EquipmentType.HAND),
-                EquipmentSlot(EquipmentType.HEAD)
+                EquipmentSlot.create(EquipmentType.HAND),
+                EquipmentSlot.create(EquipmentType.HEAD)
         )
         val equipmentAttribute: EquipmentAttribute = EquipmentAttribute(eligibleSlots)
 
-        Assertions.assertThat(equipmentAttribute.getItemsByType(EquipmentType.HAND).get(0).type).isEqualTo(NoItem)
+        Assertions.assertThat(equipmentAttribute.getItemsByType(EquipmentType.HAND).get(0).type).isEqualTo(NO_ITEM)
         Assertions.assertThat(equipmentAttribute.getItemsByType(EquipmentType.BODY).size).isEqualTo(0)
     }
 
@@ -28,10 +35,10 @@ class TestEquipmentAttribute {
         val sword = EntityFactory.newSword()
 
         val eligibleSlots = listOf(
-                EquipmentSlot(EquipmentType.HAND).also {
+                EquipmentSlot.create(EquipmentType.HAND).also {
                     it.equippedItem = sword
                 },
-                EquipmentSlot(EquipmentType.HEAD)
+                EquipmentSlot.create(EquipmentType.HEAD)
         )
 
         val equipmentAttribute: EquipmentAttribute = EquipmentAttribute(eligibleSlots)
@@ -41,8 +48,8 @@ class TestEquipmentAttribute {
     @Test
     fun testEquipItem() {
         val eligibleSlots = listOf(
-                EquipmentSlot(EquipmentType.HAND),
-                EquipmentSlot(EquipmentType.HEAD)
+                EquipmentSlot.create(EquipmentType.HAND),
+                EquipmentSlot.create(EquipmentType.HEAD)
         )
         val equipmentAttribute: EquipmentAttribute = EquipmentAttribute(eligibleSlots)
         val sword = EntityFactory.newSword()
@@ -56,21 +63,37 @@ class TestEquipmentAttribute {
 
     @Test
     fun testEquipItemIfItemAlreadyEquipped() {
+
+        val eqSlotHand = EquipmentSlot.create(EquipmentType.HAND)
+        val eqSlotHead = EquipmentSlot.create(EquipmentType.HEAD)
+
         val eligibleSlots = listOf(
-                EquipmentSlot(EquipmentType.HAND),
-                EquipmentSlot(EquipmentType.HEAD)
+                eqSlotHand,
+                eqSlotHead
         )
         val equipment = EquipmentAttribute(eligibleSlots)
-        val sword1 = EntityFactory.newSword()
-        val sword2 = EntityFactory.newSword()
+
+        val sword1 = newGameEntityOfType(Item) {
+            attributes(
+                    NameAttribute("Sword 1"),
+                    EquippableAttribute(EquipmentType.HAND)
+            )
+        }
+        val sword2 = newGameEntityOfType(Item) {
+            attributes(
+                    NameAttribute("Sword 2"),
+                    EquippableAttribute(EquipmentType.HAND)
+            )
+        }
 
         val inventory = Inventory(100)
 
-        equipment.equipItemToSlot(inventory, equipment.equipmentSlots.filter { it.type == EquipmentType.HAND }[0], sword1)
+        equipment.equipItemToSlot(inventory, eqSlotHand, sword1)
         Assertions.assertThat(inventory.items.size).isEqualTo(0)
         Assertions.assertThat(equipment.getItemsByType(EquipmentType.HAND)[0]).isEqualTo(sword1)
 
-        equipment.equipItemToSlot(inventory, equipment.equipmentSlots.filter { it.type == EquipmentType.HAND }[0], sword2)
+        equipment.equipItemToSlot(inventory, eqSlotHand, sword2)
+
         // The sword should be put back in to the inventory
         Assertions.assertThat(inventory.items.size).isEqualTo(1)
         Assertions.assertThat(equipment.getItemsByType(EquipmentType.HAND)[0]).isEqualTo(sword2)

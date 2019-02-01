@@ -4,6 +4,7 @@ import com.jscisco.lom.attributes.Inventory
 import com.jscisco.lom.attributes.types.Item
 import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.extensions.GameEntity
+import com.jscisco.lom.extensions.entityName
 import org.hexworks.cobalt.databinding.api.createPropertyFrom
 import org.hexworks.cobalt.databinding.api.property.Property
 import org.hexworks.cobalt.datatypes.Maybe
@@ -38,7 +39,7 @@ class ItemListFragment(inventory: Inventory, width: Int) : Fragment {
                         .withPosition(0, 2)
                         .build()
                 inventory.items.forEach { item ->
-                    rgb.addOption(item.id.toString(), item.name)
+                    rgb.addOption(item.id.toString(), item.entityName)
                 }
                 rgb.onSelection {
                     inventory.findItemById(IdentifierFactory.fromString(it.key)).map { item ->

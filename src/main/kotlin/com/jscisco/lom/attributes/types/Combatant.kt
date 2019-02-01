@@ -12,7 +12,7 @@ interface Combatant : EntityType
 val GameEntity<Combatant>.combatStats: CombatStats
     get() = attribute()
 
-val GameEntity<Combatant>.equipment: EquipmentAttribute
+val GameEntity<ItemHolder>.equipment: EquipmentAttribute
     get() = attribute()
 
 val GameEntity<Combatant>.health: HealthAttribute

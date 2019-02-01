@@ -35,13 +35,18 @@ class EquipmentFragment(private val entity: GameEntity<ItemHolder>, private val 
 
                 equipmentAttribute.equipmentSlots.forEachIndexed { index, eq ->
                     equipmentTypePanel.addComponent(Components.button()
-                            .withText(eq.type.name)
+                            .withText("U")
                             .withPosition(0, index)
                             .build().apply {
                                 onMouseReleased {
                                     equipmentAttribute.unequip(entity.inventory, eq)
                                 }
                             }
+                    )
+                    equipmentTypePanel.addComponent(Components.label()
+                            .withText(eq.type.name)
+                            .withPosition(7, index)
+                            .build()
                     )
 
 

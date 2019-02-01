@@ -2,6 +2,7 @@ package com.jscisco.lom.view.dialog
 
 import com.jscisco.lom.attributes.types.inventory
 import com.jscisco.lom.commands.DropItemCommand
+import com.jscisco.lom.commands.EquipItemCommand
 import com.jscisco.lom.dungeon.GameContext
 import com.jscisco.lom.extensions.position
 import com.jscisco.lom.view.fragment.ItemListFragment
@@ -39,7 +40,20 @@ class InventoryDialog(gameContext: GameContext) : Dialog(screen = gameContext.sc
                                 }
                             }
                         }
+                val equip = Components.button()
+                        .withText("Equip")
+                        .withAlignmentAround(drop, ComponentAlignment.RIGHT_CENTER)
+                        .build().apply {
+                            onMouseReleased {
+                                itemListFragment.fetchSelectedItem().map { item ->
+                                    player.executeCommand(EquipItemCommand(gameContext,
+                                            player, item))
+                                    itemListFragment.removeSelectedItem()
+                                }
+                            }
+                        }
                 inventoryPanel.addComponent(drop)
+                inventoryPanel.addComponent(equip)
             }
 
 }

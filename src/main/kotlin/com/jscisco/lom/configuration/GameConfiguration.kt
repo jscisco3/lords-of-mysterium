@@ -12,11 +12,10 @@ object GameConfiguration {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
-    private const val SCREEN_SIZE_PERCENT = 0.7
     private const val FULL_SCREEN = false
 
     const val SIDEBAR_WIDTH = 18
-    const val LOG_AREA_HEIGHT = 16
+    const val LOG_AREA_HEIGHT = 12
 
     const val WINDOW_HEIGHT = 50
     const val WINDOW_WIDTH = 80

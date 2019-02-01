@@ -20,25 +20,17 @@ object Wall : BaseEntityType(
         name = "wall"
 )
 
-object Sword : BaseEntityType(
+object Item : BaseEntityType(
         name = "sword"
-), Equipment
-
-object EquipmentEntityType : BaseEntityType(
-        name = "equipment"
-), Equipment
-
-object NoItem : BaseEntityType(
-        name = "Select an item"
-), Item
-
-object NoEquipment : BaseEntityType(
-        name = "Nothing equipped"
-), Equipment
+)
 
 object Door : BaseEntityType(
         name = "Door"
 ), Toggleable
+
+object ItemType : BaseEntityType(
+        name = "Item"
+)
 
 object FogOfWarType : BaseEntityType()
 
