@@ -4,6 +4,7 @@ import com.jscisco.lom.attributes.types.EquipmentSlot
 import com.jscisco.lom.attributes.types.EquipmentType
 import com.jscisco.lom.attributes.types.Item
 import com.jscisco.lom.builders.EntityFactory
+import com.jscisco.lom.builders.EntityFactory.NO_EQUIPMENT
 import com.jscisco.lom.builders.EntityFactory.NO_ITEM
 import com.jscisco.lom.extensions.entityName
 import com.jscisco.lom.extensions.newGameEntityOfType
@@ -26,7 +27,7 @@ class TestEquipmentAttribute {
         )
         val equipmentAttribute: EquipmentAttribute = EquipmentAttribute(eligibleSlots)
 
-        Assertions.assertThat(equipmentAttribute.getItemsByType(EquipmentType.HAND).get(0).type).isEqualTo(NO_ITEM)
+        Assertions.assertThat(equipmentAttribute.getItemsByType(EquipmentType.HAND).get(0).entityName).isEqualTo(NO_EQUIPMENT.entityName)
         Assertions.assertThat(equipmentAttribute.getItemsByType(EquipmentType.BODY).size).isEqualTo(0)
     }
 

@@ -33,6 +33,7 @@ class EquipmentAttribute(val equipmentSlots: List<EquipmentSlot>) : Attribute {
 
     fun equipItemToSlot(inventory: Inventory, slot: EquipmentSlot, item: GameEntity<Item>) {
         val oldItem = slot.equippedItem
+        inventory.removeItem(item)
         if (oldItem.entityName == NO_EQUIPMENT.entityName) {
             slot.equippedItem = item
         } else {
