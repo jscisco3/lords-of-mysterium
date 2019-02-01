@@ -7,6 +7,8 @@ import com.jscisco.lom.dungeon.GameContext
 import com.jscisco.lom.extensions.position
 import com.jscisco.lom.view.fragment.ItemListFragment
 import org.hexworks.cobalt.datatypes.extensions.map
+import org.hexworks.cobalt.logging.api.Logger
+import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.ComponentAlignment
 import org.hexworks.zircon.api.component.Container
@@ -14,6 +16,8 @@ import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.kotlin.onMouseReleased
 
 class InventoryDialog(gameContext: GameContext) : Dialog(screen = gameContext.screen) {
+
+    val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     override val container: Container = Components.panel()
             .withTitle("Inventory")
@@ -23,7 +27,7 @@ class InventoryDialog(gameContext: GameContext) : Dialog(screen = gameContext.sc
             .build().also { inventoryPanel ->
                 val player = gameContext.player
                 val inventory = player.inventory
-                val itemListFragment = ItemListFragment(inventory, 20)
+                val itemListFragment = ItemListFragment(inventory.items, 20)
                 inventoryPanel.addFragment(itemListFragment)
 
                 val drop = Components.button()

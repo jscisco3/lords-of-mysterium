@@ -1,6 +1,5 @@
 package com.jscisco.lom.view.fragment
 
-import com.jscisco.lom.attributes.Inventory
 import com.jscisco.lom.attributes.types.Item
 import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.extensions.GameEntity
@@ -9,13 +8,16 @@ import org.hexworks.cobalt.databinding.api.createPropertyFrom
 import org.hexworks.cobalt.databinding.api.property.Property
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.cobalt.datatypes.extensions.map
-import org.hexworks.cobalt.datatypes.factory.IdentifierFactory
+import org.hexworks.cobalt.logging.api.Logger
+import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.Fragment
 import org.hexworks.zircon.api.component.RadioButtonGroup
 import org.hexworks.zircon.api.kotlin.onSelection
 
-class ItemListFragment(inventory: Inventory, width: Int) : Fragment {
+class ItemListFragment(items: List<GameEntity<Item>>, width: Int) : Fragment {
+
+    val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     val selectedItem: Property<GameEntity<Item>> = createPropertyFrom(EntityFactory.noItem())
 
@@ -32,19 +34,19 @@ class ItemListFragment(inventory: Inventory, width: Int) : Fragment {
     }
 
     override val root = Components.panel()
-            .withSize(width, inventory.items.size + 2)
+            .withSize(width, items.size + 2)
             .build().apply {
                 rgb = Components.radioButtonGroup()
-                        .withSize(width, inventory.items.size)
+                        .withSize(width, items.size)
                         .withPosition(0, 2)
                         .build()
-                inventory.items.forEach { item ->
+                items.forEach { item ->
                     rgb.addOption(item.id.toString(), item.entityName)
                 }
                 rgb.onSelection {
-                    inventory.findItemById(IdentifierFactory.fromString(it.key)).map { item ->
-                        selectedItem.value = item
-                    }
+                    selectedItem.value = items.filter { item ->
+                        item.id.toString() == it.key
+                    }.last()
                 }
                 addComponent(Components.header()
                         .withText("Items"))

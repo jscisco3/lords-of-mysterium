@@ -32,7 +32,10 @@ object EntityFactory {
                 ),
                 HealthAttribute.create(100),
                 BlockOccupier,
-                Inventory(maxWeight = 100),
+                Inventory(maxWeight = 100).also {
+                    it.addItem(newSword())
+                    it.addItem(newHelmet())
+                },
                 EquipmentAttribute(listOf(
                         EquipmentSlot.create(EquipmentType.HEAD),
                         EquipmentSlot.create(EquipmentType.AMULET),
