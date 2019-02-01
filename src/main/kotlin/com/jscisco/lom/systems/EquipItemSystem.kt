@@ -17,6 +17,7 @@ object EquipItemSystem : BaseFacet<GameContext>() {
         source.equipment.equipItemToSlot(source.inventory,
                 source.equipment.getSlotsByType(item.equippable.equipmentType).last(),
                 item)
+        source.inventory.removeItem(item)
         Consumed
     }
 }
