@@ -2,6 +2,7 @@ package com.jscisco.lom.view.fragment
 
 import com.jscisco.lom.attributes.EquipmentAttribute
 import com.jscisco.lom.attributes.types.ItemHolder
+import com.jscisco.lom.attributes.types.equippable
 import com.jscisco.lom.attributes.types.inventory
 import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.view.fragment.converters.AnyGameEntityConverter
@@ -45,10 +46,21 @@ class EquipmentFragment(private val entity: GameEntity<ItemHolder>, private val 
 
 
                     equipmentTypePanel.addComponent(unequipButton)
-                    equipmentTypePanel.addComponent(Components.label()
+                    equipmentTypePanel.addComponent(Components.button()
                             .withText(eq.type.name)
                             .withPosition(unequipButton.width + 1, index)
-                            .build()
+                            .build().also {
+                                it.onMouseReleased {
+                                    this.addFragment(ItemListFragment(
+                                            entity.inventory.items.filter { item ->
+                                                item.equippable.equipmentType == eq.type
+                                            },
+                                            20
+                                    ).apply {
+                                        root.moveRightBy(30)
+                                    })
+                                }
+                            }
                     )
 
 
@@ -57,7 +69,6 @@ class EquipmentFragment(private val entity: GameEntity<ItemHolder>, private val 
                             .withPosition(0, index)
                             .build().also {
                                 it.textProperty.bind(eq.equippedItemProperty, AnyGameEntityConverter())
-                                logger.info("In build.also: " + eq.equippedItemProperty.value)
                             }
                     )
                 }
