@@ -4,6 +4,8 @@ import org.hexworks.cobalt.databinding.api.createPropertyFrom
 import org.hexworks.cobalt.databinding.api.expression.concat
 import org.hexworks.cobalt.databinding.api.expression.concatWithConvert
 import org.hexworks.cobalt.databinding.api.property.Property
+import org.hexworks.cobalt.logging.api.Logger
+import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.Component
 
@@ -13,12 +15,14 @@ class HealthAttribute(val maxHpProperty: Property<Int>,
     val maxHp: Int by maxHpProperty.asDelegate()
     val hp: Int by hpProperty.asDelegate()
 
+    val logger: Logger = LoggerFactory.getLogger(javaClass)
+
     /**
      * Executes [fn] when the entity having this attribute
-     * should be destroyed according to it's [hp] value
+     * should be destroyed according to its [hp] value.
      */
     fun whenShouldBeDestroyed(fn: () -> Unit) {
-        if (hp < 1) {
+        if (hpProperty.value < 1) {
             fn()
         }
     }

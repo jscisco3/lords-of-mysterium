@@ -75,7 +75,8 @@ object EntityFactory {
                 BlockOccupier,
                 EntityPosition())
         facets(CombatSystem,
-                MoveSystem)
+                MoveSystem,
+                DestroySystem)
     }
 
     fun newWall() = newGameEntityOfType(Wall) {
