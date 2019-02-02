@@ -21,7 +21,6 @@ import org.hexworks.zircon.api.data.impl.Position3D
 import org.hexworks.zircon.api.data.impl.Size3D
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
 
 class TestItemPickerSystem {
 
@@ -34,7 +33,7 @@ class TestItemPickerSystem {
     @BeforeEach
     fun init() {
 
-        player = TEST_ITEM_PICKER
+        player = TEST_ITEM_PICKER()
 
         val dungeonSize = Size3D.create(100, 100, 1)
         dungeon = DungeonBuilder(
@@ -89,7 +88,7 @@ class TestItemPickerSystem {
             )
         }
 
-        val TEST_ITEM_PICKER = newGameEntityOfType(Player) {
+        fun TEST_ITEM_PICKER() = newGameEntityOfType(Player) {
             attributes(
                     Inventory(maxWeight = 100),
                     EntityPosition()
