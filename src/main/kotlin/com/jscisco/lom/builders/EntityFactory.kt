@@ -87,12 +87,6 @@ object EntityFactory {
         )
     }
 
-    fun newOpenDoor() = newGameEntityOfType(Door) {
-        attributes(EntityPosition(),
-                EntityTile(GameTileBuilder.openDoor()),
-                Openable)
-    }
-
     fun newClosedDoor() = newGameEntityOfType(Door) {
         attributes(VisionBlocker,
                 BlockOccupier,

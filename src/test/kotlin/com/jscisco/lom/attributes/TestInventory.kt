@@ -4,9 +4,7 @@ import com.jscisco.lom.attributes.types.inventory
 import com.jscisco.lom.builders.EntityFactory
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TestInventory {
 
     @Test

@@ -16,9 +16,7 @@ import org.hexworks.zircon.api.data.impl.Size3D
 import org.hexworks.zircon.api.input.KeyStroke
 import org.hexworks.zircon.internal.Zircon
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TestCombatEvents {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)

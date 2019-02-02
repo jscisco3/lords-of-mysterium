@@ -203,7 +203,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
      * @return true if the [Entity] was moved
      */
     fun moveEntity(entity: GameEntity<EntityType>, position: Position3D): Boolean {
-        return if (actualSize().containsPosition(position) && position.x >= 0 && position.y >= 0) {
+        if (actualSize().containsPosition(position) && position.x >= 0 && position.y >= 0) {
             entityPositionLookup.remove(entity.id)?.let { oldPos ->
                 fetchBlockAt(oldPos).map { oldBlock ->
                     oldBlock.removeEntity(entity)
@@ -214,10 +214,12 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
                 entityPositionLookup[entity.id] = position
                 entity.position = position
                 true
-            } ?: false
+            }
         } else {
-            false
+            logger.info("Dungeon does not contain position: %s".format(position))
+            return false
         }
+        return true
     }
 
     fun fetchEntitiesAt(pos: Position3D): List<GameEntity<EntityType>> {

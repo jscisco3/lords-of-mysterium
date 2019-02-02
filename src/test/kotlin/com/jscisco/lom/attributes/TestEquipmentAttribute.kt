@@ -16,7 +16,6 @@ import org.junit.jupiter.api.TestInstance
 
 // TODO: Change this to actually test the equipment attribute
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Disabled
 class TestEquipmentAttribute {
 
