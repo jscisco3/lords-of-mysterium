@@ -1,14 +1,12 @@
 package com.jscisco.lom.systems
 
+import com.jscisco.lom.attributes.StatBlockAttribute
 import com.jscisco.lom.attributes.types.Item
 import com.jscisco.lom.attributes.types.inventory
 import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.commands.UnequipItemCommand
 import com.jscisco.lom.dungeon.GameContext
-import com.jscisco.lom.extensions.GameCommand
-import com.jscisco.lom.extensions.GameEntity
-import com.jscisco.lom.extensions.entityName
-import com.jscisco.lom.extensions.responseWhenCommandIs
+import com.jscisco.lom.extensions.*
 import org.hexworks.amethyst.api.Consumed
 import org.hexworks.amethyst.api.Response
 import org.hexworks.amethyst.api.base.BaseFacet
@@ -25,6 +23,9 @@ object UnequipItemSystem : BaseFacet<GameContext>() {
         if (oldItem.entityName != EntityFactory.NO_EQUIPMENT.entityName) {
             source.inventory.addItem(oldItem)
             equipmentSlot.equippedItem = EntityFactory.NO_EQUIPMENT
+            if (oldItem.hasAttribute<StatBlockAttribute>()) {
+                source.statBlock - oldItem.statBlock
+            }
         }
         Consumed
     }

@@ -123,7 +123,10 @@ object EntityFactory {
                 NameAttribute("A Helmet"),
                 EquippableAttribute(EquipmentType.HEAD),
                 EntityTile(GameTileBuilder.sword()),
-                EntityPosition()
+                EntityPosition(),
+                StatBlockAttribute.create(
+                        constitution = 5
+                )
         )
     }
 
