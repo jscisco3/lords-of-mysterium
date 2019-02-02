@@ -1,5 +1,7 @@
 package com.jscisco.lom.view.dialog
 
+import com.jscisco.lom.attributes.types.equipment
+import com.jscisco.lom.attributes.types.equippable
 import com.jscisco.lom.attributes.types.inventory
 import com.jscisco.lom.commands.DropItemCommand
 import com.jscisco.lom.commands.EquipItemCommand
@@ -51,7 +53,7 @@ class InventoryDialog(gameContext: GameContext) : Dialog(screen = gameContext.sc
                             onMouseReleased {
                                 itemListFragment.fetchSelectedItem().map { item ->
                                     player.executeCommand(EquipItemCommand(gameContext,
-                                            player, item))
+                                            player, item, player.equipment.getSlotsByType(item.equippable.equipmentType)[0]))
                                     itemListFragment.removeSelectedItem()
                                 }
                             }

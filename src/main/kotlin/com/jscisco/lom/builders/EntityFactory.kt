@@ -56,7 +56,8 @@ object EntityFactory {
                 CombatSystem,
                 MoveSystem,
                 OpenDoorSystem,
-                EquipItemSystem)
+                EquipItemSystem,
+                UnequipItemSystem)
 
     }
 
@@ -105,7 +106,7 @@ object EntityFactory {
                 NameAttribute(
                         name = "A Cool Sword"
                 ),
-                CombatStats(
+                CombatStatsAttribute.create(
                         power = 5,
                         toHit = 5),
                 ItemStats(

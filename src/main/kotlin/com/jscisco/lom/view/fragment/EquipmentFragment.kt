@@ -4,6 +4,8 @@ import com.jscisco.lom.attributes.EquipmentAttribute
 import com.jscisco.lom.attributes.types.ItemHolder
 import com.jscisco.lom.attributes.types.equippable
 import com.jscisco.lom.attributes.types.inventory
+import com.jscisco.lom.commands.UnequipItemCommand
+import com.jscisco.lom.dungeon.GameContext
 import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.view.fragment.converters.AnyGameEntityConverter
 import org.hexworks.cobalt.logging.api.Logger
@@ -17,7 +19,7 @@ import org.hexworks.zircon.api.kotlin.onMouseReleased
 /**
  * entity: The entity who owns this equipmentAttribute
  */
-class EquipmentFragment(private val entity: GameEntity<ItemHolder>, private val equipmentAttribute: EquipmentAttribute, width: Int) : Fragment {
+class EquipmentFragment(private val context: GameContext, private val entity: GameEntity<ItemHolder>, private val equipmentAttribute: EquipmentAttribute, width: Int) : Fragment {
 
     val height = equipmentAttribute.equipmentSlots.size
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
@@ -40,7 +42,11 @@ class EquipmentFragment(private val entity: GameEntity<ItemHolder>, private val 
                             .withPosition(0, index)
                             .build().apply {
                                 onMouseReleased {
-                                    equipmentAttribute.unequip(entity.inventory, eq)
+                                    entity.executeCommand(UnequipItemCommand(
+                                            context,
+                                            entity,
+                                            eq
+                                    ))
                                 }
                             }
 

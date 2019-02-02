@@ -14,6 +14,21 @@ data class StatBlockAttribute(
         val perceptionProperty: Property<Int>
 ) : DisplayableAttribute {
 
+    operator fun plus(statBlockAttribute: StatBlockAttribute) {
+        strengthProperty.value += statBlockAttribute.strengthProperty.value
+        intelligenceProperty.value += statBlockAttribute.intelligenceProperty.value
+        constitutionProperty.value += statBlockAttribute.constitutionProperty.value
+        agilityProperty.value += statBlockAttribute.agilityProperty.value
+        perceptionProperty.value += statBlockAttribute.perceptionProperty.value
+    }
+
+    operator fun minus(statBlockAttribute: StatBlockAttribute) {
+        strengthProperty.value -= statBlockAttribute.strengthProperty.value
+        intelligenceProperty.value -= statBlockAttribute.intelligenceProperty.value
+        constitutionProperty.value -= statBlockAttribute.constitutionProperty.value
+        agilityProperty.value -= statBlockAttribute.agilityProperty.value
+        perceptionProperty.value -= statBlockAttribute.perceptionProperty.value
+    }
 
     override fun toComponent(width: Int): Component {
         return Components.panel().withSize(width, 5).build().apply {

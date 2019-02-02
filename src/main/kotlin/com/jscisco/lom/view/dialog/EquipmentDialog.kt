@@ -17,7 +17,7 @@ class EquipmentDialog(context: GameContext) : Dialog(screen = context.screen) {
             .withBoxType(BoxType.SINGLE)
             .wrapWithBox()
             .build().also { equipmentPanel ->
-                val equipmentFragment = EquipmentFragment(context.player, equipment, 30)
+                val equipmentFragment = EquipmentFragment(context, context.player, equipment, 30)
                 equipmentPanel.addFragment(equipmentFragment)
             }
 }
