@@ -15,4 +15,9 @@ class Trigger(subscriptionFunction: () -> Subscription) {
         subscription = fn()
     }
 
+    val active: Boolean
+        get() = !subscription.cancelled
+
+    val inactive: Boolean
+        get() = subscription.cancelled
 }

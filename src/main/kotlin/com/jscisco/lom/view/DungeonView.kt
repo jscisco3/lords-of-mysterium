@@ -64,6 +64,7 @@ class DungeonView(private val dungeon: Dungeon) : BaseView() {
          * Subscribe events that are specific for the DungeonView
          */
         Zircon.eventBus.subscribe<GameLogEvent> { (text) ->
+            logger.info(text)
             logArea.addParagraph(text, withNewLine = false)
         }
 

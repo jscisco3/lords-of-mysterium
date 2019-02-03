@@ -12,6 +12,7 @@ import com.jscisco.lom.entities.FogOfWar
 import com.jscisco.lom.events.GameLogEvent
 import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.newGameEntityOfType
+import com.jscisco.lom.extensions.triggers
 import com.jscisco.lom.systems.*
 import com.jscisco.lom.trigger.Trigger
 import org.hexworks.cobalt.events.api.subscribe
@@ -127,13 +128,17 @@ object EntityFactory {
                         constitution = 5
                 ),
                 TriggersAttribute(
-                        mutableListOf(Trigger {
-                            Zircon.eventBus.subscribe<GameLogEvent> { (text) ->
-                                println("A helmet heard $text!")
-                            }
-                        }.also { it.deactivate() })
+                        mutableListOf()
                 )
         )
+    }.also {
+        it.triggers.add(Trigger {
+            Zircon.eventBus.subscribe<GameLogEvent> { (text) ->
+                println("A helmet heard $text!")
+            }
+        }.also { trigger ->
+            trigger.deactivate()
+        })
     }
 
     fun noItem() = newGameEntityOfType(Item) {

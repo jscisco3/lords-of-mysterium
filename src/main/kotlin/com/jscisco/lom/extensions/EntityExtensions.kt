@@ -6,6 +6,7 @@ import com.jscisco.lom.attributes.flags.VisionBlocker
 import com.jscisco.lom.attributes.types.Player
 import com.jscisco.lom.attributes.types.Wall
 import com.jscisco.lom.dungeon.GameContext
+import com.jscisco.lom.trigger.Trigger
 import org.hexworks.amethyst.api.Attribute
 import org.hexworks.amethyst.api.Consumed
 import org.hexworks.amethyst.api.entity.Entity
@@ -28,6 +29,9 @@ var AnyGameEntity.position: Position3D
 
 val AnyGameEntity.tile: Tile
     get() = this.attribute<EntityTile>().tile
+
+val AnyGameEntity.triggers: MutableList<Trigger>
+    get() = this.attribute<TriggersAttribute>().triggers
 
 val AnyGameEntity.occupiesBlock: Boolean
     get() = hasAttribute<BlockOccupier>()
