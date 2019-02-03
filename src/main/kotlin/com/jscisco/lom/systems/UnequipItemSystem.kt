@@ -23,8 +23,9 @@ object UnequipItemSystem : BaseFacet<GameContext>() {
         if (oldItem.entityName != EntityFactory.NO_EQUIPMENT.entityName) {
             source.inventory.addItem(oldItem)
             equipmentSlot.equippedItem = EntityFactory.NO_EQUIPMENT
-            if (oldItem.hasAttribute<StatBlockAttribute>()) {
-                source.statBlock - oldItem.statBlock
+
+            oldItem.whenHasAttribute<StatBlockAttribute> {
+                source.statBlock - it
             }
         }
         Consumed

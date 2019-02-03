@@ -65,7 +65,6 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
             }
         }
 
-        logger.info("Registering dungeon events...")
         registerEvents()
         calculateResistanceMap(resistanceMap)
 

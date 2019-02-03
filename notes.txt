@@ -79,3 +79,27 @@ How should doors work?
     - When OpenDoor event is thrown, remove the ClosedDoor entity and replace with open door entity
     - When CloseDoor event is thrown, remove OpenDoor entity and replace with closed door entity
     - What about LockedDoors? TBD
+
+How should CharacterAttributes work?
+    - Character has StatBlockAttribute (base stats)
+        - How is this different than below?
+    - Effects can have StatBlockAttribute & operater
+        E.g. StrengthBonusEffect:
+                    attr = StatBlockAttribute(
+                        strength = 5)
+                    operator = MULTIPLICATION
+    - How to handle a Helmet which grants an effect that multiplies strength?
+        -> Does it even need to be added to the equippers effect list? Instead, some calculateAttr function could
+            loop through equipped items & get effects from that.
+
+    - Helment of dumb and strong:
+        Helment
+            Effects = listOf(
+                Effect(attr = StatBlockAttribute(strength = 5), operator = +),
+                Effect(attr = StatBlockAttribute(intelligence = -5), operator = +)
+            )
+    - Reflect Damage Shield
+        Shield
+            Effects = listOf(
+                TriggeredEffect(trigger = OnDamageEvent, function = {}, condition = ALWAYS)
+            )

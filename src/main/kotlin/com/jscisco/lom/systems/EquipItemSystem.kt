@@ -11,8 +11,13 @@ import org.hexworks.amethyst.api.Consumed
 import org.hexworks.amethyst.api.Response
 import org.hexworks.amethyst.api.base.BaseFacet
 import org.hexworks.amethyst.api.entity.EntityType
+import org.hexworks.cobalt.logging.api.Logger
+import org.hexworks.cobalt.logging.api.LoggerFactory
 
 object EquipItemSystem : BaseFacet<GameContext>() {
+
+    private val logger: Logger = LoggerFactory.getLogger(javaClass)
+
     override fun executeCommand(command: GameCommand<out EntityType>): Response = command.responseWhenCommandIs<EquipItemCommand> { (context, source, item, equipmentSlot) ->
         val oldItem = equipmentSlot.equippedItem
         source.inventory.removeItem(item)
@@ -26,8 +31,8 @@ object EquipItemSystem : BaseFacet<GameContext>() {
             ))
             equipmentSlot.equippedItemProperty.value = item
         }
-        if (equipmentSlot.equippedItem.hasAttribute<StatBlockAttribute>()) {
-            source.statBlock + equipmentSlot.equippedItem.statBlock
+        equipmentSlot.equippedItem.whenHasAttribute<StatBlockAttribute> {
+            source.statBlock + it
         }
         Consumed
     }
