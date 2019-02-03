@@ -9,10 +9,14 @@ import com.jscisco.lom.commands.AttackCommand
 import com.jscisco.lom.commands.ToggleDoorCommand
 import com.jscisco.lom.dungeon.Dungeon
 import com.jscisco.lom.entities.FogOfWar
+import com.jscisco.lom.events.GameLogEvent
 import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.newGameEntityOfType
 import com.jscisco.lom.systems.*
+import com.jscisco.lom.trigger.Trigger
+import org.hexworks.cobalt.events.api.subscribe
 import org.hexworks.zircon.api.data.impl.Size3D
+import org.hexworks.zircon.internal.Zircon
 import java.util.*
 
 object EntityFactory {
@@ -71,7 +75,7 @@ object EntityFactory {
                         agility = 5,
                         perception = 6
                 ),
-                HealthAttribute.create(20),
+                HealthAttribute.create(50),
                 BlockOccupier,
                 EntityPosition())
         facets(CombatSystem,
@@ -121,6 +125,13 @@ object EntityFactory {
                 EntityPosition(),
                 StatBlockAttribute.create(
                         constitution = 5
+                ),
+                TriggersAttribute(
+                        mutableListOf(Trigger {
+                            Zircon.eventBus.subscribe<GameLogEvent> { (text) ->
+                                println("A helmet heard $text!")
+                            }
+                        }.also { it.deactivate() })
                 )
         )
     }

@@ -1,6 +1,7 @@
 package com.jscisco.lom.systems
 
 import com.jscisco.lom.attributes.StatBlockAttribute
+import com.jscisco.lom.attributes.TriggersAttribute
 import com.jscisco.lom.attributes.types.inventory
 import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.commands.EquipItemCommand
@@ -33,6 +34,11 @@ object EquipItemSystem : BaseFacet<GameContext>() {
         }
         equipmentSlot.equippedItem.whenHasAttribute<StatBlockAttribute> {
             source.statBlock + it
+        }
+        equipmentSlot.equippedItem.whenHasAttribute<TriggersAttribute> {
+            it.triggers.forEach { trigger ->
+                trigger.activate()
+            }
         }
         Consumed
     }

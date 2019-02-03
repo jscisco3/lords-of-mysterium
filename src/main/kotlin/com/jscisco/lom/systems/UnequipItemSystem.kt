@@ -1,6 +1,7 @@
 package com.jscisco.lom.systems
 
 import com.jscisco.lom.attributes.StatBlockAttribute
+import com.jscisco.lom.attributes.TriggersAttribute
 import com.jscisco.lom.attributes.types.Item
 import com.jscisco.lom.attributes.types.inventory
 import com.jscisco.lom.builders.EntityFactory
@@ -26,6 +27,11 @@ object UnequipItemSystem : BaseFacet<GameContext>() {
 
             oldItem.whenHasAttribute<StatBlockAttribute> {
                 source.statBlock - it
+            }
+            oldItem.whenHasAttribute<TriggersAttribute> {
+                it.triggers.forEach { trigger ->
+                    trigger.deactivate()
+                }
             }
         }
         Consumed
