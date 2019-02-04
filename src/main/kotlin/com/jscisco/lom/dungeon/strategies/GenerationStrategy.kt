@@ -50,7 +50,7 @@ abstract class GenerationStrategy(private val dungeonSize: Size3D) {
 
     internal fun placeStairs() {
         blocks[Position3D.create(15, 15, 0)] = GameBlock.createWith(EntityFactory.stairsUp())
-        blocks[Position3D.create(15, 15, 1)] = GameBlock.createWith(EntityFactory.stairsDown())
+        blocks[Position3D.create(20, 30, 1)] = GameBlock.createWith(EntityFactory.stairsDown())
 
     }
 

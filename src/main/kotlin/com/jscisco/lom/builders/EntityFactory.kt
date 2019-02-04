@@ -64,7 +64,9 @@ object EntityFactory {
                 MoveSystem,
                 OpenDoorSystem,
                 EquipItemSystem,
-                UnequipItemSystem)
+                UnequipItemSystem,
+                StairAscender,
+                StairDescender)
 
     }
 

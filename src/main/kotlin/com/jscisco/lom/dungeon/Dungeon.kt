@@ -7,9 +7,7 @@ import com.jscisco.lom.attributes.types.inventory
 import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.builders.GameBlockFactory
-import com.jscisco.lom.commands.DropItemCommand
-import com.jscisco.lom.commands.MoveCommand
-import com.jscisco.lom.commands.PickItemUpCommand
+import com.jscisco.lom.commands.*
 import com.jscisco.lom.events.DoorOpenedEvent
 import com.jscisco.lom.events.EntityMovedEvent
 import com.jscisco.lom.extensions.GameEntity
@@ -24,7 +22,6 @@ import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.cobalt.datatypes.Identifier
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.cobalt.datatypes.extensions.fold
-import org.hexworks.cobalt.datatypes.extensions.ifPresent
 import org.hexworks.cobalt.datatypes.extensions.map
 import org.hexworks.cobalt.events.api.subscribe
 import org.hexworks.cobalt.logging.api.Logger
@@ -80,6 +77,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         updateCamera()
     }
 
+
     private fun registerEvents() {
         Zircon.eventBus.subscribe<EntityMovedEvent> { (entity, _) ->
             if (entity.isPlayer) {
@@ -122,22 +120,8 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
                     player.executeCommand(MoveCommand(context, it, Position3D.create(30, 30, 0)))
                 }
                 'z' -> player.health.hpProperty.value -= 5
-                '>' -> {
-                    fetchBlockAt(player.position).ifPresent {
-                        if (it.isStairsDown) {
-                            player.executeCommand(MoveCommand(context, player, player.position.withRelativeZ(-1)))
-                            scrollOneDown()
-                        }
-                    }
-                }
-                '<' -> {
-                    fetchBlockAt(player.position).ifPresent {
-                        if (it.isStairsUp) {
-                            player.executeCommand(MoveCommand(context, player, player.position.withRelativeZ(1)))
-                            scrollOneUp()
-                        }
-                    }
-                }
+                '>' -> player.executeCommand(DescendStairsCommand(context, player))
+                '<' -> player.executeCommand(AscendStairsCommand(context, player))
             }
         }
         engine.update(context)
@@ -166,6 +150,32 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
      */
     fun findPositionOf(entity: GameEntity<EntityType>): Maybe<Position3D> {
         return Maybe.ofNullable(entityPositionLookup[entity.id])
+    }
+
+    /**
+     * Finds the [Position3D] of the StairsDown the given ZLevel
+     */
+    fun findPositionOfStairsDown(z: Int): Maybe<Position3D> {
+        var position: Position3D? = null
+        fetchBlocksAtLevel(z).forEach {
+            if (it.block.isStairsDown) {
+                position = it.position
+            }
+        }
+        return Maybe.ofNullable(position)
+    }
+
+    /**
+     * Finds the [Position3D] of the StairsUp for the given ZLevel
+     */
+    fun findPositionOfStairsUp(z: Int): Maybe<Position3D> {
+        var position: Position3D? = null
+        fetchBlocksAtLevel(z).forEach {
+            if (it.block.isStairsUp) {
+                position = it.position
+            }
+        }
+        return Maybe.ofNullable(position)
     }
 
     /**
