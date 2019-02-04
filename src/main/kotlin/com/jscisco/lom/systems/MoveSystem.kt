@@ -11,6 +11,7 @@ import org.hexworks.amethyst.api.Consumed
 import org.hexworks.amethyst.api.Response
 import org.hexworks.amethyst.api.base.BaseFacet
 import org.hexworks.amethyst.api.entity.EntityType
+import org.hexworks.cobalt.datatypes.extensions.ifPresent
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.internal.Zircon
@@ -21,12 +22,13 @@ object MoveSystem : BaseFacet<GameContext>() {
 
     override fun executeCommand(command: GameCommand<out EntityType>): Response = command.responseWhenCommandIs<MoveCommand> { (context, source, position) ->
         logger.debug("%s is trying to move to %s.".format(source.entityName, position))
-        val toBlock = context.dungeon.fetchBlockAt(position).get()
-        if (toBlock.isOccupied) {
-            source.tryActionsOn(context, toBlock.occupier)
-        } else {
-            if (context.dungeon.moveEntity(source, position)) {
-                Zircon.eventBus.publish(EntityMovedEvent(source, position))
+        context.dungeon.fetchBlockAt(position).ifPresent {
+            if (it.isOccupied) {
+                source.tryActionsOn(context, it.occupier)
+            } else {
+                if (context.dungeon.moveEntity(source, position)) {
+                    Zircon.eventBus.publish(EntityMovedEvent(source, position))
+                }
             }
         }
         Consumed

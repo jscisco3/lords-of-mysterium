@@ -35,6 +35,7 @@ class FogOfWar(val dungeon: Dungeon, val player: GameEntity<Player>, val size: S
             fows[level] = fow
             dungeon.pushOverlayAt(fow, level)
         }
+        logger.info(this.size.toString())
     }
 
     init {
@@ -43,7 +44,7 @@ class FogOfWar(val dungeon: Dungeon, val player: GameEntity<Player>, val size: S
 
     private fun updateFOW() {
         player.whenHasAttribute<FieldOfView> {
-            player.fov.fov = fieldOfViewCalculator.calculateFOV(dungeon.resistanceMap, player.position.x, player.position.y, player.fov.radius)
+            player.fov.fov = fieldOfViewCalculator.calculateFOV(dungeon.resistanceMap.getValue(player.position.z), player.position.x, player.position.y, player.fov.radius)
             val fov = player.fov.fov
             for (x in 0 until fov.size) {
                 for (y in 0 until fov[x].size) {
@@ -70,7 +71,6 @@ class FogOfWar(val dungeon: Dungeon, val player: GameEntity<Player>, val size: S
                     }
                 }
             }
-            player.fov.fov
         }
     }
 

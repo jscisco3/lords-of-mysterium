@@ -54,7 +54,9 @@ object EntityFactory {
                 )),
                 EntityTile(GameTileBuilder.PLAYER),
                 EntityPosition(),
-                FieldOfView(),
+                FieldOfView(
+                        radius = 5.0
+                ),
                 EntityActions(AttackCommand::class, ToggleDoorCommand::class))
         facets(ItemPickerSystem,
                 ItemDropperSystem,

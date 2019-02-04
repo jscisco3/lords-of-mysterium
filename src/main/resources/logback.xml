@@ -1,7 +1,7 @@
 <configuration debug="false">
 
     <property name="defaultPattern"
-              value="%d{HH:mm:ss.SSS} session_id=${session.id} %-5level %logger{36} - %msg%n" />
+              value="%d{HH:mm:ss.SSS} session_id=${session.id} %-5level %logger{36} - %msg%n"/>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -25,14 +25,14 @@
     </appender>
 
     <root level="DEBUG">
-        <appender-ref ref="FILE" />
+        <appender-ref ref="FILE"/>
     </root>
 
     <logger name="com.jscisco.lom" level="INFO" additivity="true">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="STDOUT"/>
     </logger>
     <logger name="org.hexworks" level="WARN" additivity="true">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="STDOUT"/>
     </logger>
 
 </configuration>

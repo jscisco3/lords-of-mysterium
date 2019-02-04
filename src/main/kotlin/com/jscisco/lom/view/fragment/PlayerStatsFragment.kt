@@ -27,7 +27,6 @@ class PlayerStatsFragment(player: GameEntity<Player>) : Fragment {
         statBlockComponent.moveDownBy(componentHeight)
         componentHeight += statBlockComponent.height
 
-
         Components.panel()
                 .withSize(SIDEBAR_WIDTH, componentHeight + 2)
                 .wrapWithBox()

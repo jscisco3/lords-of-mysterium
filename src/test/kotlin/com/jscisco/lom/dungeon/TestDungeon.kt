@@ -163,9 +163,9 @@ class TestDungeon {
 
     @Test
     fun testInitializeFOV() {
-        Assertions.assertThat(dungeon.resistanceMap[0][0]).isEqualTo(1.0)
-        Assertions.assertThat(dungeon.resistanceMap[1][1]).isEqualTo(0.0)
-        Assertions.assertThat(dungeon.resistanceMap[99][59]).isEqualTo(1.0)
+        Assertions.assertThat(dungeon.resistanceMap.getValue(0)[0][0]).isEqualTo(1.0)
+        Assertions.assertThat(dungeon.resistanceMap.getValue(0)[1][1]).isEqualTo(0.0)
+        Assertions.assertThat(dungeon.resistanceMap.getValue(0)[99][59]).isEqualTo(1.0)
     }
 
 }

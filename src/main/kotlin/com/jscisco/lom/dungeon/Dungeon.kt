@@ -37,6 +37,7 @@ import org.hexworks.zircon.api.game.GameArea
 import org.hexworks.zircon.api.input.InputType
 import org.hexworks.zircon.api.kotlin.whenKeyStroke
 import org.hexworks.zircon.internal.Zircon
+import java.util.concurrent.ConcurrentHashMap
 
 
 class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
@@ -53,7 +54,11 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     private val engine = newEngine<GameContext>()
     private val entityPositionLookup = mutableMapOf<Identifier, Position3D>()
 
-    val resistanceMap = Array(actualSize.xLength, { DoubleArray(actualSize.yLength) })
+    val resistanceMap = ConcurrentHashMap<Int, Array<DoubleArray>>().also {
+        for (z in 0 until actualSize.zLength) {
+            it[z] = Array(actualSize.xLength, { DoubleArray(actualSize.yLength) })
+        }
+    }
 
     init {
         blocks.forEach { pos, block ->
@@ -70,6 +75,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
 
         addEntity(player, Position3D.create(12, 12, 0))
         addDungeonEntity(EntityFactory.newFogOfWar(this, player, actualSize))
+        logger.info("%s".format(fetchBlockAt(Position3D.create(0, 0, 1)).get().layers.last()))
         updateCamera()
     }
 
@@ -85,12 +91,12 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         }
     }
 
-    fun calculateResistanceMap(resistanceMap: Array<DoubleArray>) {
+    fun calculateResistanceMap(resistanceMap: MutableMap<Int, Array<DoubleArray>>) {
         blocks.forEach { pos, block ->
             if (block.blocksVision) {
-                resistanceMap[pos.x][pos.y] = 1.0
+                resistanceMap.getValue(pos.z)[pos.x][pos.y] = 1.0
             } else {
-                resistanceMap[pos.x][pos.y] = 0.0
+                resistanceMap.getValue(pos.z)[pos.x][pos.y] = 0.0
             }
         }
     }
@@ -115,6 +121,14 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
                     player.executeCommand(MoveCommand(context, it, Position3D.create(30, 30, 0)))
                 }
                 'z' -> player.health.hpProperty.value -= 5
+                '>' -> {
+                    player.executeCommand(MoveCommand(context, player, player.position.withRelativeZ(-1)))
+                    scrollOneDown()
+                }
+                '<' -> {
+                    player.executeCommand(MoveCommand(context, player, player.position.withRelativeZ(1)))
+                    scrollOneUp()
+                }
             }
         }
         engine.update(context)

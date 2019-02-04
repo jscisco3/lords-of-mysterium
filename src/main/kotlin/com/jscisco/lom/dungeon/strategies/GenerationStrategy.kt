@@ -13,14 +13,17 @@ abstract class GenerationStrategy(private val dungeonSize: Size3D) {
     abstract fun generateDungeon(): MutableMap<Position3D, GameBlock>
 
     internal fun createOutsideWalls() {
-        for (i in 0 until dungeonSize.xLength) {
-            blocks[Position3D.create(i, 0, 0)] = GameBlockFactory.wall()
-            blocks[Position3D.create(i, dungeonSize.yLength - 1, 0)] = GameBlockFactory.wall()
+        for (z in 0 until dungeonSize.zLength) {
+            for (i in 0 until dungeonSize.xLength) {
+                blocks[Position3D.create(i, 0, z)] = GameBlockFactory.wall()
+                blocks[Position3D.create(i, dungeonSize.yLength - 1, z)] = GameBlockFactory.wall()
+            }
+            for (i in 0 until dungeonSize.yLength) {
+                blocks[Position3D.create(0, i, z)] = GameBlockFactory.wall()
+                blocks[Position3D.create(dungeonSize.xLength - 1, i, z)] = GameBlockFactory.wall()
+            }
         }
-        for (i in 0 until dungeonSize.yLength) {
-            blocks[Position3D.create(0, i, 0)] = GameBlockFactory.wall()
-            blocks[Position3D.create(dungeonSize.xLength - 1, i, 0)] = GameBlockFactory.wall()
-        }
+
     }
 
     internal fun randomizeTiles() {
