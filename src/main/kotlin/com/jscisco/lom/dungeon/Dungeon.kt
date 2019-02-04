@@ -24,6 +24,7 @@ import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.cobalt.datatypes.Identifier
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.cobalt.datatypes.extensions.fold
+import org.hexworks.cobalt.datatypes.extensions.ifPresent
 import org.hexworks.cobalt.datatypes.extensions.map
 import org.hexworks.cobalt.events.api.subscribe
 import org.hexworks.cobalt.logging.api.Logger
@@ -122,12 +123,20 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
                 }
                 'z' -> player.health.hpProperty.value -= 5
                 '>' -> {
-                    player.executeCommand(MoveCommand(context, player, player.position.withRelativeZ(-1)))
-                    scrollOneDown()
+                    fetchBlockAt(player.position).ifPresent {
+                        if (it.isStairsDown) {
+                            player.executeCommand(MoveCommand(context, player, player.position.withRelativeZ(-1)))
+                            scrollOneDown()
+                        }
+                    }
                 }
                 '<' -> {
-                    player.executeCommand(MoveCommand(context, player, player.position.withRelativeZ(1)))
-                    scrollOneUp()
+                    fetchBlockAt(player.position).ifPresent {
+                        if (it.isStairsUp) {
+                            player.executeCommand(MoveCommand(context, player, player.position.withRelativeZ(1)))
+                            scrollOneUp()
+                        }
+                    }
                 }
             }
         }

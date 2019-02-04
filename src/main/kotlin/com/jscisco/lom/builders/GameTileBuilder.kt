@@ -59,6 +59,16 @@ object GameTileBuilder {
             .withForegroundColor(TileColors.fromString("#00FF00"))
             .buildCharacterTile()
 
+    val STAIRS_UP: CharacterTile = Tiles.newBuilder()
+            .withCharacter('<')
+            .withForegroundColor(DEFAULT_FOREGROUND)
+            .buildCharacterTile()
+
+    val STAIRS_DOWN: CharacterTile = Tiles.newBuilder()
+            .withCharacter('>')
+            .withForegroundColor(DEFAULT_FOREGROUND)
+            .buildCharacterTile()
+
     val DEFAULT: CharacterTile = Tiles.newBuilder()
             .withBackgroundColor(FLOOR_BACKGROUND)
             .buildCharacterTile()

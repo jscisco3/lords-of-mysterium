@@ -1,6 +1,8 @@
 package com.jscisco.lom.blocks
 
 import com.jscisco.lom.attributes.types.Item
+import com.jscisco.lom.attributes.types.StairsDown
+import com.jscisco.lom.attributes.types.StairsUp
 import com.jscisco.lom.builders.GameTileBuilder
 import com.jscisco.lom.extensions.*
 import org.hexworks.amethyst.api.entity.EntityType
@@ -48,6 +50,16 @@ class GameBlock(private var defaultTile: Tile = GameTileBuilder.floor(),
     val isWall: Boolean
         get() = currentEntities.any {
             it.isWall
+        }
+
+    val isStairsDown: Boolean
+        get() = currentEntities.any {
+            it.type is StairsDown
+        }
+
+    val isStairsUp: Boolean
+        get() = currentEntities.any {
+            it.type is StairsUp
         }
 
     val blocksVision: Boolean

@@ -143,6 +143,19 @@ object EntityFactory {
         })
     }
 
+    fun stairsUp() = newGameEntityOfType(StairsUp) {
+        attributes(
+                EntityTile(GameTileBuilder.STAIRS_UP)
+        )
+
+    }
+
+    fun stairsDown() = newGameEntityOfType(StairsDown) {
+        attributes(
+                EntityTile(GameTileBuilder.STAIRS_DOWN)
+        )
+    }
+
     fun noItem() = newGameEntityOfType(Item) {
         attributes(
                 NameAttribute("No Item")

@@ -27,6 +27,14 @@ object Door : BaseEntityType(
         name = "Door"
 ), Toggleable
 
+object StairsUp : BaseEntityType(
+        name = "Stairs Up"
+)
+
+object StairsDown : BaseEntityType(
+        name = "Stairs Down"
+)
+
 object FogOfWarType : BaseEntityType()
 
 val GameEntity<Item>.weight: Int
