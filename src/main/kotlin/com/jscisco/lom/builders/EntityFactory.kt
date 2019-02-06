@@ -1,7 +1,6 @@
 package com.jscisco.lom.builders;
 
 import com.jscisco.lom.attributes.*
-import com.jscisco.lom.attributes.ai.HunterSeekerTarget
 import com.jscisco.lom.attributes.flags.BlockOccupier
 import com.jscisco.lom.attributes.flags.Openable
 import com.jscisco.lom.attributes.flags.VisionBlocker
@@ -87,8 +86,7 @@ object EntityFactory {
                 HealthAttribute.create(50),
                 BlockOccupier,
                 EntityPosition(),
-                EntityActions(AttackCommand::class),
-                HunterSeekerTarget(null))
+                EntityActions(AttackCommand::class))
         behaviors(
                 CompositeOrBehavior(
                         HunterSeekerAI(),
