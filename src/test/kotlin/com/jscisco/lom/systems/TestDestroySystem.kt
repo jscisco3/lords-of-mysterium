@@ -21,7 +21,7 @@ class TestDestroySystem {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     private val player: GameEntity<Player> = destroyableEntity()
-    private val dungeonSize = Size3D.create(15, 15, 1)
+    private val dungeonSize = Size3D.create(50, 50, 2)
     private val dungeon = DungeonBuilder(
             dungeonSize = dungeonSize,
             player = player,

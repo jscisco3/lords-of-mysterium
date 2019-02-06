@@ -33,7 +33,7 @@ class TestDungeon {
         // Make sue we have no events subscriibed
         Zircon.eventBus.cancelScope(ApplicationScope)
 
-        val dungeonSize: Size3D = Size3D.create(100, 60, 1)
+        val dungeonSize: Size3D = Size3D.create(100, 60, 2)
         val visibleSize: Size3D = Size3D.create(25, 25, 1)
         player = EntityFactory.newPlayer()
         val strategy: GenerationStrategy = GenericDungeonStrategy(dungeonSize = dungeonSize)
@@ -164,7 +164,7 @@ class TestDungeon {
     @Test
     fun testInitializeFOV() {
         Assertions.assertThat(dungeon.resistanceMap.getValue(0)[0][0]).isEqualTo(1.0)
-        Assertions.assertThat(dungeon.resistanceMap.getValue(0)[1][1]).isEqualTo(0.0)
+        Assertions.assertThat(dungeon.resistanceMap.getValue(0)[1][1]).isLessThan(0.1)
         Assertions.assertThat(dungeon.resistanceMap.getValue(0)[99][59]).isEqualTo(1.0)
     }
 

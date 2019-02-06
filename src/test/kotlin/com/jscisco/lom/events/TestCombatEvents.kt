@@ -33,7 +33,7 @@ class TestCombatEvents {
         target = EntityFactory.newGoblin()
 
 
-        val dungeonSize: Size3D = Size3D.create(100, 60, 1)
+        val dungeonSize: Size3D = Size3D.create(100, 60, 2)
         val visibleSize: Size3D = Size3D.create(25, 25, 1)
 
         dungeon = DungeonBuilder(

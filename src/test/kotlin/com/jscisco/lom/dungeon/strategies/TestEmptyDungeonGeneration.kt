@@ -11,7 +11,7 @@ class TestEmptyDungeonGeneration {
 
     @Test
     fun testEmptyDungeonCreated() {
-        val dungeonSize: Size3D = Size3D.create(100, 100, 1)
+        val dungeonSize: Size3D = Size3D.create(100, 100, 2)
         val dungeon = DungeonBuilder(dungeonSize = dungeonSize,
                 strategy = EmptyDungeonStrategy(dungeonSize),
                 player = EntityFactory.newPlayer()).build(dungeonSize, dungeonSize)

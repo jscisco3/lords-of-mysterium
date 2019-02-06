@@ -33,7 +33,7 @@ class TestItemDropperSystem {
     @BeforeEach
     fun init() {
 
-        val dungeonSize = Size3D.create(100, 100, 1)
+        val dungeonSize = Size3D.create(100, 100, 2)
         dungeon = DungeonBuilder(
                 dungeonSize = dungeonSize,
                 strategy = EmptyDungeonStrategy(dungeonSize),
