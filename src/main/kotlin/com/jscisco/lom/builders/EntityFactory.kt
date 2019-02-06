@@ -5,6 +5,7 @@ import com.jscisco.lom.attributes.flags.BlockOccupier
 import com.jscisco.lom.attributes.flags.Openable
 import com.jscisco.lom.attributes.flags.VisionBlocker
 import com.jscisco.lom.attributes.types.*
+import com.jscisco.lom.behaviors.ai.WanderAI
 import com.jscisco.lom.commands.AttackCommand
 import com.jscisco.lom.commands.ToggleDoorCommand
 import com.jscisco.lom.dungeon.Dungeon
@@ -82,7 +83,9 @@ object EntityFactory {
                 ),
                 HealthAttribute.create(50),
                 BlockOccupier,
-                EntityPosition())
+                EntityPosition(),
+                EntityActions(AttackCommand::class))
+        behaviors(WanderAI())
         facets(CombatSystem,
                 MoveSystem,
                 DestroySystem)
