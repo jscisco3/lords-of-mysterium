@@ -45,7 +45,7 @@ abstract class GenerationStrategy(private val dungeonSize: Size3D) {
     }
 
     internal fun createNPCs() {
-        blocks[Position3D.create(10, 10, 0)] = GameBlock.createWith(EntityFactory.newGoblin())
+        blocks[Position3D.create(8, 8, 0)] = GameBlock.createWith(EntityFactory.newGoblin())
     }
 
     internal fun placeStairs() {

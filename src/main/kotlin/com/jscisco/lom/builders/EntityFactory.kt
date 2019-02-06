@@ -5,7 +5,7 @@ import com.jscisco.lom.attributes.flags.BlockOccupier
 import com.jscisco.lom.attributes.flags.Openable
 import com.jscisco.lom.attributes.flags.VisionBlocker
 import com.jscisco.lom.attributes.types.*
-import com.jscisco.lom.behaviors.ai.WanderAI
+import com.jscisco.lom.behaviors.ai.HunterSeekerAI
 import com.jscisco.lom.commands.AttackCommand
 import com.jscisco.lom.commands.ToggleDoorCommand
 import com.jscisco.lom.dungeon.Dungeon
@@ -56,7 +56,7 @@ object EntityFactory {
                 EntityTile(GameTileBuilder.PLAYER),
                 EntityPosition(),
                 FieldOfView(
-                        radius = 5.0
+                        radius = 10.0
                 ),
                 EntityActions(AttackCommand::class, ToggleDoorCommand::class))
         facets(ItemPickerSystem,
@@ -85,7 +85,10 @@ object EntityFactory {
                 BlockOccupier,
                 EntityPosition(),
                 EntityActions(AttackCommand::class))
-        behaviors(WanderAI())
+        behaviors(
+//                WanderAI()
+                HunterSeekerAI()
+        )
         facets(CombatSystem,
                 MoveSystem,
                 DestroySystem)
