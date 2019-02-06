@@ -51,6 +51,9 @@ val AnyGameEntity.nameAttribute: NameAttribute
 val AnyGameEntity.statBlock: StatBlockAttribute
     get() = attribute()
 
+val AnyGameEntity.energy: EnergyAttribute
+    get() = attribute()
+
 val AnyGameEntity.entityName: String
     get() {
         return try {

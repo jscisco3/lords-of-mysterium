@@ -5,6 +5,8 @@ import com.jscisco.lom.attributes.flags.BlockOccupier
 import com.jscisco.lom.attributes.flags.Openable
 import com.jscisco.lom.attributes.flags.VisionBlocker
 import com.jscisco.lom.attributes.types.*
+import com.jscisco.lom.behaviors.EnergyBehavior
+import com.jscisco.lom.behaviors.ai.AIBehavior
 import com.jscisco.lom.behaviors.ai.HunterSeekerAI
 import com.jscisco.lom.behaviors.ai.WanderAI
 import com.jscisco.lom.commands.AttackCommand
@@ -18,7 +20,6 @@ import com.jscisco.lom.extensions.position
 import com.jscisco.lom.extensions.triggers
 import com.jscisco.lom.systems.*
 import com.jscisco.lom.trigger.Trigger
-import org.hexworks.amethyst.internal.system.CompositeOrBehavior
 import org.hexworks.cobalt.events.api.subscribe
 import org.hexworks.zircon.api.data.impl.Size3D
 import org.hexworks.zircon.internal.Zircon
@@ -61,7 +62,12 @@ object EntityFactory {
                 FieldOfView(
                         radius = 10.0
                 ),
-                EntityActions(AttackCommand::class, ToggleDoorCommand::class))
+                EntityActions(AttackCommand::class, ToggleDoorCommand::class),
+                EnergyAttribute.create(
+                        energy = 1000,
+                        rechargeRate = 1000
+                ))
+        behaviors(EnergyBehavior())
         facets(ItemPickerSystem,
                 ItemDropperSystem,
                 CombatSystem,
@@ -87,16 +93,14 @@ object EntityFactory {
                 HealthAttribute.create(50),
                 BlockOccupier,
                 EntityPosition(),
-                EntityActions(AttackCommand::class))
+                EntityActions(AttackCommand::class),
+                EnergyAttribute.create(
+                        energy = 1000,
+                        rechargeRate = 2000
+                ))
         behaviors(
-                CompositeOrBehavior(
-                        HunterSeekerAI(
-                                updateTarget = {
-                                    it.player.position
-                                }
-                        ),
-                        WanderAI()
-                )
+                EnergyBehavior(),
+                AIBehavior(HunterSeekerAI(updateTarget = { it.player.position }).or(WanderAI()))
         )
         facets(CombatSystem,
                 MoveSystem,

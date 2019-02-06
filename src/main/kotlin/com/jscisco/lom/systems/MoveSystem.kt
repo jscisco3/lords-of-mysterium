@@ -1,12 +1,10 @@
 package com.jscisco.lom.systems
 
+import com.jscisco.lom.attributes.EnergyAttribute
 import com.jscisco.lom.commands.MoveCommand
 import com.jscisco.lom.dungeon.GameContext
 import com.jscisco.lom.events.EntityMovedEvent
-import com.jscisco.lom.extensions.GameCommand
-import com.jscisco.lom.extensions.entityName
-import com.jscisco.lom.extensions.responseWhenCommandIs
-import com.jscisco.lom.extensions.tryActionsOn
+import com.jscisco.lom.extensions.*
 import org.hexworks.amethyst.api.Consumed
 import org.hexworks.amethyst.api.Response
 import org.hexworks.amethyst.api.base.BaseFacet
@@ -27,6 +25,10 @@ object MoveSystem : BaseFacet<GameContext>() {
                 source.tryActionsOn(context, it.occupier)
             } else {
                 if (context.dungeon.moveEntity(source, position)) {
+                    source.whenHasAttribute<EnergyAttribute> { energy ->
+                        energy.energyProperty.value -= 1000
+                        logger.info("%s has %s energy remaining!".format(source.entityName, energy.energy))
+                    }
                     Zircon.eventBus.publish(EntityMovedEvent(source, position))
                 }
             }

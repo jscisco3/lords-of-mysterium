@@ -1,5 +1,6 @@
 package com.jscisco.lom.systems
 
+import com.jscisco.lom.attributes.EnergyAttribute
 import com.jscisco.lom.attributes.types.health
 import com.jscisco.lom.commands.AttackCommand
 import com.jscisco.lom.commands.DestroyCommand
@@ -10,6 +11,7 @@ import com.jscisco.lom.events.GameLogEvent
 import com.jscisco.lom.extensions.GameCommand
 import com.jscisco.lom.extensions.entityName
 import com.jscisco.lom.extensions.responseWhenCommandIs
+import com.jscisco.lom.extensions.whenHasAttribute
 import org.hexworks.amethyst.api.Consumed
 import org.hexworks.amethyst.api.Response
 import org.hexworks.amethyst.api.base.BaseFacet
@@ -21,6 +23,9 @@ object CombatSystem : BaseFacet<GameContext>() {
     override fun executeCommand(command: GameCommand<out EntityType>): Response = command.responseWhenCommandIs<AttackCommand> { (context: GameContext, attacker, target) ->
         Zircon.eventBus.publish(CombatInstigatedEvent(context, attacker, target))
         var damageAmount = 10
+        attacker.whenHasAttribute<EnergyAttribute> {
+            it.energyProperty.value -= 1000
+        }
         target.health.hpProperty.value -= damageAmount
         target.health.whenShouldBeDestroyed {
             target.executeCommand(DestroyCommand(context, target, ""))

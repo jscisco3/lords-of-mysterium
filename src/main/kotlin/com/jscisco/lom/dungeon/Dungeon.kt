@@ -8,12 +8,10 @@ import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.builders.GameBlockFactory
 import com.jscisco.lom.commands.*
+import com.jscisco.lom.engine.LOMEngine
 import com.jscisco.lom.events.DoorOpenedEvent
 import com.jscisco.lom.events.EntityMovedEvent
-import com.jscisco.lom.extensions.GameEntity
-import com.jscisco.lom.extensions.filterType
-import com.jscisco.lom.extensions.isPlayer
-import com.jscisco.lom.extensions.position
+import com.jscisco.lom.extensions.*
 import com.jscisco.lom.view.dialog.EquipmentDialog
 import com.jscisco.lom.view.dialog.InventoryDialog
 import org.hexworks.amethyst.api.Engines.newEngine
