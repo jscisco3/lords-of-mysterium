@@ -13,7 +13,7 @@ import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.data.impl.Position3D
 import squidpony.squidmath.AStarSearch
 
-class HunterSeekerAI : BaseBehavior<GameContext>() {
+class HunterSeekerAI(val updateTarget: (context: GameContext) -> Position3D) : BaseBehavior<GameContext>() {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
@@ -53,7 +53,7 @@ class HunterSeekerAI : BaseBehavior<GameContext>() {
         return Position3D.create(coord.x, coord.y, entity.position.z)
     }
 
-    private fun updateTarget(context: GameContext): Position3D {
-        return context.player.position
-    }
+//    private fun updateTarget(context: GameContext): Position3D {
+//        return context.player.position
+//    }
 }

@@ -14,6 +14,7 @@ import com.jscisco.lom.entities.FogOfWar
 import com.jscisco.lom.events.GameLogEvent
 import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.newGameEntityOfType
+import com.jscisco.lom.extensions.position
 import com.jscisco.lom.extensions.triggers
 import com.jscisco.lom.systems.*
 import com.jscisco.lom.trigger.Trigger
@@ -89,7 +90,11 @@ object EntityFactory {
                 EntityActions(AttackCommand::class))
         behaviors(
                 CompositeOrBehavior(
-                        HunterSeekerAI(),
+                        HunterSeekerAI(
+                                updateTarget = {
+                                    it.player.position
+                                }
+                        ),
                         WanderAI()
                 )
         )
