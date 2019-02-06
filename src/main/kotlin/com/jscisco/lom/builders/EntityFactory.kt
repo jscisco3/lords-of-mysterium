@@ -1,11 +1,13 @@
 package com.jscisco.lom.builders;
 
 import com.jscisco.lom.attributes.*
+import com.jscisco.lom.attributes.ai.HunterSeekerTarget
 import com.jscisco.lom.attributes.flags.BlockOccupier
 import com.jscisco.lom.attributes.flags.Openable
 import com.jscisco.lom.attributes.flags.VisionBlocker
 import com.jscisco.lom.attributes.types.*
 import com.jscisco.lom.behaviors.ai.HunterSeekerAI
+import com.jscisco.lom.behaviors.ai.WanderAI
 import com.jscisco.lom.commands.AttackCommand
 import com.jscisco.lom.commands.ToggleDoorCommand
 import com.jscisco.lom.dungeon.Dungeon
@@ -16,6 +18,7 @@ import com.jscisco.lom.extensions.newGameEntityOfType
 import com.jscisco.lom.extensions.triggers
 import com.jscisco.lom.systems.*
 import com.jscisco.lom.trigger.Trigger
+import org.hexworks.amethyst.internal.system.CompositeOrBehavior
 import org.hexworks.cobalt.events.api.subscribe
 import org.hexworks.zircon.api.data.impl.Size3D
 import org.hexworks.zircon.internal.Zircon
@@ -84,10 +87,13 @@ object EntityFactory {
                 HealthAttribute.create(50),
                 BlockOccupier,
                 EntityPosition(),
-                EntityActions(AttackCommand::class))
+                EntityActions(AttackCommand::class),
+                HunterSeekerTarget(null))
         behaviors(
-//                WanderAI()
-                HunterSeekerAI()
+                CompositeOrBehavior(
+                        HunterSeekerAI(),
+                        WanderAI()
+                )
         )
         facets(CombatSystem,
                 MoveSystem,
