@@ -10,7 +10,7 @@ import com.jscisco.lom.behaviors.ai.AIBehavior
 import com.jscisco.lom.behaviors.ai.HunterSeekerAI
 import com.jscisco.lom.behaviors.ai.WanderAI
 import com.jscisco.lom.commands.AttackCommand
-import com.jscisco.lom.commands.ToggleDoorCommand
+import com.jscisco.lom.commands.OpenDoorCommand
 import com.jscisco.lom.dungeon.Dungeon
 import com.jscisco.lom.entities.FogOfWar
 import com.jscisco.lom.events.GameLogEvent
@@ -62,10 +62,10 @@ object EntityFactory {
                 FieldOfView(
                         radius = 10.0
                 ),
-                EntityActions(AttackCommand::class, ToggleDoorCommand::class),
+                EntityActions(AttackCommand::class, OpenDoorCommand::class),
                 EnergyAttribute.create(
-                        energy = 1000,
-                        rechargeRate = 1000
+                        energy = 10000,
+                        rechargeRate = 5000
                 ))
         behaviors(EnergyBehavior())
         facets(ItemPickerSystem,

@@ -72,7 +72,6 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
 
         addEntity(player, Position3D.create(12, 12, 0))
         addDungeonEntity(EntityFactory.newFogOfWar(this, player, actualSize))
-        logger.info("%s".format(fetchBlockAt(Position3D.create(0, 0, 1)).get().layers.last()))
         updateCamera()
     }
 
@@ -101,33 +100,31 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
 
     fun handleInput(context: GameContext) {
         var response: Response = Pass
-        if (player.energy.energy > 0) {
-            context.input.whenKeyStroke { ks ->
-                when (ks.inputType()) {
-                    InputType.ArrowUp -> response = player.executeCommand(MoveCommand(context, player, player.position.withRelativeY(-1)))
-                    InputType.ArrowDown -> response = player.executeCommand(MoveCommand(context, player, player.position.withRelativeY(1)))
-                    InputType.ArrowLeft -> response = player.executeCommand(MoveCommand(context, player, player.position.withRelativeX(-1)))
-                    InputType.ArrowRight -> response = player.executeCommand(MoveCommand(context, player, player.position.withRelativeX(1)))
+        context.input.whenKeyStroke { ks ->
+            when (ks.inputType()) {
+                InputType.ArrowUp -> response = player.executeCommand(MoveCommand(context, player, player.position.withRelativeY(-1)))
+                InputType.ArrowDown -> response = player.executeCommand(MoveCommand(context, player, player.position.withRelativeY(1)))
+                InputType.ArrowLeft -> response = player.executeCommand(MoveCommand(context, player, player.position.withRelativeX(-1)))
+                InputType.ArrowRight -> response = player.executeCommand(MoveCommand(context, player, player.position.withRelativeX(1)))
+                else -> response = Pass
+            }
+            when (ks.getCharacter()) {
+                ',' -> response = player.executeCommand(PickItemUpCommand(context = context, source = player, position = entityPositionLookup[player.id]!!))
+                'i' -> context.screen.openModal(InventoryDialog(context))
+                'e' -> context.screen.openModal(EquipmentDialog(context))
+                'd' -> if (player.inventory.items.lastOrNull() != null) {
+                    response = player.executeCommand(DropItemCommand(context, player, player.inventory.items.last(), entityPositionLookup[player.id]!!))
                 }
-                when (ks.getCharacter()) {
-                    ',' -> response = player.executeCommand(PickItemUpCommand(context = context, source = player, position = entityPositionLookup[player.id]!!))
-                    'i' -> context.screen.openModal(InventoryDialog(context))
-                    'e' -> context.screen.openModal(EquipmentDialog(context))
-                    'd' -> if (player.inventory.items.lastOrNull() != null) {
-                        response = player.executeCommand(DropItemCommand(context, player, player.inventory.items.last(), entityPositionLookup[player.id]!!))
-                    }
-                    'g' -> fetchEntitiesAt(Position3D.create(10, 10, 0)).map {
-                        response = player.executeCommand(MoveCommand(context, it, Position3D.create(30, 30, 0)))
-                    }
-                    'z' -> player.health.hpProperty.value -= 5
-                    '>' -> response = player.executeCommand(DescendStairsCommand(context, player))
-                    '<' -> response = player.executeCommand(AscendStairsCommand(context, player))
+                'g' -> fetchEntitiesAt(Position3D.create(10, 10, 0)).map {
+                    response = player.executeCommand(MoveCommand(context, it, Position3D.create(30, 30, 0)))
                 }
+                'z' -> player.health.hpProperty.value -= 5
+                '>' -> response = player.executeCommand(DescendStairsCommand(context, player))
+                '<' -> response = player.executeCommand(AscendStairsCommand(context, player))
+                else -> response = Pass
             }
         }
-        if (player.energy.energy <= 0) {
-            engine.update(context)
-        }
+        engine.update(context)
     }
 
     private fun updateCamera() {

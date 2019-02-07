@@ -7,7 +7,7 @@ import com.jscisco.lom.attributes.flags.VisionBlocker
 import com.jscisco.lom.attributes.types.Door
 import com.jscisco.lom.attributes.types.Player
 import com.jscisco.lom.builders.GameTileBuilder
-import com.jscisco.lom.commands.ToggleDoorCommand
+import com.jscisco.lom.commands.OpenDoorCommand
 import com.jscisco.lom.extensions.hasAttribute
 import com.jscisco.lom.extensions.newGameEntityOfType
 import com.jscisco.lom.extensions.tile
@@ -22,7 +22,7 @@ class TestOpenDoorSystem {
 
     @Test
     fun `open a door`() {
-        doorOpener.executeCommand(ToggleDoorCommand(
+        doorOpener.executeCommand(OpenDoorCommand(
                 context = mockk(),
                 source = doorOpener,
                 target = door
