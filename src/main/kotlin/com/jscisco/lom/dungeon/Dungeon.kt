@@ -8,13 +8,14 @@ import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.builders.GameBlockFactory
 import com.jscisco.lom.commands.*
-import com.jscisco.lom.engine.LOMEngine
 import com.jscisco.lom.events.DoorOpenedEvent
 import com.jscisco.lom.events.EntityMovedEvent
 import com.jscisco.lom.extensions.*
 import com.jscisco.lom.view.dialog.EquipmentDialog
 import com.jscisco.lom.view.dialog.InventoryDialog
 import org.hexworks.amethyst.api.Engines.newEngine
+import org.hexworks.amethyst.api.Pass
+import org.hexworks.amethyst.api.Response
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.cobalt.datatypes.Identifier
@@ -99,30 +100,34 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     }
 
     fun handleInput(context: GameContext) {
-        context.input.whenKeyStroke { ks ->
-            when (ks.inputType()) {
-                InputType.ArrowUp -> player.executeCommand(MoveCommand(context, player, player.position.withRelativeY(-1)))
-                InputType.ArrowDown -> player.executeCommand(MoveCommand(context, player, player.position.withRelativeY(1)))
-                InputType.ArrowLeft -> player.executeCommand(MoveCommand(context, player, player.position.withRelativeX(-1)))
-                InputType.ArrowRight -> player.executeCommand(MoveCommand(context, player, player.position.withRelativeX(1)))
-                else -> Unit
-            }
-            when (ks.getCharacter()) {
-                ',' -> player.executeCommand(PickItemUpCommand(context = context, source = player, position = entityPositionLookup[player.id]!!))
-                'i' -> context.screen.openModal(InventoryDialog(context))
-                'e' -> context.screen.openModal(EquipmentDialog(context))
-                'd' -> if (player.inventory.items.lastOrNull() != null) {
-                    player.executeCommand(DropItemCommand(context, player, player.inventory.items.last(), entityPositionLookup[player.id]!!))
+        var response: Response = Pass
+        if (player.energy.energy > 0) {
+            context.input.whenKeyStroke { ks ->
+                when (ks.inputType()) {
+                    InputType.ArrowUp -> response = player.executeCommand(MoveCommand(context, player, player.position.withRelativeY(-1)))
+                    InputType.ArrowDown -> response = player.executeCommand(MoveCommand(context, player, player.position.withRelativeY(1)))
+                    InputType.ArrowLeft -> response = player.executeCommand(MoveCommand(context, player, player.position.withRelativeX(-1)))
+                    InputType.ArrowRight -> response = player.executeCommand(MoveCommand(context, player, player.position.withRelativeX(1)))
                 }
-                'g' -> fetchEntitiesAt(Position3D.create(10, 10, 0)).map {
-                    player.executeCommand(MoveCommand(context, it, Position3D.create(30, 30, 0)))
+                when (ks.getCharacter()) {
+                    ',' -> response = player.executeCommand(PickItemUpCommand(context = context, source = player, position = entityPositionLookup[player.id]!!))
+                    'i' -> context.screen.openModal(InventoryDialog(context))
+                    'e' -> context.screen.openModal(EquipmentDialog(context))
+                    'd' -> if (player.inventory.items.lastOrNull() != null) {
+                        response = player.executeCommand(DropItemCommand(context, player, player.inventory.items.last(), entityPositionLookup[player.id]!!))
+                    }
+                    'g' -> fetchEntitiesAt(Position3D.create(10, 10, 0)).map {
+                        response = player.executeCommand(MoveCommand(context, it, Position3D.create(30, 30, 0)))
+                    }
+                    'z' -> player.health.hpProperty.value -= 5
+                    '>' -> response = player.executeCommand(DescendStairsCommand(context, player))
+                    '<' -> response = player.executeCommand(AscendStairsCommand(context, player))
                 }
-                'z' -> player.health.hpProperty.value -= 5
-                '>' -> player.executeCommand(DescendStairsCommand(context, player))
-                '<' -> player.executeCommand(AscendStairsCommand(context, player))
             }
         }
-        engine.update(context)
+        if (player.energy.energy <= 0) {
+            engine.update(context)
+        }
     }
 
     private fun updateCamera() {

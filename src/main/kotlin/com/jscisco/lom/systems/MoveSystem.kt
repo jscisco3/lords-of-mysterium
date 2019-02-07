@@ -27,7 +27,6 @@ object MoveSystem : BaseFacet<GameContext>() {
                 if (context.dungeon.moveEntity(source, position)) {
                     source.whenHasAttribute<EnergyAttribute> { energy ->
                         energy.energyProperty.value -= 1000
-                        logger.info("%s has %s energy remaining!".format(source.entityName, energy.energy))
                     }
                     Zircon.eventBus.publish(EntityMovedEvent(source, position))
                 }

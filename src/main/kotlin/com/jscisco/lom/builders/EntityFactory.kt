@@ -96,7 +96,7 @@ object EntityFactory {
                 EntityActions(AttackCommand::class),
                 EnergyAttribute.create(
                         energy = 1000,
-                        rechargeRate = 2000
+                        rechargeRate = 1000
                 ))
         behaviors(
                 EnergyBehavior(),
