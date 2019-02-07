@@ -64,8 +64,8 @@ object EntityFactory {
                 ),
                 EntityActions(AttackCommand::class, OpenDoorCommand::class),
                 EnergyAttribute.create(
-                        energy = 10000,
-                        rechargeRate = 5000
+                        energy = 1000,
+                        rechargeRate = 1000
                 ))
         behaviors(EnergyBehavior())
         facets(ItemPickerSystem,
