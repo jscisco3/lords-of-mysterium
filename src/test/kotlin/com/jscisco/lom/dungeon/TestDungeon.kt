@@ -18,9 +18,9 @@ import org.hexworks.zircon.api.input.InputType
 import org.hexworks.zircon.api.input.KeyStroke
 import org.hexworks.zircon.internal.Zircon
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
 
 class TestDungeon {
 
@@ -48,6 +48,7 @@ class TestDungeon {
     }
 
     @Nested
+    @Disabled
     inner class DungeonMovement {
 
         private val initialPosition = Position3D.create(5, 5, 0)

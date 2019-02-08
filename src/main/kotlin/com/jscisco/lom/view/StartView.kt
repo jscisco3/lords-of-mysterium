@@ -6,7 +6,7 @@ import com.jscisco.lom.configuration.GameConfiguration.VISIBLE_DUNGEON_WIDTH
 import com.jscisco.lom.configuration.GameConfiguration.WINDOW_HEIGHT
 import com.jscisco.lom.configuration.GameConfiguration.WINDOW_WIDTH
 import com.jscisco.lom.dungeon.DungeonBuilder
-import com.jscisco.lom.dungeon.strategies.GenericDungeonStrategy
+import com.jscisco.lom.dungeon.strategies.BSPTreeGenerationStrategy
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.Components
@@ -38,7 +38,7 @@ class StartView() : BaseView() {
             val dungeonSize = Size3D.create(WINDOW_WIDTH, WINDOW_HEIGHT, 5)
             val visibleSize = Size3D.create(VISIBLE_DUNGEON_WIDTH, VISIBLE_DUNGEON_HEIGHT, 1)
 
-            val dungeon = DungeonBuilder(dungeonSize, strategy = GenericDungeonStrategy(dungeonSize), player = EntityFactory.newPlayer())
+            val dungeon = DungeonBuilder(dungeonSize, strategy = BSPTreeGenerationStrategy(dungeonSize), player = EntityFactory.newPlayer())
                     .build(visibleSize, dungeonSize)
 
             replaceWith(DungeonView(dungeon))
