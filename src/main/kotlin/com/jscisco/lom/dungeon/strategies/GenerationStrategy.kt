@@ -5,6 +5,7 @@ import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.builders.GameBlockFactory
 import org.hexworks.zircon.api.data.impl.Position3D
 import org.hexworks.zircon.api.data.impl.Size3D
+import java.io.File
 
 abstract class GenerationStrategy(private val dungeonSize: Size3D) {
 
@@ -12,7 +13,24 @@ abstract class GenerationStrategy(private val dungeonSize: Size3D) {
 
     abstract fun generateDungeon(): MutableMap<Position3D, GameBlock>
 
-    internal fun createOutsideWalls() {
+    internal fun writeDungeonToFile() {
+        File("test.txt").printWriter().use { out ->
+            for (z in 0 until dungeonSize.zLength) {
+                out.println("=================== Floor: %s ===================".format(z))
+                for (y in 0 until dungeonSize.yLength) {
+                    val sb = StringBuilder()
+                    for (x in 0 until dungeonSize.xLength) {
+                        val block = blocks[Position3D.create(x, y, z)]
+                        block?.inFov = true
+                        sb.append(block?.layers?.last()?.asCharacterTile()?.get()?.character)
+                    }
+                    out.println(sb.toString())
+                }
+            }
+        }
+    }
+
+    internal fun initializeOutsideWalls() {
         for (z in 0 until dungeonSize.zLength) {
             for (i in 0 until dungeonSize.xLength) {
                 blocks[Position3D.create(i, 0, z)] = GameBlockFactory.wall()
@@ -37,6 +55,12 @@ abstract class GenerationStrategy(private val dungeonSize: Size3D) {
     internal fun initializeFloors() {
         forAllPositions { pos ->
             blocks[pos] = GameBlockFactory.floor()
+        }
+    }
+
+    internal fun initializeWalls() {
+        forAllPositions { pos ->
+            blocks[pos] = GameBlockFactory.wall()
         }
     }
 

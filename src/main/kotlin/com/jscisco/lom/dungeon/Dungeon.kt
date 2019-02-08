@@ -51,7 +51,6 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
     private val engine = newEngine<GameContext>()
     private val entityPositionLookup = mutableMapOf<Identifier, Position3D>()
-    //    private val fogOfWar: FogOfWar = EntityFactory.newFogOfWar(this, player, actualSize)
     private val fogOfWar: FogOfWar by lazy { EntityFactory.newFogOfWar(this, player, actualSize) }
 
     val resistanceMap = ConcurrentHashMap<Int, Array<DoubleArray>>().also {
