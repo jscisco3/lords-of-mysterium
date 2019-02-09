@@ -19,6 +19,7 @@ import org.hexworks.zircon.api.data.impl.Position3D
 import org.hexworks.zircon.api.data.impl.Size3D
 import org.hexworks.zircon.api.graphics.Layer
 import squidpony.squidgrid.FOV
+import squidpony.squidgrid.Radius
 import java.util.concurrent.ConcurrentHashMap
 
 class FogOfWar(val dungeon: Dungeon, val player: GameEntity<Player>, val size: Size3D) : BaseEntity<FogOfWarType, GameContext>(FogOfWarType) {
@@ -35,7 +36,6 @@ class FogOfWar(val dungeon: Dungeon, val player: GameEntity<Player>, val size: S
             fows[level] = fow
             dungeon.pushOverlayAt(fow, level)
         }
-        logger.info(this.size.toString())
     }
 
     init {
@@ -44,7 +44,7 @@ class FogOfWar(val dungeon: Dungeon, val player: GameEntity<Player>, val size: S
 
     private fun updateFOW() {
         player.whenHasAttribute<FieldOfView> {
-            player.fov.fov = fieldOfViewCalculator.calculateFOV(dungeon.resistanceMap.getValue(player.position.z), player.position.x, player.position.y, player.fov.radius)
+            player.fov.fov = fieldOfViewCalculator.calculateFOV(dungeon.resistanceMap.getValue(player.position.z), player.position.x, player.position.y, player.fov.radius, Radius.DIAMOND)
             val fov = player.fov.fov
             for (x in 0 until fov.size) {
                 for (y in 0 until fov[x].size) {

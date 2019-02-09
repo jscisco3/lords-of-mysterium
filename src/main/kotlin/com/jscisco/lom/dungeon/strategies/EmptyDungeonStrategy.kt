@@ -10,7 +10,6 @@ class EmptyDungeonStrategy(private val dungeonSize: Size3D) : GenerationStrategy
         initializeFloors()
         initializeOutsideWalls()
         createItems()
-        createNPCs()
         placeStairs()
 
         blocks[Position3D.create(7, 7, 0)]?.addEntity(EntityFactory.newClosedDoor())

@@ -22,9 +22,15 @@ class DungeonBuilder(private val dungeonSize: Size3D,
 
     fun build(visibleSize: Size3D, dungeonSize: Size3D): Dungeon {
         val dungeon = Dungeon(blocks, visibleSize, dungeonSize, player)
-        dungeon.addAtEmptyPosition(EntityFactory.newGoblin(),
-                offset = Position3D.defaultPosition().withZ(0)
-        )
+        addNPCs(dungeon,
+                Position3D.defaultPosition().withZ(0))
         return dungeon
+    }
+
+    private fun addNPCs(dungeon: Dungeon, offset: Position3D) {
+        for (i in 0..20) {
+            dungeon.addAtEmptyPosition(EntityFactory.newGoblin(),
+                    offset = offset)
+        }
     }
 }

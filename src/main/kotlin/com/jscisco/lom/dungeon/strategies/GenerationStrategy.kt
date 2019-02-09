@@ -51,10 +51,6 @@ abstract class GenerationStrategy(private val dungeonSize: Size3D) {
         blocks[Position3D.create(5, 5, 0)] = GameBlock.createWith(EntityFactory.newSword())
     }
 
-    open fun createNPCs() {
-        blocks[Position3D.create(8, 8, 0)] = GameBlock.createWith(EntityFactory.newGoblin())
-    }
-
     internal fun placeStairs() {
         blocks[Position3D.create(15, 15, 0)] = GameBlock.createWith(EntityFactory.stairsUp())
         blocks[Position3D.create(20, 30, 1)] = GameBlock.createWith(EntityFactory.stairsDown())

@@ -35,11 +35,12 @@ class StartView() : BaseView() {
                 .build()
 
         jumpIntoDungeon.onMouseReleased {
-            val dungeonSize = Size3D.create(WINDOW_WIDTH, WINDOW_HEIGHT, 5)
+            val dungeonSize = Size3D.create(WINDOW_WIDTH, WINDOW_HEIGHT, 1)
             val visibleSize = Size3D.create(VISIBLE_DUNGEON_WIDTH, VISIBLE_DUNGEON_HEIGHT, 1)
 
             val dungeon = DungeonBuilder(dungeonSize, strategy = GenericDungeonStrategy(dungeonSize), player = EntityFactory.newPlayer())
                     .build(visibleSize, dungeonSize)
+            dungeon.writeToFile()
 
             replaceWith(DungeonView(dungeon))
             close()

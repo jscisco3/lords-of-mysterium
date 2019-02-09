@@ -1,0 +1,14 @@
+{
+  "monsters": [
+    {
+      "name": "Goblin",
+      "description": "A nasty little goblin",
+      "attributes": [
+
+      ],
+      "facets": [],
+      "behaviors": [
+      ]
+    }
+  ]
+}

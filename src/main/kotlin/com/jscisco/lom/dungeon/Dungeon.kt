@@ -82,7 +82,6 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         logger.info("The player is at: %s".format(player.position))
         addDungeonEntity(fogOfWar)
         updateCamera()
-        writeToFile()
     }
 
 
@@ -197,7 +196,6 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
      * Finds an empty location on a given Z-level
      */
     fun findEmptyLocationWithin(offset: Position3D, size: Size3D): Maybe<Position3D> {
-        logger.info("Offset: %s | Size: %s".format(offset.toString(), size.toString()))
         var position = Maybe.empty<Position3D>()
         val maxTries = 10
         var currentTry = 0
@@ -279,7 +277,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         return fetchEntitiesAt(pos).filterType()
     }
 
-    private fun writeToFile() {
+    fun writeToFile() {
         File("test.txt").printWriter().use { out ->
             for (z in 0 until actualSize().zLength) {
                 out.println("=================== Floor: %s ===================".format(z))
@@ -288,9 +286,10 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
                     for (x in 0 until actualSize().xLength) {
                         val block = blocks[Position3D.create(x, y, z)]
                         block?.inFov = true
-                        sb.append(block?.layers?.last()?.asCharacterTile()?.get()?.character)
+                        val c = block?.getEntityTile()?.asCharacterTile()?.get()?.character
+                        sb.append(c)
                     }
-                    out.println(sb.toString())
+                    out.println(sb)
                 }
             }
         }

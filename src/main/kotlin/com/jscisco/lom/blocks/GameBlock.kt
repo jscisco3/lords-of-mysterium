@@ -21,9 +21,7 @@ class GameBlock(private var defaultTile: Tile = GameTileBuilder.floor(),
     override val layers: MutableList<Tile>
         get() {
             if (inFov) {
-                return mutableListOf(defaultTile, currentEntities.filter { !it.hasAttribute<Item>() }.map { it.tile }.lastOrNull()
-                        ?: currentEntities.filter { it.hasAttribute<Item>() }.map { it.tile }.lastOrNull()
-                        ?: GameTileBuilder.EMPTY)
+                return mutableListOf(defaultTile, getEntityTile())
             } else {
                 if (seen) {
                     return mutableListOf(defaultTile, lastSeen)
@@ -34,6 +32,18 @@ class GameBlock(private var defaultTile: Tile = GameTileBuilder.floor(),
 
     override fun fetchSide(side: BlockSide): Tile {
         return GameTileBuilder.EMPTY
+    }
+
+    fun getEntityTile(): Tile {
+        val itemTile: Tile? = currentEntities.filter { it.hasAttribute<Item>() }.map { it.tile }.lastOrNull()
+        val nonItemTile: Tile? = currentEntities.filter { !it.hasAttribute<Item>() }.map { it.tile }.lastOrNull()
+        if (nonItemTile != null) {
+            return nonItemTile
+        }
+        if (itemTile != null) {
+            return itemTile
+        }
+        return GameTileBuilder.floor()
     }
 
     val occupier: GameEntity<EntityType>
