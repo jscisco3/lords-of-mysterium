@@ -8,11 +8,23 @@ import org.hexworks.zircon.api.data.impl.Position3D
 import org.hexworks.zircon.api.data.impl.Size3D
 import org.hexworks.zircon.api.shape.EllipseFactory
 import org.hexworks.zircon.api.shape.FilledRectangleFactory
+import squidpony.squidgrid.mapping.DungeonGenerator
 
 class GenericDungeonStrategy(private val dungeonSize: Size3D) : GenerationStrategy(dungeonSize) {
     override fun generateDungeon(): MutableMap<Position3D, GameBlock> {
-        initializeWalls()
-        digRooms(10)
+        val dungeonGenerator = DungeonGenerator(dungeonSize.xLength, dungeonSize.yLength)
+        for (z in 0 until dungeonSize.zLength) {
+            dungeonGenerator.generate()
+            dungeonGenerator.dungeon.forEachIndexed { row, arr ->
+                arr.forEachIndexed { column, terrain ->
+                    if (terrain == '#') {
+                        blocks[Position3D.create(row, column, z)] = GameBlockFactory.wall()
+                    } else {
+                        blocks[Position3D.create(row, column, z)] = GameBlockFactory.floor()
+                    }
+                }
+            }
+        }
         initializeOutsideWalls()
         writeDungeonToFile()
         return blocks

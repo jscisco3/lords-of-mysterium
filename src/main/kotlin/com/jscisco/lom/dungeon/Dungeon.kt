@@ -72,7 +72,13 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         registerEvents()
         calculateResistanceMap(resistanceMap)
 
-        addEntity(player, Position3D.create(12, 12, 0))
+        var playerStartPosition = findEmptyLocationWithin(Position3D.defaultPosition().withZ(0), actualSize)
+        while (playerStartPosition.isEmpty()) {
+            playerStartPosition = findEmptyLocationWithin(Position3D.defaultPosition().withZ(0), actualSize)
+        }
+
+        addEntity(player, playerStartPosition.get())
+        logger.info("The player is at: %s".format(player.position))
         addDungeonEntity(fogOfWar)
         updateCamera()
     }
@@ -197,7 +203,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
             val pos = Positions.create3DPosition(
                     x = (Math.random() * size.xLength).toInt() + offset.x,
                     y = (Math.random() * size.yLength).toInt() + offset.y,
-                    z = (Math.random() * size.zLength).toInt() + offset.z)
+                    z = offset.z)
             fetchBlockAt(pos).map {
                 if (it.isOccupied.not()) {
                     position = Maybe.of(pos)
