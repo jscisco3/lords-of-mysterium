@@ -278,8 +278,8 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     }
 
     fun writeToFile() {
-        File("test.txt").printWriter().use { out ->
-            for (z in 0 until actualSize().zLength) {
+        for (z in 0 until actualSize().zLength) {
+            File("logs/%s_dungeon_floor_%s.txt".format(System.getProperty("session.id"), z)).printWriter().use { out ->
                 out.println("=================== Floor: %s ===================".format(z))
                 for (y in 0 until actualSize().yLength) {
                     val sb = StringBuilder()

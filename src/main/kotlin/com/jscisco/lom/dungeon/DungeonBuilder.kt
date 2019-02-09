@@ -22,8 +22,8 @@ class DungeonBuilder(private val dungeonSize: Size3D,
 
     fun build(visibleSize: Size3D, dungeonSize: Size3D): Dungeon {
         val dungeon = Dungeon(blocks, visibleSize, dungeonSize, player)
-        addNPCs(dungeon,
-                Position3D.defaultPosition().withZ(0))
+//        addNPCs(dungeon,
+//                Position3D.defaultPosition().withZ(0))
         return dungeon
     }
 
