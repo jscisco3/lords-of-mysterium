@@ -46,7 +46,6 @@ class BSPTreeGenerationStrategy(private val dungeonSize: Size3D) : GenerationStr
             }
         }
         initializeOutsideWalls()
-        writeDungeonToFile()
         return blocks
     }
 

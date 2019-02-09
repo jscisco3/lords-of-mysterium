@@ -13,4 +13,8 @@ object GameBlockFactory {
 
     fun stairsDown() = GameBlock.createWith(EntityFactory.stairsDown())
 
+    fun closedDoor() = GameBlock.createWith(EntityFactory.newClosedDoor())
+
+    fun openDoor() = GameBlock.createWith(EntityFactory.newOpenDoor())
+
 }

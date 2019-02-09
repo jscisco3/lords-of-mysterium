@@ -35,6 +35,7 @@ import org.hexworks.zircon.api.game.GameArea
 import org.hexworks.zircon.api.input.InputType
 import org.hexworks.zircon.api.kotlin.whenKeyStroke
 import org.hexworks.zircon.internal.Zircon
+import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 
 
@@ -81,6 +82,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         logger.info("The player is at: %s".format(player.position))
         addDungeonEntity(fogOfWar)
         updateCamera()
+        writeToFile()
     }
 
 
@@ -275,6 +277,23 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
 
     fun findItemsAt(pos: Position3D): List<GameEntity<Item>> {
         return fetchEntitiesAt(pos).filterType()
+    }
+
+    private fun writeToFile() {
+        File("test.txt").printWriter().use { out ->
+            for (z in 0 until actualSize().zLength) {
+                out.println("=================== Floor: %s ===================".format(z))
+                for (y in 0 until actualSize().yLength) {
+                    val sb = StringBuilder()
+                    for (x in 0 until actualSize().xLength) {
+                        val block = blocks[Position3D.create(x, y, z)]
+                        block?.inFov = true
+                        sb.append(block?.layers?.last()?.asCharacterTile()?.get()?.character)
+                    }
+                    out.println(sb.toString())
+                }
+            }
+        }
     }
 
     companion object {

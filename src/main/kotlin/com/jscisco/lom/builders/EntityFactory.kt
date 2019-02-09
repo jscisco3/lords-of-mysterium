@@ -16,11 +16,11 @@ import com.jscisco.lom.entities.FogOfWar
 import com.jscisco.lom.events.GameLogEvent
 import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.newGameEntityOfType
-import com.jscisco.lom.extensions.position
 import com.jscisco.lom.extensions.triggers
 import com.jscisco.lom.systems.*
 import com.jscisco.lom.trigger.Trigger
 import org.hexworks.cobalt.events.api.subscribe
+import org.hexworks.zircon.api.data.impl.Position3D
 import org.hexworks.zircon.api.data.impl.Size3D
 import org.hexworks.zircon.internal.Zircon
 import java.util.*
@@ -100,7 +100,7 @@ object EntityFactory {
                 ))
         behaviors(
                 EnergyBehavior(),
-                AIBehavior(HunterSeekerAI(updateTarget = { it.player.position }).or(WanderAI()))
+                AIBehavior(HunterSeekerAI(updateTarget = { Position3D.unknown() }).or(WanderAI()))
         )
         facets(CombatSystem,
                 MoveSystem,
@@ -122,6 +122,11 @@ object EntityFactory {
                 EntityTile(GameTileBuilder.closedDoor()),
                 Openable)
         facets(OpenDoorSystem)
+    }
+
+    fun newOpenDoor() = newGameEntityOfType(Door) {
+        attributes(EntityPosition(),
+                EntityTile(GameTileBuilder.openDoor()))
     }
 
     fun newSword() = newGameEntityOfType(Item) {

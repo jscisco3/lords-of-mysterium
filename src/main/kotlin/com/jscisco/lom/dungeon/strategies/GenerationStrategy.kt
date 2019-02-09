@@ -13,23 +13,6 @@ abstract class GenerationStrategy(private val dungeonSize: Size3D) {
 
     abstract fun generateDungeon(): MutableMap<Position3D, GameBlock>
 
-    internal fun writeDungeonToFile() {
-        File("test.txt").printWriter().use { out ->
-            for (z in 0 until dungeonSize.zLength) {
-                out.println("=================== Floor: %s ===================".format(z))
-                for (y in 0 until dungeonSize.yLength) {
-                    val sb = StringBuilder()
-                    for (x in 0 until dungeonSize.xLength) {
-                        val block = blocks[Position3D.create(x, y, z)]
-                        block?.inFov = true
-                        sb.append(block?.layers?.last()?.asCharacterTile()?.get()?.character)
-                    }
-                    out.println(sb.toString())
-                }
-            }
-        }
-    }
-
     internal fun initializeOutsideWalls() {
         for (z in 0 until dungeonSize.zLength) {
             for (i in 0 until dungeonSize.xLength) {
@@ -64,11 +47,11 @@ abstract class GenerationStrategy(private val dungeonSize: Size3D) {
         }
     }
 
-    internal fun createItems() {
+    open fun createItems() {
         blocks[Position3D.create(5, 5, 0)] = GameBlock.createWith(EntityFactory.newSword())
     }
 
-    internal fun createNPCs() {
+    open fun createNPCs() {
         blocks[Position3D.create(8, 8, 0)] = GameBlock.createWith(EntityFactory.newGoblin())
     }
 
