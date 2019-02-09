@@ -39,9 +39,6 @@ class TestBSPDungeonGeneration {
             Assertions.assertThat(splitRegions[1].topLeftCorner).isEqualTo(
                     region.topLeftCorner.withRelative(Position.create(region.topLeftCorner.x + splitRegions[1].size.width, region.topLeftCorner.y))
             )
-            splitRegions.forEach {
-                println(it)
-            }
         }
 
         @Test
@@ -52,22 +49,31 @@ class TestBSPDungeonGeneration {
         }
 
         @Test
-        fun `if I split a region and it's subregion they should look like what I expect`() {
-            val region = Region(Size.create(65, 75), Position.defaultPosition())
-            val splitRegions = region.splitRegion(true)
-            val splitRegions2 = splitRegions[1].splitRegion(false)
-
+        fun `I should be able to split a region and have a minimum height`() {
+            val minHeight = 5
+            val region = Region(Size.create(20, 20), Position.defaultPosition())
+            val splitRegions = region.splitRegion(horizontal = true, splitMultiplier = 0.00001, minHeight = minHeight)
             splitRegions.forEach {
-                println(it)
-            }
-            splitRegions2.forEach {
-                println(it)
+                Assertions.assertThat(it.size.height).isGreaterThanOrEqualTo(minHeight)
             }
         }
+
+        @Test
+        fun `I should be able to split a region and have a minimum width`() {
+            val minWidth = 5
+            val region = Region(Size.create(20, 20), Position.defaultPosition())
+            val splitRegions = region.splitRegion(horizontal = false, splitMultiplier = 0.000001, minWidth = minWidth)
+            splitRegions.forEach {
+                Assertions.assertThat(it.size.width).isGreaterThanOrEqualTo(minWidth)
+            }
+        }
+
     }
 
     @Nested
     inner class TestCreateBSPTree {
+
+        val DEFAULT_REGION = Region(Size.create(80, 50), Position.defaultPosition())
 
         @Test
         fun `a new BSP trees should have null children`() {
@@ -125,10 +131,7 @@ class TestBSPDungeonGeneration {
             )
             val bspDungeonGeneration = BSPTreeGenerationStrategy(Size3D.create(80, 50, 1))
             val tree = bspDungeonGeneration.createBSPTree(root, 2)
-//            Assertions.assertThat(tree.leafNodes().size).isEqualTo(4)
-            tree.leafNodes().forEach {
-                println(it)
-            }
+            Assertions.assertThat(tree.leafNodes().size).isEqualTo(4)
         }
     }
 

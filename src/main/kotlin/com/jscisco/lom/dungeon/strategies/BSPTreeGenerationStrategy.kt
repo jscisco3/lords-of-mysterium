@@ -11,9 +11,9 @@ import org.hexworks.zircon.api.data.impl.Size3D
 import org.hexworks.zircon.api.shape.FilledRectangleFactory
 import java.util.*
 import kotlin.math.ceil
-import kotlin.math.floor
 import kotlin.random.Random
 
+//TODO: Fix this at some point
 class BSPTreeGenerationStrategy(private val dungeonSize: Size3D) : GenerationStrategy(dungeonSize) {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
@@ -25,14 +25,15 @@ class BSPTreeGenerationStrategy(private val dungeonSize: Size3D) : GenerationStr
             // Create the BSP tree for each floor
             val bspTree = createBSPTree(
                     BSPNode(rootRegion),
-                    iterations = 3
+                    iterations = 5
             )
             // For each leaf node, carve out a small room
             bspTree.leafNodes().forEach {
-                val fillWidth = Random.nextInt(5, it.value.size.width - 1)
-                val fillHeight = Random.nextInt(5, it.value.size.height - 1)
-                val topLeftX = Random.nextInt(1, fillWidth)
-                val topLeftY = Random.nextInt(1, fillHeight)
+                val fillWidth = Random.nextInt(4, it.value.size.width)
+                val fillHeight = Random.nextInt(4, it.value.size.height)
+                val topLeftX = (1..(it.value.size.width - fillWidth)).random()
+                val topLeftY = (1..(it.value.size.height - fillHeight)).random()
+                logger.info("(%s,%s) | W:%s | H:%s |  %sx%s".format(topLeftX, topLeftY, it.value.size.width, it.value.size.height, fillWidth, fillHeight))
                 FilledRectangleFactory.buildFilledRectangle(
                         it.value.topLeftCorner.withRelative(Position.create(topLeftX, topLeftY)),
                         Size.create(
@@ -42,7 +43,6 @@ class BSPTreeGenerationStrategy(private val dungeonSize: Size3D) : GenerationStr
                 ).forEach { pos ->
                     blocks[Position3D.from2DPosition(pos, z)] = GameBlockFactory.floor()
                 }
-
             }
         }
         initializeOutsideWalls()
@@ -62,10 +62,13 @@ class BSPTreeGenerationStrategy(private val dungeonSize: Size3D) : GenerationStr
     fun splitRegion(node: BSPNode<Region>) {
         val region = node.value
         val splitRegions = region.splitRegion(horizontal = Random.nextBoolean(), splitMultiplier = Random.nextDouble(0.2, 0.8))
-        node.link(
-                BSPNode(splitRegions[0]),
-                BSPNode(splitRegions[1])
-        )
+        if (splitRegions.isNotEmpty()) {
+            node.link(
+                    BSPNode(splitRegions[0]),
+                    BSPNode(splitRegions[1])
+            )
+        }
+
     }
 
 
@@ -145,15 +148,28 @@ class BSPTreeGenerationStrategy(private val dungeonSize: Size3D) : GenerationStr
                 if (size.height - firstRegionHeight < minHeight) {
                     firstRegionHeight -= (minHeight - (size.height - firstRegionHeight))
                 }
+                if (firstRegionHeight < minHeight) {
+                    return listOf()
+                }
                 listOf(
-                        Region(Size.create(size.width, ceil(size.height * splitMultiplier).toInt()), topLeftCorner),
-                        Region(Size.create(size.width, floor(size.height * (1 - splitMultiplier)).toInt()), splitPosition)
+                        Region(Size.create(size.width, firstRegionHeight), topLeftCorner),
+                        Region(Size.create(size.width, size.height - firstRegionHeight), splitPosition)
                 )
             } else {
                 val splitPosition = Position.create(topLeftCorner.x + ceil(size.width * splitMultiplier).toInt(), topLeftCorner.y)
+                var firstRegionWidth = ceil(size.width * splitMultiplier).toInt()
+                if (firstRegionWidth < minWidth) {
+                    firstRegionWidth = minWidth
+                }
+                if (size.width - firstRegionWidth < minWidth) {
+                    firstRegionWidth -= (minHeight - (size.width - firstRegionWidth))
+                }
+                if (firstRegionWidth < minWidth) {
+                    return listOf()
+                }
                 listOf(
-                        Region(Size.create(ceil(size.width * splitMultiplier).toInt(), size.height), topLeftCorner),
-                        Region(Size.create(floor(size.width * (1 - splitMultiplier)).toInt(), size.height), splitPosition)
+                        Region(Size.create(firstRegionWidth, size.height), topLeftCorner),
+                        Region(Size.create(size.width - firstRegionWidth, size.height), splitPosition)
                 )
             }
         }
