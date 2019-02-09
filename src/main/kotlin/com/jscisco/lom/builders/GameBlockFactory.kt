@@ -9,4 +9,8 @@ object GameBlockFactory {
 
     fun wall() = GameBlock.createWith(EntityFactory.newWall())
 
+    fun stairsUp() = GameBlock.createWith(EntityFactory.stairsUp())
+
+    fun stairsDown() = GameBlock.createWith(EntityFactory.stairsDown())
+
 }

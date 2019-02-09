@@ -24,6 +24,14 @@ class GenericDungeonStrategy(private val dungeonSize: Size3D) : GenerationStrate
                     }
                 }
             }
+            if (z > 0) {
+                val stairsDown = dungeonGenerator.stairsDown
+                blocks[Position3D.create(stairsDown.x, stairsDown.y, z)] = GameBlockFactory.stairsDown()
+            }
+            if (z < dungeonSize.zLength) {
+                val stairsUp = dungeonGenerator.stairsUp
+                blocks[Position3D.create(stairsUp.x, stairsUp.y, z)] = GameBlockFactory.stairsUp()
+            }
         }
         initializeOutsideWalls()
         writeDungeonToFile()
