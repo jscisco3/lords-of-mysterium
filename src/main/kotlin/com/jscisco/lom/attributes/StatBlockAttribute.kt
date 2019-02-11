@@ -11,7 +11,11 @@ data class StatBlockAttribute(
         val intelligenceProperty: Property<Int>,
         val constitutionProperty: Property<Int>,
         val agilityProperty: Property<Int>,
-        val perceptionProperty: Property<Int>
+        val perceptionProperty: Property<Int>,
+        val attackPowerProperty: Property<Int>,
+        val toHitProperty: Property<Int>,
+        val acProperty: Property<Int>,
+        val evProperty: Property<Int>
 ) : DisplayableAttribute {
 
     operator fun plus(statBlockAttribute: StatBlockAttribute) {
@@ -20,6 +24,10 @@ data class StatBlockAttribute(
         constitutionProperty.value += statBlockAttribute.constitutionProperty.value
         agilityProperty.value += statBlockAttribute.agilityProperty.value
         perceptionProperty.value += statBlockAttribute.perceptionProperty.value
+        attackPowerProperty.value += statBlockAttribute.attackPowerProperty.value
+        toHitProperty.value += statBlockAttribute.toHitProperty.value
+        acProperty.value += statBlockAttribute.acProperty.value
+        evProperty.value += statBlockAttribute.evProperty.value
     }
 
     operator fun minus(statBlockAttribute: StatBlockAttribute) {
@@ -28,6 +36,10 @@ data class StatBlockAttribute(
         constitutionProperty.value -= statBlockAttribute.constitutionProperty.value
         agilityProperty.value -= statBlockAttribute.agilityProperty.value
         perceptionProperty.value -= statBlockAttribute.perceptionProperty.value
+        attackPowerProperty.value -= statBlockAttribute.attackPowerProperty.value
+        toHitProperty.value -= statBlockAttribute.toHitProperty.value
+        acProperty.value -= statBlockAttribute.acProperty.value
+        evProperty.value -= statBlockAttribute.evProperty.value
     }
 
     override fun toComponent(width: Int): Component {
@@ -57,6 +69,12 @@ data class StatBlockAttribute(
                     .concatWithConvert(perceptionProperty)
             perceptionLabel.textProperty.bind(perceptionProp)
 
+            val attackPowerLabel = Components.label().withSize(width, 1).withPosition(0, 6).build()
+            val attackProp = createPropertyFrom("Power: ")
+                    .concatWithConvert(attackPowerProperty)
+            attackPowerLabel.textProperty.bind(attackProp)
+
+
 
 
             addComponent(strengthLabel)
@@ -72,13 +90,21 @@ data class StatBlockAttribute(
                    intelligence: Int = 0,
                    constitution: Int = 0,
                    agility: Int = 0,
-                   perception: Int = 0) =
+                   perception: Int = 0,
+                   attackPower: Int = 0,
+                   toHit: Int = 0,
+                   ac: Int = 0,
+                   ev: Int = 0) =
                 StatBlockAttribute(
                         strengthProperty = createPropertyFrom(strength),
                         intelligenceProperty = createPropertyFrom(intelligence),
                         constitutionProperty = createPropertyFrom(constitution),
                         agilityProperty = createPropertyFrom(agility),
-                        perceptionProperty = createPropertyFrom(perception)
+                        perceptionProperty = createPropertyFrom(perception),
+                        attackPowerProperty = createPropertyFrom(attackPower),
+                        toHitProperty = createPropertyFrom(toHit),
+                        acProperty = createPropertyFrom(ac),
+                        evProperty = createPropertyFrom(ev)
                 )
     }
 }

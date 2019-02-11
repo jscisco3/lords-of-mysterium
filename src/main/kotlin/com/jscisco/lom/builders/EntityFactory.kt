@@ -13,11 +13,13 @@ import com.jscisco.lom.commands.AttackCommand
 import com.jscisco.lom.commands.OpenDoorCommand
 import com.jscisco.lom.dungeon.Dungeon
 import com.jscisco.lom.entities.FogOfWar
+import com.jscisco.lom.events.CombatInstigatedEvent
 import com.jscisco.lom.events.GameLogEvent
 import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.newGameEntityOfType
 import com.jscisco.lom.extensions.triggers
 import com.jscisco.lom.systems.*
+import com.jscisco.lom.systems.combat.CombatSystem
 import com.jscisco.lom.trigger.Trigger
 import org.hexworks.cobalt.events.api.subscribe
 import org.hexworks.zircon.api.data.impl.Position3D
@@ -97,7 +99,14 @@ object EntityFactory {
                 EnergyAttribute.create(
                         energy = 1000,
                         rechargeRate = 1000
-                ))
+                ),
+                EventListenerAttribute().also {
+                    it.eventListeners.add(
+                            Zircon.eventBus.subscribe<CombatInstigatedEvent>(it.scope) { (source, attacker, defender) ->
+                                println("%s attacked %s.".format(attacker, defender))
+                            }
+                    )
+                })
         behaviors(
                 EnergyBehavior(),
                 AIBehavior(HunterSeekerAI(updateTarget = { Position3D.unknown() }).or(WanderAI()))
