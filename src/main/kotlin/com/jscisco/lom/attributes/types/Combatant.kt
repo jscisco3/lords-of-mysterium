@@ -21,9 +21,12 @@ val GameEntity<ItemHolder>.equipment: EquipmentAttribute
 val GameEntity<Combatant>.health: HealthAttribute
     get() = attribute()
 
-val GameEntity<Combatant>.toHit: Int
+val GameEntity<Combatant>.combinedStats: StatBlockAttribute
     get() {
-        val baseStats = this.statBlock
+        val baseStats = StatBlockAttribute.create()
+        this.whenHasAttribute<StatBlockAttribute> {
+            baseStats + it
+        }
         this.whenHasAttribute<EquipmentAttribute> {
             it.equipmentSlots.forEach { eq ->
                 eq.equippedItem.whenHasAttribute<StatBlockAttribute> { sba ->
@@ -31,10 +34,17 @@ val GameEntity<Combatant>.toHit: Int
                 }
             }
         }
-        return baseStats.toHitProperty.value
+        return baseStats
     }
 
+val GameEntity<Combatant>.toHit: Int
+    get() = this.combinedStats.toHitProperty.value
+
 val GameEntity<Combatant>.ev: Int
-    get() {
-        return 0
-    }
+    get() = this.combinedStats.evProperty.value
+
+val GameEntity<Combatant>.attackPower: Int
+    get() = this.combinedStats.attackPowerProperty.value
+
+val GameEntity<Combatant>.ac: Int
+    get() = this.combinedStats.acProperty.value
