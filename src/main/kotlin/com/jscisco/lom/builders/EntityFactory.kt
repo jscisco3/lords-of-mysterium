@@ -13,7 +13,6 @@ import com.jscisco.lom.commands.AttackCommand
 import com.jscisco.lom.commands.OpenDoorCommand
 import com.jscisco.lom.dungeon.Dungeon
 import com.jscisco.lom.entities.FogOfWar
-import com.jscisco.lom.events.CombatInstigatedEvent
 import com.jscisco.lom.events.GameLogEvent
 import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.newGameEntityOfType
@@ -99,14 +98,7 @@ object EntityFactory {
                 EnergyAttribute.create(
                         energy = 1000,
                         rechargeRate = 1000
-                ),
-                EventListenerAttribute().also {
-                    it.eventListeners.add(
-                            Zircon.eventBus.subscribe<CombatInstigatedEvent>(it.scope) { (source, attacker, defender) ->
-                                println("%s attacked %s.".format(attacker, defender))
-                            }
-                    )
-                })
+                ))
         behaviors(
                 EnergyBehavior(),
                 AIBehavior(HunterSeekerAI(updateTarget = { Position3D.unknown() }).or(WanderAI()))
@@ -143,8 +135,8 @@ object EntityFactory {
                 NameAttribute(
                         name = "A Cool Sword"
                 ),
-                CombatStatsAttribute.create(
-                        power = 5,
+                StatBlockAttribute.create(
+                        attackPower = 5,
                         toHit = 5),
                 ItemStats(
                         weight = 1,

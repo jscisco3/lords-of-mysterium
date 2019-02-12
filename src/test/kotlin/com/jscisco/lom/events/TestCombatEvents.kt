@@ -61,6 +61,6 @@ class TestCombatEvents {
 
     @Test
     fun testDamageEvent() {
-        Zircon.eventBus.publish(EntityDamagedEvent(context, attacker, target, 50))
+        Zircon.eventBus.publish(DamageEvent(context, attacker, target, 50))
     }
 }
