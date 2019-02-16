@@ -13,8 +13,10 @@ import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.cobalt.datatypes.extensions.map
 import org.hexworks.cobalt.datatypes.extensions.orElseThrow
+import org.hexworks.cobalt.events.api.Event
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.data.impl.Position3D
+import org.hexworks.zircon.internal.Zircon
 import kotlin.reflect.full.isSuperclassOf
 
 var AnyGameEntity.position: Position3D
@@ -54,6 +56,9 @@ val AnyGameEntity.statBlock: StatBlockAttribute
 val AnyGameEntity.energy: EnergyAttribute
     get() = attribute()
 
+val AnyGameEntity.eventListener: EventListenerAttribute
+    get() = attribute()
+
 val AnyGameEntity.entityName: String
     get() {
         return try {
@@ -62,6 +67,12 @@ val AnyGameEntity.entityName: String
             this.name
         }
     }
+
+fun AnyGameEntity.publishEvent(T: Event) {
+    this.whenHasAttribute<EventListenerAttribute> {
+        Zircon.eventBus.publish(T, eventScope = it.scope)
+    }
+}
 
 inline fun <reified T : Attribute> AnyGameEntity.attribute(): T = findAttribute(T::class).orElseThrow {
     NoSuchElementException("Entity '$this' has no property with type '${T::class.simpleName}'.")

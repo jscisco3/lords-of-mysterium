@@ -13,10 +13,10 @@ import com.jscisco.lom.commands.AttackCommand
 import com.jscisco.lom.commands.OpenDoorCommand
 import com.jscisco.lom.dungeon.Dungeon
 import com.jscisco.lom.entities.FogOfWar
+import com.jscisco.lom.events.CombatInstigatedEvent
 import com.jscisco.lom.events.GameLogEvent
-import com.jscisco.lom.extensions.GameEntity
-import com.jscisco.lom.extensions.newGameEntityOfType
-import com.jscisco.lom.extensions.triggers
+import com.jscisco.lom.events.scope.EntityEventScope
+import com.jscisco.lom.extensions.*
 import com.jscisco.lom.systems.*
 import com.jscisco.lom.systems.combat.CombatSystem
 import com.jscisco.lom.trigger.Trigger
@@ -63,6 +63,7 @@ object EntityFactory {
                 FieldOfView(
                         radius = 10.0
                 ),
+                EventListenerAttribute(EntityEventScope()),
                 EntityActions(AttackCommand::class, OpenDoorCommand::class),
                 EnergyAttribute.create(
                         energy = 1000,
@@ -79,6 +80,10 @@ object EntityFactory {
                 StairAscender,
                 StairDescender)
 
+    }.also {
+        Zircon.eventBus.subscribe<CombatInstigatedEvent>(it.eventListener.scope) { (context, attacker, defender, attack) ->
+            Zircon.eventBus.publish(GameLogEvent("%s instigated combat!".format(attacker.entityName)))
+        }
     }
 
     fun newGoblin() = newGameEntityOfType(NPC) {
