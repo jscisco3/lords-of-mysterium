@@ -6,6 +6,7 @@ import com.jscisco.lom.attributes.flags.Openable
 import com.jscisco.lom.attributes.flags.VisionBlocker
 import com.jscisco.lom.attributes.types.*
 import com.jscisco.lom.behaviors.EnergyBehavior
+import com.jscisco.lom.behaviors.PlayerInputHandler
 import com.jscisco.lom.behaviors.ai.AIBehavior
 import com.jscisco.lom.behaviors.ai.HunterSeekerAI
 import com.jscisco.lom.behaviors.ai.WanderAI
@@ -69,7 +70,7 @@ object EntityFactory {
                         energy = 1000,
                         rechargeRate = 1000
                 ))
-        behaviors(EnergyBehavior())
+        behaviors(PlayerInputHandler, EnergyBehavior())
         facets(ItemPickerSystem,
                 ItemDropperSystem,
                 CombatSystem,
@@ -80,10 +81,6 @@ object EntityFactory {
                 StairAscender,
                 StairDescender)
 
-    }.also {
-        Zircon.eventBus.subscribe<CombatInstigatedEvent>(it.eventListener.scope) { (context, attacker, defender, attack) ->
-            Zircon.eventBus.publish(GameLogEvent("%s instigated combat!".format(attacker.entityName)))
-        }
     }
 
     fun newGoblin() = newGameEntityOfType(NPC) {

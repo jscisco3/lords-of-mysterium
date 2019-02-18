@@ -6,7 +6,6 @@ import com.jscisco.lom.configuration.GameConfiguration.SIDEBAR_WIDTH
 import com.jscisco.lom.configuration.GameConfiguration.WINDOW_HEIGHT
 import com.jscisco.lom.configuration.GameConfiguration.WINDOW_WIDTH
 import com.jscisco.lom.dungeon.Dungeon
-import com.jscisco.lom.dungeon.GameContext
 import com.jscisco.lom.events.GameLogEvent
 import com.jscisco.lom.view.fragment.PlayerStatsFragment
 import org.hexworks.cobalt.events.api.subscribe
@@ -28,12 +27,10 @@ class DungeonView(private val dungeon: Dungeon) : BaseView() {
     override fun onDock() {
 
         screen.onInput {
-            dungeon.handleInput(GameContext(
-                    dungeon = dungeon,
+            dungeon.update(
                     screen = screen,
-                    input = it,
-                    player = dungeon.player
-            ))
+                    input = it
+            )
         }
 
         val sidebar = Components.panel()

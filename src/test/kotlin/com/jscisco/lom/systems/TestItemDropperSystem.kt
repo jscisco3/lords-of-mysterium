@@ -69,7 +69,6 @@ class TestItemDropperSystem {
     @Test
     fun `don't do anything if the item is not in the dropper's inventory`() {
         val sword = TEST_SWORD()
-        logger.debug(player.inventory.items.toString())
         Assertions.assertThat(sword.position).isEqualTo(Position3D.unknown())
         player.executeCommand(DropItemCommand(
                 context = context,

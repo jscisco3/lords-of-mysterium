@@ -40,7 +40,7 @@ class StartView() : BaseView() {
 
             val dungeon = DungeonBuilder(dungeonSize, strategy = GenericDungeonStrategy(dungeonSize), player = EntityFactory.newPlayer())
                     .build(visibleSize, dungeonSize)
-            dungeon.writeToFile()
+//            dungeon.writeToFile()
 
             replaceWith(DungeonView(dungeon))
             close()
