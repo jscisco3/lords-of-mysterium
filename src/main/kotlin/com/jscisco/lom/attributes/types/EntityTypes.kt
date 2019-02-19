@@ -7,6 +7,10 @@ import com.jscisco.lom.extensions.attribute
 import org.hexworks.amethyst.api.base.BaseEntityType
 import org.hexworks.amethyst.api.entity.EntityType
 
+object Generic : BaseEntityType(
+        name = "generic"
+)
+
 object Player : BaseEntityType(
         name = "player"
 ), ItemHolder, Combatant

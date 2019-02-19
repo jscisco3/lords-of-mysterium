@@ -70,7 +70,6 @@ class TestDungeon {
                     input = keystroke,
                     player = player
             )
-            dungeon.handleInput(context)
             val expectedPosition = initialPosition.withRelativeY(1)
             Assertions.assertThat(player.position).isEqualTo(expectedPosition)
         }
@@ -87,7 +86,6 @@ class TestDungeon {
                     input = keystroke,
                     player = player
             )
-            dungeon.handleInput(context)
             val expectedPosition = initialPosition.withRelativeY(-1)
             Assertions.assertThat(player.position).isEqualTo(expectedPosition)
         }
@@ -104,7 +102,6 @@ class TestDungeon {
                     input = keystroke,
                     player = player
             )
-            dungeon.handleInput(context)
             val expectedPosition = initialPosition.withRelativeX(-1)
             Assertions.assertThat(player.position).isEqualTo(expectedPosition)
         }
@@ -121,7 +118,6 @@ class TestDungeon {
                     input = keystroke,
                     player = player
             )
-            dungeon.handleInput(context)
             val expectedPosition = initialPosition.withRelativeX(1)
             Assertions.assertThat(player.position).isEqualTo(expectedPosition)
         }
