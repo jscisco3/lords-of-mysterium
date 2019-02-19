@@ -1,15 +1,16 @@
 package com.jscisco.lom.behaviors
 
-import com.jscisco.lom.attributes.EnergyAttribute
+import com.jscisco.lom.attributes.InitiativeAttribute
+import com.jscisco.lom.attributes.flags.ActiveTurn
 import com.jscisco.lom.dungeon.GameContext
-import com.jscisco.lom.extensions.energy
+import com.jscisco.lom.extensions.initiative
 import org.hexworks.amethyst.api.base.BaseBehavior
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
 
-class EnergyBehavior : BaseBehavior<GameContext>(EnergyAttribute::class) {
+class InitiativeBehavior : BaseBehavior<GameContext>(InitiativeAttribute::class) {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
@@ -18,10 +19,13 @@ class EnergyBehavior : BaseBehavior<GameContext>(EnergyAttribute::class) {
      * returns TRUE.
      */
     override fun update(entity: Entity<EntityType, GameContext>, context: GameContext): Boolean {
-        if (entity.energy.energy <= 0) {
-            entity.energy.recharge()
-            return true
+        // Tick down
+        entity.initiative.initiativeProperty.value -= 1
+        // Once you hit 0, take a turn
+        if (entity.initiative.initiative <= 0) {
+            entity.initiative.recharge()
+            entity.addAttribute(ActiveTurn)
         }
-        return false
+        return true
     }
 }

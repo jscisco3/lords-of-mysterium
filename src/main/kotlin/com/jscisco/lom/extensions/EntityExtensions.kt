@@ -53,7 +53,7 @@ val AnyGameEntity.nameAttribute: NameAttribute
 val AnyGameEntity.statBlock: StatBlockAttribute
     get() = attribute()
 
-val AnyGameEntity.energy: EnergyAttribute
+val AnyGameEntity.initiative: InitiativeAttribute
     get() = attribute()
 
 val AnyGameEntity.eventListener: EventListenerAttribute

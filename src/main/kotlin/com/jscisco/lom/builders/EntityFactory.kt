@@ -5,7 +5,7 @@ import com.jscisco.lom.attributes.flags.BlockOccupier
 import com.jscisco.lom.attributes.flags.Openable
 import com.jscisco.lom.attributes.flags.VisionBlocker
 import com.jscisco.lom.attributes.types.*
-import com.jscisco.lom.behaviors.EnergyBehavior
+import com.jscisco.lom.behaviors.InitiativeBehavior
 import com.jscisco.lom.behaviors.PlayerInputHandler
 import com.jscisco.lom.behaviors.ai.AIBehavior
 import com.jscisco.lom.behaviors.ai.HunterSeekerAI
@@ -14,7 +14,6 @@ import com.jscisco.lom.commands.AttackCommand
 import com.jscisco.lom.commands.OpenDoorCommand
 import com.jscisco.lom.dungeon.Dungeon
 import com.jscisco.lom.entities.FogOfWar
-import com.jscisco.lom.events.CombatInstigatedEvent
 import com.jscisco.lom.events.GameLogEvent
 import com.jscisco.lom.events.scope.EntityEventScope
 import com.jscisco.lom.extensions.*
@@ -66,11 +65,10 @@ object EntityFactory {
                 ),
                 EventListenerAttribute(EntityEventScope()),
                 EntityActions(AttackCommand::class, OpenDoorCommand::class),
-                EnergyAttribute.create(
-                        energy = 1000,
-                        rechargeRate = 1000
+                InitiativeAttribute.create(
+                        initiative = 10
                 ))
-        behaviors(PlayerInputHandler, EnergyBehavior())
+        behaviors(PlayerInputHandler, InitiativeBehavior())
         facets(ItemPickerSystem,
                 ItemDropperSystem,
                 CombatSystem,
@@ -97,12 +95,11 @@ object EntityFactory {
                 BlockOccupier,
                 EntityPosition(),
                 EntityActions(AttackCommand::class),
-                EnergyAttribute.create(
-                        energy = 1000,
-                        rechargeRate = 1000
+                InitiativeAttribute.create(
+                        initiative = 100
                 ))
         behaviors(
-                EnergyBehavior(),
+                InitiativeBehavior(),
                 AIBehavior(HunterSeekerAI(updateTarget = { Position3D.unknown() }).or(WanderAI()))
         )
         facets(CombatSystem,

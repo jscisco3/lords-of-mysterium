@@ -1,6 +1,6 @@
 package com.jscisco.lom.systems
 
-import com.jscisco.lom.attributes.EnergyAttribute
+import com.jscisco.lom.attributes.InitiativeAttribute
 import com.jscisco.lom.commands.MoveCommand
 import com.jscisco.lom.dungeon.GameContext
 import com.jscisco.lom.events.EntityMovedEvent
@@ -25,8 +25,8 @@ object MoveSystem : BaseFacet<GameContext>() {
                 source.tryActionsOn(context, it.occupier)
             } else {
                 if (context.dungeon.moveEntity(source, position)) {
-                    source.whenHasAttribute<EnergyAttribute> { energy ->
-                        energy.energyProperty.value -= 1000
+                    source.whenHasAttribute<InitiativeAttribute> { initiative ->
+                        initiative.initiativeProperty.value += 10
                     }
                     Zircon.eventBus.publish(EntityMovedEvent(source, position))
                 }
