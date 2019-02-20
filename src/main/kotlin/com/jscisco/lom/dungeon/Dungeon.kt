@@ -46,7 +46,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     private val entityPositionLookup = mutableMapOf<Identifier, Position3D>()
     private val fogOfWar: FogOfWar by lazy { FogOfWar(this, player, actualSize) }
 
-    val lookingOverlay: LookingOverlay by lazy { LookingOverlay(this, player, actualSize) }
+    val targetingOverlay: TargetingOverlay by lazy { TargetingOverlay(this, player, actualSize) }
     var gameState = "exploring"
 
     val resistanceMap = ConcurrentHashMap<Int, Array<DoubleArray>>().also {
@@ -96,12 +96,12 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
             fogOfWar.updateFOW()
         }
 
-        Zircon.eventBus.subscribe<Looking> {
-            lookingOverlay.updateOverlay()
+        Zircon.eventBus.subscribe<Targeting> {
+            targetingOverlay.updateOverlay()
         }
 
-        Zircon.eventBus.subscribe<StopLooking> {
-            lookingOverlay.clearOverlay()
+        Zircon.eventBus.subscribe<TargetingCancelled> {
+            targetingOverlay.clearOverlay()
         }
     }
 

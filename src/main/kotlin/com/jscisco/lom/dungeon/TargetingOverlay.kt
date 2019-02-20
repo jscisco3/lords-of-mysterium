@@ -16,7 +16,7 @@ import org.hexworks.zircon.api.data.impl.Size3D
 import org.hexworks.zircon.api.graphics.Layer
 import squidpony.squidmath.DDALine
 
-class LookingOverlay(val dungeon: Dungeon, val player: GameEntity<Player>, val size: Size3D) {
+class TargetingOverlay(val dungeon: Dungeon, val player: GameEntity<Player>, val size: Size3D) {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 

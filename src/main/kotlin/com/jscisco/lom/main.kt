@@ -9,8 +9,8 @@ import com.jscisco.lom.configuration.GameConfiguration
 import com.jscisco.lom.dungeon.DungeonBuilder
 import com.jscisco.lom.dungeon.GameContext
 import com.jscisco.lom.dungeon.strategies.GenericDungeonStrategy
-import com.jscisco.lom.events.Looking
-import com.jscisco.lom.events.StopLooking
+import com.jscisco.lom.events.Targeting
+import com.jscisco.lom.events.TargetingCancelled
 import com.jscisco.lom.extensions.attribute
 import com.jscisco.lom.extensions.hasAttribute
 import com.jscisco.lom.extensions.position
@@ -67,13 +67,13 @@ fun main(args: Array<String>) {
                 '<' -> player.executeCommand(AscendStairsCommand(context, player))
                 // 't' -> targetingMode()
                 'l' -> {
-                    dungeon.gameState = "looking"
+                    dungeon.gameState = "targeting"
                     logger.info("Let's look around...")
                     player.addAttribute(LookingAttribute(player.position))
                 }
             }
         }
-        if (dungeon.gameState == "looking") {
+        if (dungeon.gameState == "targeting") {
             val lookingAttribute = player.attribute<LookingAttribute>()
             logger.info("You are looking at %s".format(lookingAttribute.position.toString()))
             when (ks.inputType()) {
@@ -84,10 +84,10 @@ fun main(args: Array<String>) {
                 InputType.Escape -> {
                     dungeon.gameState = "exploring"
                     player.removeAttribute(lookingAttribute)
-                    Zircon.eventBus.publish(StopLooking())
+                    Zircon.eventBus.publish(TargetingCancelled())
                 }
             }
-            Zircon.eventBus.publish(Looking())
+            Zircon.eventBus.publish(Targeting())
         }
 
     }
