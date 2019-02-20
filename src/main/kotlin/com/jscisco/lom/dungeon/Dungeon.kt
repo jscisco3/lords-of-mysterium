@@ -4,9 +4,7 @@ import com.jscisco.lom.attributes.types.Item
 import com.jscisco.lom.attributes.types.Player
 import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.builders.GameBlockFactory
-import com.jscisco.lom.events.DoorOpenedEvent
-import com.jscisco.lom.events.EntityMovedEvent
-import com.jscisco.lom.events.UpdateFOW
+import com.jscisco.lom.events.*
 import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.filterType
 import com.jscisco.lom.extensions.isPlayer
@@ -47,6 +45,9 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     private val engine = newEngine<GameContext>()
     private val entityPositionLookup = mutableMapOf<Identifier, Position3D>()
     private val fogOfWar: FogOfWar by lazy { FogOfWar(this, player, actualSize) }
+
+    val lookingOverlay: LookingOverlay by lazy { LookingOverlay(this, player, actualSize) }
+    var gameState = "exploring"
 
     val resistanceMap = ConcurrentHashMap<Int, Array<DoubleArray>>().also {
         for (z in 0 until actualSize.zLength) {
@@ -93,6 +94,14 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
 
         Zircon.eventBus.subscribe<UpdateFOW> {
             fogOfWar.updateFOW()
+        }
+
+        Zircon.eventBus.subscribe<Looking> {
+            lookingOverlay.updateOverlay()
+        }
+
+        Zircon.eventBus.subscribe<StopLooking> {
+            lookingOverlay.clearOverlay()
         }
     }
 
