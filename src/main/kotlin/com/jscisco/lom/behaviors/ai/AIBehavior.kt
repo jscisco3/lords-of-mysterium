@@ -10,7 +10,7 @@ import org.hexworks.amethyst.api.system.Behavior
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
 
-class AIBehavior(private val behaviors: Behavior<GameContext>) : BaseBehavior<GameContext>() {
+class AIBehavior(private val behaviors: Behavior<GameContext>) : BaseBehavior<GameContext>(ActiveTurn::class) {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 

@@ -29,7 +29,6 @@ object MoveSystem : BaseFacet<GameContext>() {
                     source.whenHasAttribute<InitiativeAttribute> { initiative ->
                         initiative.initiativeProperty.value += 10
                     }
-                    logger.info("removing attribute")
                     source.removeAttribute(ActiveTurn)
                     Zircon.eventBus.publish(EntityMovedEvent(source, position))
                 }

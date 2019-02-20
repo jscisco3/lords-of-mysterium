@@ -22,9 +22,9 @@ class InitiativeBehavior : BaseBehavior<GameContext>(InitiativeAttribute::class)
     override fun update(entity: Entity<EntityType, GameContext>, context: GameContext): Boolean {
         // Tick down
         entity.initiative.initiativeProperty.value -= 1
+        logger.info("%s is %s ticks away from taking their turn.".format(entity.entityName, entity.initiative.initiative))
         // Once you hit 0, take a turn
         if (entity.initiative.initiative <= 0) {
-            entity.initiative.recharge()
             entity.addAttribute(ActiveTurn)
             logger.info("%s now has an active turn.".format(entity.entityName))
         }

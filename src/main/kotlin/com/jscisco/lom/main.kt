@@ -20,6 +20,7 @@ import org.hexworks.zircon.api.data.impl.Size3D
 import org.hexworks.zircon.api.input.InputType
 import org.hexworks.zircon.api.kotlin.onKeyStroke
 import java.util.*
+import kotlin.ConcurrentModificationException
 
 fun main(args: Array<String>) {
     System.setProperty("session.id", UUID.randomUUID().toString())
@@ -65,8 +66,13 @@ fun main(args: Array<String>) {
 
 
     while (true) {
-        if (dungeon.player.hasAttribute<ActiveTurn>().not()) {
-            dungeon.update(dv.screen)
+        try {
+            if (dungeon.player.hasAttribute<ActiveTurn>().not()) {
+                dungeon.update(dv.screen)
+            }
+        } catch (e: Exception) {
+            logger.error(e.message ?: "Unknown")
         }
+
     }
 }
