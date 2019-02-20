@@ -45,7 +45,6 @@ class TestItemPickerSystem {
         context = GameContext(
                 dungeon = dungeon,
                 screen = mockk(),
-                input = mockk(),
                 player = player
         )
     }

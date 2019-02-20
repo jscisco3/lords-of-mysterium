@@ -8,6 +8,7 @@ import com.jscisco.lom.configuration.GameConfiguration
 import com.jscisco.lom.dungeon.DungeonBuilder
 import com.jscisco.lom.dungeon.GameContext
 import com.jscisco.lom.dungeon.strategies.GenericDungeonStrategy
+import com.jscisco.lom.extensions.hasAttribute
 import com.jscisco.lom.extensions.position
 import com.jscisco.lom.view.DungeonView
 import com.jscisco.lom.view.dialog.EquipmentDialog
@@ -64,9 +65,7 @@ fun main(args: Array<String>) {
 
 
     while (true) {
-        // If it isn't the players turn, keep updating all Entities
-        val playersTurn = dungeon.player.findAttribute(ActiveTurn::class).isPresent
-        if (playersTurn.not()) {
+        if (dungeon.player.hasAttribute<ActiveTurn>().not()) {
             dungeon.update(dv.screen)
         }
     }

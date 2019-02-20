@@ -67,7 +67,6 @@ class TestDungeon {
             val context = GameContext(
                     dungeon = dungeon,
                     screen = Screens.createScreenFor(TileGridBuilder.newBuilder().build()),
-                    input = keystroke,
                     player = player
             )
             val expectedPosition = initialPosition.withRelativeY(1)
@@ -83,7 +82,6 @@ class TestDungeon {
             val context = GameContext(
                     dungeon = dungeon,
                     screen = Screens.createScreenFor(TileGridBuilder.newBuilder().build()),
-                    input = keystroke,
                     player = player
             )
             val expectedPosition = initialPosition.withRelativeY(-1)
@@ -99,7 +97,6 @@ class TestDungeon {
             val context = GameContext(
                     dungeon = dungeon,
                     screen = Screens.createScreenFor(TileGridBuilder.newBuilder().build()),
-                    input = keystroke,
                     player = player
             )
             val expectedPosition = initialPosition.withRelativeX(-1)
@@ -115,7 +112,6 @@ class TestDungeon {
             val context = GameContext(
                     dungeon = dungeon,
                     screen = Screens.createScreenFor(TileGridBuilder.newBuilder().build()),
-                    input = keystroke,
                     player = player
             )
             val expectedPosition = initialPosition.withRelativeX(1)
