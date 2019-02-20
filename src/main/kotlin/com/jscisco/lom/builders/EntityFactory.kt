@@ -1,7 +1,6 @@
 package com.jscisco.lom.builders;
 
 import com.jscisco.lom.attributes.*
-import com.jscisco.lom.attributes.flags.ActiveTurn
 import com.jscisco.lom.attributes.flags.BlockOccupier
 import com.jscisco.lom.attributes.flags.Openable
 import com.jscisco.lom.attributes.flags.VisionBlocker
@@ -68,7 +67,7 @@ object EntityFactory {
                 EventListenerAttribute(EntityEventScope()),
                 EntityActions(AttackCommand::class, OpenDoorCommand::class),
                 InitiativeAttribute.create(
-                        initiative = 10
+                        initiative = 0
                 ))
         behaviors(InitiativeBehavior())
         facets(ItemPickerSystem,
@@ -98,7 +97,7 @@ object EntityFactory {
                 EntityPosition(),
                 EntityActions(AttackCommand::class),
                 InitiativeAttribute.create(
-                        initiative = 100
+                        initiative = 2
                 ))
         behaviors(
                 InitiativeBehavior(),
