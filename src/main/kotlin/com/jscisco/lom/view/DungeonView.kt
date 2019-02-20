@@ -1,5 +1,6 @@
 package com.jscisco.lom.view
 
+import com.jscisco.lom.attributes.flags.ActiveTurn
 import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.configuration.GameConfiguration.LOG_AREA_HEIGHT
 import com.jscisco.lom.configuration.GameConfiguration.SIDEBAR_WIDTH
@@ -7,6 +8,7 @@ import com.jscisco.lom.configuration.GameConfiguration.WINDOW_HEIGHT
 import com.jscisco.lom.configuration.GameConfiguration.WINDOW_WIDTH
 import com.jscisco.lom.dungeon.Dungeon
 import com.jscisco.lom.events.GameLogEvent
+import com.jscisco.lom.extensions.hasAttribute
 import com.jscisco.lom.view.fragment.PlayerStatsFragment
 import org.hexworks.cobalt.events.api.subscribe
 import org.hexworks.cobalt.logging.api.Logger
@@ -16,6 +18,7 @@ import org.hexworks.zircon.api.GameComponents
 import org.hexworks.zircon.api.component.ComponentAlignment
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.game.ProjectionMode
+import org.hexworks.zircon.api.input.Input
 import org.hexworks.zircon.api.kotlin.onInput
 import org.hexworks.zircon.api.mvc.base.BaseView
 import org.hexworks.zircon.internal.Zircon
@@ -25,14 +28,6 @@ class DungeonView(private val dungeon: Dungeon) : BaseView() {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     override fun onDock() {
-
-        screen.onInput {
-            dungeon.update(
-                    screen = screen,
-                    input = it
-            )
-        }
-
         val sidebar = Components.panel()
                 .withSize(SIDEBAR_WIDTH, WINDOW_HEIGHT)
                 .build()

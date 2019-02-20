@@ -1,6 +1,7 @@
 package com.jscisco.lom.systems
 
 import com.jscisco.lom.attributes.InitiativeAttribute
+import com.jscisco.lom.attributes.flags.ActiveTurn
 import com.jscisco.lom.commands.MoveCommand
 import com.jscisco.lom.dungeon.GameContext
 import com.jscisco.lom.events.EntityMovedEvent
@@ -19,7 +20,7 @@ object MoveSystem : BaseFacet<GameContext>() {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     override fun executeCommand(command: GameCommand<out EntityType>): Response = command.responseWhenCommandIs<MoveCommand> { (context, source, position) ->
-        logger.debug("%s is trying to move to %s.".format(source.entityName, position))
+        logger.info("%s is trying to move to %s.".format(source.entityName, position))
         context.dungeon.fetchBlockAt(position).ifPresent {
             if (it.isOccupied) {
                 source.tryActionsOn(context, it.occupier)
@@ -28,6 +29,8 @@ object MoveSystem : BaseFacet<GameContext>() {
                     source.whenHasAttribute<InitiativeAttribute> { initiative ->
                         initiative.initiativeProperty.value += 10
                     }
+                    logger.info("removing attribute")
+                    source.removeAttribute(ActiveTurn)
                     Zircon.eventBus.publish(EntityMovedEvent(source, position))
                 }
             }

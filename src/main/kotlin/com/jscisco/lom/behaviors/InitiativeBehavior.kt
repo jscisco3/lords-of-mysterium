@@ -3,6 +3,7 @@ package com.jscisco.lom.behaviors
 import com.jscisco.lom.attributes.InitiativeAttribute
 import com.jscisco.lom.attributes.flags.ActiveTurn
 import com.jscisco.lom.dungeon.GameContext
+import com.jscisco.lom.extensions.entityName
 import com.jscisco.lom.extensions.initiative
 import org.hexworks.amethyst.api.base.BaseBehavior
 import org.hexworks.amethyst.api.entity.Entity
@@ -25,6 +26,7 @@ class InitiativeBehavior : BaseBehavior<GameContext>(InitiativeAttribute::class)
         if (entity.initiative.initiative <= 0) {
             entity.initiative.recharge()
             entity.addAttribute(ActiveTurn)
+            logger.info("%s now has an active turn.".format(entity.entityName))
         }
         return true
     }
