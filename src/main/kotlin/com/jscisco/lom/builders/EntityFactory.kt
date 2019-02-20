@@ -12,7 +12,7 @@ import com.jscisco.lom.behaviors.ai.WanderAI
 import com.jscisco.lom.commands.AttackCommand
 import com.jscisco.lom.commands.OpenDoorCommand
 import com.jscisco.lom.dungeon.Dungeon
-import com.jscisco.lom.entities.FogOfWar
+import com.jscisco.lom.dungeon.FogOfWar
 import com.jscisco.lom.events.GameLogEvent
 import com.jscisco.lom.events.scope.EntityEventScope
 import com.jscisco.lom.extensions.GameEntity

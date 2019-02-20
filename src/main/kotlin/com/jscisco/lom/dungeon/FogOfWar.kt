@@ -1,16 +1,12 @@
-package com.jscisco.lom.entities
+package com.jscisco.lom.dungeon
 
 import com.jscisco.lom.attributes.FieldOfView
-import com.jscisco.lom.attributes.types.FogOfWarType
 import com.jscisco.lom.attributes.types.Player
 import com.jscisco.lom.attributes.types.fov
 import com.jscisco.lom.builders.GameTileBuilder
-import com.jscisco.lom.dungeon.Dungeon
-import com.jscisco.lom.dungeon.GameContext
 import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.position
 import com.jscisco.lom.extensions.whenHasAttribute
-import org.hexworks.amethyst.api.base.BaseEntity
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.Layers
@@ -22,7 +18,7 @@ import squidpony.squidgrid.FOV
 import squidpony.squidgrid.Radius
 import java.util.concurrent.ConcurrentHashMap
 
-class FogOfWar(val dungeon: Dungeon, val player: GameEntity<Player>, val size: Size3D) : BaseEntity<FogOfWarType, GameContext>(FogOfWarType) {
+class FogOfWar(val dungeon: Dungeon, val player: GameEntity<Player>, val size: Size3D) {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
     private val fieldOfViewCalculator = FOV()
@@ -42,7 +38,7 @@ class FogOfWar(val dungeon: Dungeon, val player: GameEntity<Player>, val size: S
         updateFOW()
     }
 
-    private fun updateFOW() {
+    fun updateFOW() {
         player.whenHasAttribute<FieldOfView> {
             player.fov.fov = fieldOfViewCalculator.calculateFOV(dungeon.resistanceMap.getValue(player.position.z), player.position.x, player.position.y, player.fov.radius, Radius.DIAMOND)
             val fov = player.fov.fov
@@ -52,30 +48,31 @@ class FogOfWar(val dungeon: Dungeon, val player: GameEntity<Player>, val size: S
                     // Else:
                     //      If the tile is out of FOV, but it is seen, then it should be SEEN_OUT_OF_SIGHT
                     //      If the tile is out of FOV & not seen, then it should be UNREVEALED:
-                    val dungeonBlock = dungeon.fetchBlockOrDefault(Position3D.create(x, y, player.position.z))
-                    if (fov[x][y] > 0) {
-                        // An empty tile essentially removes the overlay here
-                        // Is this even how I want to handle it?
-                        dungeonBlock.seen = true
-                        dungeonBlock.inFov = true
-                        dungeonBlock.lastSeen = dungeonBlock.layers.last()
-                        fowPerLevel[player.position.z]?.setTileAt(Position.create(x, y), GameTileBuilder.EMPTY)
-                    } else {
-                        dungeonBlock.inFov = false
-                        if (dungeonBlock.seen) {
-                            fowPerLevel[player.position.z]?.setTileAt(Position.create(x, y), GameTileBuilder.SEEN_OUT_OF_SIGHT)
-                        } else {
-                            fowPerLevel[player.position.z]?.setTileAt(Position.create(x, y), GameTileBuilder.UNREVEALED)
-
-                        }
-                    }
+                    updateGameBlockAtPosition(Position3D.create(x, y, player.position.z), fov[x][y])
                 }
             }
         }
     }
 
-    override fun update(context: GameContext): Boolean {
-        updateFOW()
-        return true
+    private fun updateGameBlockAtPosition(position: Position3D, fovValue: Double) {
+        val block = dungeon.fetchBlockOrDefault(position)
+        if (fovValue > 0) {
+            block.seen = true
+            block.inFov = true
+            block.lastSeen = block.layers.last()
+            // Remove the overlay if it is in FOV
+            fowPerLevel[position.z]?.setTileAt(Position.create(position.x, position.y), GameTileBuilder.EMPTY)
+        } else {
+            // This is not in FOV
+            block.inFov = false
+            if (block.seen) {
+                // Not in FOV but we have seen it
+                fowPerLevel[position.z]?.setTileAt(Position.create(position.x, position.y), GameTileBuilder.SEEN_OUT_OF_SIGHT)
+            } else {
+                // Never seen
+                fowPerLevel[position.z]?.setTileAt(Position.create(position.x, position.y), GameTileBuilder.UNREVEALED)
+
+            }
+        }
     }
 }

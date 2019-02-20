@@ -3,11 +3,10 @@ package com.jscisco.lom.dungeon
 import com.jscisco.lom.attributes.types.Item
 import com.jscisco.lom.attributes.types.Player
 import com.jscisco.lom.blocks.GameBlock
-import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.builders.GameBlockFactory
-import com.jscisco.lom.entities.FogOfWar
 import com.jscisco.lom.events.DoorOpenedEvent
 import com.jscisco.lom.events.EntityMovedEvent
+import com.jscisco.lom.events.UpdateFOW
 import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.filterType
 import com.jscisco.lom.extensions.isPlayer
@@ -47,7 +46,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
     private val engine = newEngine<GameContext>()
     private val entityPositionLookup = mutableMapOf<Identifier, Position3D>()
-    val fogOfWar: FogOfWar by lazy { EntityFactory.newFogOfWar(this, player, actualSize) }
+    private val fogOfWar: FogOfWar by lazy { FogOfWar(this, player, actualSize) }
 
     val resistanceMap = ConcurrentHashMap<Int, Array<DoubleArray>>().also {
         for (z in 0 until actualSize.zLength) {
@@ -75,7 +74,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
 
         addEntity(player, playerStartPosition.get())
         logger.info("The player is at: %s".format(player.position))
-        addDungeonEntity(fogOfWar)
+        fogOfWar.updateFOW()
         updateCamera()
     }
 
@@ -89,6 +88,11 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
 
         Zircon.eventBus.subscribe<DoorOpenedEvent>() {
             calculateResistanceMap(resistanceMap)
+            fogOfWar.updateFOW()
+        }
+
+        Zircon.eventBus.subscribe<UpdateFOW> {
+            fogOfWar.updateFOW()
         }
     }
 
