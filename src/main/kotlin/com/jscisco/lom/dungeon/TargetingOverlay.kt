@@ -40,7 +40,7 @@ class TargetingOverlay(val dungeon: Dungeon, val player: GameEntity<Player>, val
                         blockingIdx = index
                     }
                 }
-                logger.info("blocking index: %s | index: %s | coordinate: %s".format(blockingIdx, index, coord.toString()))
+                logger.debug("blocking index: %s | index: %s | coordinate: %s".format(blockingIdx, index, coord.toString()))
                 // IF there is something blocking the Line and we are at or past it, show in red
                 if (index >= blockingIdx && blockingIdx != -1) {
                     lookingOverlay.setTileAt(Position.create(coord.x, coord.y), GameTileBuilder.LOOKING_LINE_BLOCKED)
@@ -48,6 +48,7 @@ class TargetingOverlay(val dungeon: Dungeon, val player: GameEntity<Player>, val
                     lookingOverlay.setTileAt(Position.create(coord.x, coord.y), GameTileBuilder.LOOKING_LINE)
                 }
             }
+            lookingOverlay.setTileAt(Position.create(coords.last().x, coords.last().y), GameTileBuilder.LOOKING_LINE_SELECTED)
             // Have the line start off the player
             lookingOverlay.setTileAt(player.position.to2DPosition(), GameTileBuilder.EMPTY)
         }

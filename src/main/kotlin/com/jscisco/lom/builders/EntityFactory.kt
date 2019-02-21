@@ -2,6 +2,7 @@ package com.jscisco.lom.builders;
 
 import com.jscisco.lom.attributes.*
 import com.jscisco.lom.attributes.flags.BlockOccupier
+import com.jscisco.lom.attributes.flags.Exploring
 import com.jscisco.lom.attributes.flags.Openable
 import com.jscisco.lom.attributes.flags.VisionBlocker
 import com.jscisco.lom.attributes.types.*
@@ -35,6 +36,7 @@ object EntityFactory {
     fun newPlayer() = newGameEntityOfType(Player) {
         attributes(Player,
                 NameAttribute("The Greatest Thief in the Multiverse"),
+                Exploring,
                 StatBlockAttribute.create(
                         strength = 10,
                         intelligence = 8,

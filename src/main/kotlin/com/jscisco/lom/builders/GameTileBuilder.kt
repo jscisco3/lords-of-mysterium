@@ -85,6 +85,11 @@ object GameTileBuilder {
             .withCharacter(' ')
             .buildCharacterTile()
 
+    val LOOKING_LINE_SELECTED: CharacterTile = Tiles.newBuilder()
+            .withBackgroundColor(TileColors.create(12, 12, 244, 128))
+            .withCharacter(' ')
+            .buildCharacterTile()
+
     val UNREVEALED: CharacterTile = Tiles.newBuilder()
             .withBackgroundColor(DEFAULT_BACKGROUND)
             .withCharacter(' ')

@@ -47,7 +47,6 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     private val fogOfWar: FogOfWar by lazy { FogOfWar(this, player, actualSize) }
 
     val targetingOverlay: TargetingOverlay by lazy { TargetingOverlay(this, player, actualSize) }
-    var gameState = "exploring"
 
     val resistanceMap = ConcurrentHashMap<Int, Array<DoubleArray>>().also {
         for (z in 0 until actualSize.zLength) {
