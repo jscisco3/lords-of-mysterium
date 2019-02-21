@@ -56,9 +56,6 @@ class TestItemPickerSystem {
         dungeon.addEntity(sword, swordPosition)
         dungeon.moveEntity(player, swordPosition).toString()
 
-        logger.info(player.position.toString())
-        logger.info(sword.position.toString())
-
         player.executeCommand(PickItemUpCommand(
                 context = context,
                 source = player,

@@ -1,6 +1,7 @@
 package com.jscisco.lom.view
 
 import com.jscisco.lom.attributes.LookingAttribute
+import com.jscisco.lom.attributes.flags.ActiveTurn
 import com.jscisco.lom.attributes.flags.Exploring
 import com.jscisco.lom.attributes.types.inventory
 import com.jscisco.lom.blocks.GameBlock
@@ -80,48 +81,48 @@ class DungeonView(private val dungeon: Dungeon) : BaseView() {
         screen.onKeyStroke { ks ->
             val player = dungeon.player
             val context = GameContext(dungeon = dungeon, screen = screen, player = dungeon.player)
-            player.whenHasAttribute<Exploring> {
-                when (ks.inputType()) {
-                    InputType.ArrowUp -> player.executeCommand(MoveCommand(context, player, player.position.withRelativeY(-1)))
-                    InputType.ArrowDown -> player.executeCommand(MoveCommand(context, player, player.position.withRelativeY(1)))
-                    InputType.ArrowLeft -> player.executeCommand(MoveCommand(context, player, player.position.withRelativeX(-1)))
-                    InputType.ArrowRight -> player.executeCommand(MoveCommand(context, player, player.position.withRelativeX(1)))
-                }
-                when (ks.getCharacter()) {
-                    ',' -> player.executeCommand(PickItemUpCommand(context = context, source = player, position = player.position))
-                    'i' -> context.screen.openModal(InventoryDialog(context))
-                    'e' -> context.screen.openModal(EquipmentDialog(context))
-                    'd' -> if (player.inventory.items.lastOrNull() != null) {
-                        player.executeCommand(DropItemCommand(context, player, player.inventory.items.last(), player.position))
+            player.whenHasAttribute<ActiveTurn> {
+                player.whenHasAttribute<Exploring> {
+                    when (ks.inputType()) {
+                        InputType.ArrowUp -> player.executeCommand(MoveCommand(context, player, player.position.withRelativeY(-1)))
+                        InputType.ArrowDown -> player.executeCommand(MoveCommand(context, player, player.position.withRelativeY(1)))
+                        InputType.ArrowLeft -> player.executeCommand(MoveCommand(context, player, player.position.withRelativeX(-1)))
+                        InputType.ArrowRight -> player.executeCommand(MoveCommand(context, player, player.position.withRelativeX(1)))
                     }
+                    when (ks.getCharacter()) {
+                        ',' -> player.executeCommand(PickItemUpCommand(context = context, source = player, position = player.position))
+                        'i' -> context.screen.openModal(InventoryDialog(context))
+                        'e' -> context.screen.openModal(EquipmentDialog(context))
+                        'd' -> if (player.inventory.items.lastOrNull() != null) {
+                            player.executeCommand(DropItemCommand(context, player, player.inventory.items.last(), player.position))
+                        }
 //                    'z' -> autoexploreMode()
-                    '>' -> player.executeCommand(DescendStairsCommand(context, player))
-                    '<' -> player.executeCommand(AscendStairsCommand(context, player))
-                    // 't' -> targetingMode()
-                    'l' -> {
-                        logger.info("Let's look around...")
-                        player.addAttribute(LookingAttribute(player.position))
-                        player.removeAttribute(Exploring)
+                        '>' -> player.executeCommand(DescendStairsCommand(context, player))
+                        '<' -> player.executeCommand(AscendStairsCommand(context, player))
+                        // 't' -> targetingMode()
+                        'l' -> {
+                            player.addAttribute(LookingAttribute(player.position))
+                            player.removeAttribute(Exploring)
+                        }
                     }
                 }
-            }
-            player.whenHasAttribute<LookingAttribute> {
-                val lookingAttribute = player.attribute<LookingAttribute>()
-                logger.info("You are looking at %s".format(lookingAttribute.position.toString()))
-                when (ks.inputType()) {
-                    InputType.ArrowUp -> lookingAttribute.position = lookingAttribute.position.withRelativeY(-1)
-                    InputType.ArrowDown -> lookingAttribute.position = lookingAttribute.position.withRelativeY(1)
-                    InputType.ArrowLeft -> lookingAttribute.position = lookingAttribute.position.withRelativeX(-1)
-                    InputType.ArrowRight -> lookingAttribute.position = lookingAttribute.position.withRelativeX(1)
-                    InputType.Escape -> {
-                        player.removeAttribute(lookingAttribute)
-                        player.addAttribute(Exploring)
-                        Zircon.eventBus.publish(TargetingCancelled())
+                player.whenHasAttribute<LookingAttribute> {
+                    val lookingAttribute = player.attribute<LookingAttribute>()
+                    logger.debug("You are looking at %s".format(lookingAttribute.position.toString()))
+                    when (ks.inputType()) {
+                        InputType.ArrowUp -> lookingAttribute.position = lookingAttribute.position.withRelativeY(-1)
+                        InputType.ArrowDown -> lookingAttribute.position = lookingAttribute.position.withRelativeY(1)
+                        InputType.ArrowLeft -> lookingAttribute.position = lookingAttribute.position.withRelativeX(-1)
+                        InputType.ArrowRight -> lookingAttribute.position = lookingAttribute.position.withRelativeX(1)
+                        InputType.Escape -> {
+                            player.removeAttribute(lookingAttribute)
+                            player.addAttribute(Exploring)
+                            Zircon.eventBus.publish(TargetingCancelled())
+                        }
                     }
+                    Zircon.eventBus.publish(Targeting())
                 }
-                Zircon.eventBus.publish(Targeting())
             }
-
         }
 
     }

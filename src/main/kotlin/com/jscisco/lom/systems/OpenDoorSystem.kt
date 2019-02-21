@@ -28,7 +28,6 @@ object OpenDoorSystem : BaseFacet<GameContext>() {
         door.removeAttribute(BlockOccupier)
         door.removeAttribute(door.attribute<EntityTile>())
         door.addAttribute(EntityTile(GameTileBuilder.openDoor()))
-        logger.info(door.tile.toString())
         Zircon.eventBus.publish(DoorOpenedEvent(context, source, door))
         Consumed
     }

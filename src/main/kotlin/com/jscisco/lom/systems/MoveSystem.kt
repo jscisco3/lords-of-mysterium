@@ -22,7 +22,7 @@ object MoveSystem : BaseFacet<GameContext>() {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     override fun executeCommand(command: GameCommand<out EntityType>): Response = command.responseWhenCommandIs<MoveCommand> { (context, source, position) ->
-        logger.info("%s is trying to move to %s.".format(source.entityName, position))
+        logger.debug("%s is trying to move to %s.".format(source.entityName, position))
         context.dungeon.fetchBlockAt(position).ifPresent {
             if (it.isOccupied) {
                 source.tryActionsOn(context, it.occupier)

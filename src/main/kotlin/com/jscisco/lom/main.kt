@@ -12,6 +12,7 @@ import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.SwingApplications
 import org.hexworks.zircon.api.data.impl.Size3D
 import java.util.*
+import kotlin.system.measureTimeMillis
 
 fun main(args: Array<String>) {
     System.setProperty("session.id", UUID.randomUUID().toString())
@@ -38,6 +39,5 @@ fun main(args: Array<String>) {
         } catch (e: Exception) {
             logger.error(e.message ?: "Unknown")
         }
-
     }
 }

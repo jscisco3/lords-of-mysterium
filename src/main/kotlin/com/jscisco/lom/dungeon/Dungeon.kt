@@ -73,7 +73,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         }
 
         addEntity(player, playerStartPosition.get())
-        logger.info("The player is at: %s".format(player.position))
+        logger.debug("The player is at: %s".format(player.position))
         fogOfWar.updateFOW()
         updateCamera()
     }
@@ -248,7 +248,6 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
                 true
             }
         } else {
-            logger.info("Dungeon does not contain position: %s".format(position))
             return false
         }
         return true

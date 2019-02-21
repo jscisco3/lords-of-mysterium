@@ -2,6 +2,7 @@ package com.jscisco.lom.behaviors
 
 import com.jscisco.lom.attributes.InitiativeAttribute
 import com.jscisco.lom.attributes.flags.ActiveTurn
+import com.jscisco.lom.attributes.types.Player
 import com.jscisco.lom.dungeon.GameContext
 import com.jscisco.lom.extensions.entityName
 import com.jscisco.lom.extensions.initiative
@@ -26,7 +27,9 @@ class InitiativeBehavior : BaseBehavior<GameContext>(InitiativeAttribute::class)
         // Once you hit 0, take a turn
         if (entity.initiative.initiative <= 0) {
             entity.addAttribute(ActiveTurn)
-            logger.info("%s now has an active turn.".format(entity.entityName))
+            if (entity.type == Player) {
+                logger.info("%s now has an active turn.".format(entity.entityName))
+            }
         }
         return true
     }
