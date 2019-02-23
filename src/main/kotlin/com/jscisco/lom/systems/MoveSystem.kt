@@ -29,7 +29,7 @@ object MoveSystem : BaseFacet<GameContext>() {
             } else {
                 if (context.dungeon.moveEntity(source, position)) {
                     source.whenHasAttribute<InitiativeAttribute> { initiative ->
-                        initiative.initiativeProperty.value += 10
+                        initiative.initiativeProperty.value += 1
                     }
                     if (source.type == Player) {
                         Zircon.eventBus.publish(UpdateFOW())

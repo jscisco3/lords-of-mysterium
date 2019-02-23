@@ -28,9 +28,9 @@ class DungeonBuilder(private val dungeonSize: Size3D,
     }
 
     private fun addNPCs(dungeon: Dungeon, offset: Position3D) {
-        for (i in 0 until 20) {
-            dungeon.addAtEmptyPosition(EntityFactory.newGoblin(),
-                    offset = offset)
-        }
+//        for (i in 0 until 20) {
+//            dungeon.addAtEmptyPosition(EntityFactory.newGoblin(),
+//                    offset = offset)
+//        }
     }
 }

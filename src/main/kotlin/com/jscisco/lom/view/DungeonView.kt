@@ -99,6 +99,7 @@ class DungeonView(private val dungeon: Dungeon) : BaseView() {
                         }
                         'z' -> {
                             player.addAttribute(AutoexploreAttribute())
+                            player.update(context)
                         }
                         '>' -> player.executeCommand(DescendStairsCommand(context, player))
                         '<' -> player.executeCommand(AscendStairsCommand(context, player))

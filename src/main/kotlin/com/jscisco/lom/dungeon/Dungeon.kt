@@ -1,6 +1,7 @@
 package com.jscisco.lom.dungeon
 
 import com.jscisco.lom.attributes.types.Item
+import com.jscisco.lom.attributes.types.NPC
 import com.jscisco.lom.attributes.types.Player
 import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.builders.GameBlockFactory
@@ -45,6 +46,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     private val engine = newEngine<GameContext>()
     private val entityPositionLookup = mutableMapOf<Identifier, Position3D>()
     private val fogOfWar: FogOfWar by lazy { FogOfWar(this, player, actualSize) }
+    val enemyList = mutableListOf<GameEntity<EntityType>>()
 
     val targetingOverlay: TargetingOverlay by lazy { TargetingOverlay(this, player, actualSize) }
 
@@ -212,8 +214,11 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
      * Add an [Entity] at a given [Position3D]
      * No effect if the [Entity] already exists in the dungeon
      */
-    fun addEntity(entity: Entity<EntityType, GameContext>, position: Position3D) {
+    fun addEntity(entity: GameEntity<EntityType>, position: Position3D) {
         engine.addEntity(entity)
+        if (entity.type == NPC) {
+            enemyList.add(entity)
+        }
         if (entityPositionLookup.containsKey(entity.id).not()) {
             entityPositionLookup[entity.id] = position
             fetchBlockAt(position).map {
