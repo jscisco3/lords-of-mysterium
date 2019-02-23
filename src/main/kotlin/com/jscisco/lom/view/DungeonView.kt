@@ -1,5 +1,6 @@
 package com.jscisco.lom.view
 
+import com.jscisco.lom.attributes.AutoexploreAttribute
 import com.jscisco.lom.attributes.LookingAttribute
 import com.jscisco.lom.attributes.flags.ActiveTurn
 import com.jscisco.lom.attributes.flags.Exploring
@@ -96,7 +97,9 @@ class DungeonView(private val dungeon: Dungeon) : BaseView() {
                         'd' -> if (player.inventory.items.lastOrNull() != null) {
                             player.executeCommand(DropItemCommand(context, player, player.inventory.items.last(), player.position))
                         }
-//                    'z' -> autoexploreMode()
+                        'z' -> {
+                            player.addAttribute(AutoexploreAttribute())
+                        }
                         '>' -> player.executeCommand(DescendStairsCommand(context, player))
                         '<' -> player.executeCommand(AscendStairsCommand(context, player))
                         // 't' -> targetingMode()

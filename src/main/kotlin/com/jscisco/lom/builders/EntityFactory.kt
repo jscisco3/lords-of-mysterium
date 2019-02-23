@@ -6,6 +6,7 @@ import com.jscisco.lom.attributes.flags.Exploring
 import com.jscisco.lom.attributes.flags.Openable
 import com.jscisco.lom.attributes.flags.VisionBlocker
 import com.jscisco.lom.attributes.types.*
+import com.jscisco.lom.behaviors.AutoexploreBehavior
 import com.jscisco.lom.behaviors.InitiativeBehavior
 import com.jscisco.lom.behaviors.ai.AIBehavior
 import com.jscisco.lom.behaviors.ai.HunterSeekerAI
@@ -71,7 +72,8 @@ object EntityFactory {
                 InitiativeAttribute.create(
                         initiative = 0
                 ))
-        behaviors(InitiativeBehavior())
+        behaviors(InitiativeBehavior(),
+                AutoexploreBehavior())
         facets(ItemPickerSystem,
                 ItemDropperSystem,
                 CombatSystem,
