@@ -1,5 +1,6 @@
 package com.jscisco.lom
 
+import com.jscisco.lom.attributes.AutoexploreAttribute
 import com.jscisco.lom.attributes.flags.ActiveTurn
 import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.configuration.GameConfiguration
@@ -12,7 +13,6 @@ import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.SwingApplications
 import org.hexworks.zircon.api.data.impl.Size3D
 import java.util.*
-import kotlin.system.measureTimeMillis
 
 fun main(args: Array<String>) {
     System.setProperty("session.id", UUID.randomUUID().toString())
@@ -33,11 +33,11 @@ fun main(args: Array<String>) {
 
     while (true) {
         try {
-            if (dungeon.player.hasAttribute<ActiveTurn>().not()) {
+            if (dungeon.player.hasAttribute<ActiveTurn>().not() || dungeon.player.hasAttribute<AutoexploreAttribute>()) {
                 dungeon.update(dv.screen)
             }
         } catch (e: Exception) {
-            logger.error(e.message ?: "Unknown")
+            logger.error(e.stackTrace.toString() ?: "Unknown")
         }
     }
 }

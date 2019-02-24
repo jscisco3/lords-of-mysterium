@@ -13,6 +13,7 @@ import com.jscisco.lom.configuration.GameConfiguration.WINDOW_HEIGHT
 import com.jscisco.lom.configuration.GameConfiguration.WINDOW_WIDTH
 import com.jscisco.lom.dungeon.Dungeon
 import com.jscisco.lom.dungeon.GameContext
+import com.jscisco.lom.events.CancelAutoexplore
 import com.jscisco.lom.events.GameLogEvent
 import com.jscisco.lom.events.Targeting
 import com.jscisco.lom.events.TargetingCancelled
@@ -82,6 +83,7 @@ class DungeonView(private val dungeon: Dungeon) : BaseView() {
         screen.onKeyStroke { ks ->
             val player = dungeon.player
             val context = GameContext(dungeon = dungeon, screen = screen, player = dungeon.player)
+            Zircon.eventBus.publish(CancelAutoexplore(player))
             player.whenHasAttribute<ActiveTurn> {
                 player.whenHasAttribute<Exploring> {
                     when (ks.inputType()) {

@@ -62,6 +62,11 @@ class GameBlock(private var defaultTile: Tile = GameTileBuilder.floor(),
             it.isWall
         }
 
+    val isClosedDoor: Boolean
+        get() = currentEntities.any {
+            it.isClosedDoor
+        }
+
     val isStairsDown: Boolean
         get() = currentEntities.any {
             it.type is StairsDown

@@ -1,7 +1,8 @@
 package com.jscisco.lom.attributes
 
 import org.hexworks.amethyst.api.Attribute
+import squidpony.squidai.DijkstraMap
 
 class AutoexploreAttribute : Attribute {
-    var costMap = Array<DoubleArray>(size = 0, init = { doubleArrayOf(0.0) })
+    val dijkstraMap = DijkstraMap()
 }

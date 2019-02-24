@@ -1,15 +1,13 @@
 package com.jscisco.lom.dungeon
 
+import com.jscisco.lom.attributes.AutoexploreAttribute
 import com.jscisco.lom.attributes.types.Item
 import com.jscisco.lom.attributes.types.NPC
 import com.jscisco.lom.attributes.types.Player
 import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.builders.GameBlockFactory
 import com.jscisco.lom.events.*
-import com.jscisco.lom.extensions.GameEntity
-import com.jscisco.lom.extensions.filterType
-import com.jscisco.lom.extensions.isPlayer
-import com.jscisco.lom.extensions.position
+import com.jscisco.lom.extensions.*
 import org.hexworks.amethyst.api.Engines.newEngine
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.amethyst.api.entity.EntityType
@@ -104,6 +102,14 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         Zircon.eventBus.subscribe<TargetingCancelled> {
             targetingOverlay.clearOverlay()
         }
+
+        Zircon.eventBus.subscribe<CancelAutoexplore> { (entity) ->
+            entity.whenHasAttribute<AutoexploreAttribute> {
+                entity.removeAttribute(it)
+            }
+
+        }
+
     }
 
     fun calculateResistanceMap(resistanceMap: MutableMap<Int, Array<DoubleArray>>) {

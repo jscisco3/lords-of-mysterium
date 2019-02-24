@@ -5,6 +5,7 @@ import com.jscisco.lom.attributes.flags.ActiveTurn
 import com.jscisco.lom.commands.MoveCommand
 import com.jscisco.lom.dungeon.Dungeon
 import com.jscisco.lom.dungeon.GameContext
+import com.jscisco.lom.events.CancelAutoexplore
 import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.attribute
 import com.jscisco.lom.extensions.hasAttribute
@@ -14,53 +15,58 @@ import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.data.impl.Position3D
+import org.hexworks.zircon.internal.Zircon
 import squidpony.squidai.DijkstraMap
 import squidpony.squidmath.Coord
 
-class AutoexploreBehavior : BaseBehavior<GameContext>(AutoexploreAttribute::class, ActiveTurn::class) {
+class AutoexploreBehavior : BaseBehavior<GameContext>() {
 
     private var logger: Logger = LoggerFactory.getLogger(javaClass)
 
-    var autoexploreCosts = Array<DoubleArray>(size = 0, init = {
-        doubleArrayOf(0.0)
-    })
-
     override fun update(entity: GameEntity<EntityType>, context: GameContext): Boolean {
         if (entity.hasAttribute<AutoexploreAttribute>() && entity.hasAttribute<ActiveTurn>()) {
-            calculateAutoexploreMap(entity, context.dungeon)
-            val dijkstraMap: DijkstraMap = DijkstraMap(autoexploreCosts, DijkstraMap.Measurement.CHEBYSHEV)
+            val dijkstraMap = entity.attribute<AutoexploreAttribute>().dijkstraMap
+            dijkstraMap.initialize(calculateAutoexploreMap(entity, context.dungeon))
+
             val goals = getCoordsOfUnseenBlocks(context.dungeon, entity.position.z)
+
+            println(goals[0].toString())
+
             var path = dijkstraMap.findPath(1, getCoordsOfEnemies(context.dungeon), mutableListOf<Coord>(), Coord.get(entity.position.x, entity.position.y),
                     *goals)
-            if (path.size == 0) {
+            if (path.size == 0 && context.dungeon.findPositionOfStairsUp(entity.position.z).isPresent) {
                 path = dijkstraMap.findPath(1, getCoordsOfEnemies(context.dungeon), mutableListOf<Coord>(), Coord.get(entity.position.x, entity.position.y),
                         getCoordsOfStairsUp(context.dungeon, entity.position.z))
             }
-            if (goals.size == 0) {
-                entity.removeAttribute(entity.attribute<AutoexploreAttribute>())
+            if (goals.isEmpty()) {
+                Zircon.eventBus.publish(CancelAutoexplore(entity))
                 return true
             }
             if (path.size > 0) {
                 entity.executeCommand(MoveCommand(context, entity, Position3D.create(path[0].x, path[0].y, entity.position.z)))
             } else {
                 logger.info("I can't find a path")
-                entity.removeAttribute(entity.attribute<AutoexploreAttribute>())
+                Zircon.eventBus.publish(CancelAutoexplore(entity))
             }
         }
         return true
     }
 
-    private fun calculateAutoexploreMap(entity: GameEntity<EntityType>, dungeon: Dungeon) {
-        autoexploreCosts = Array(dungeon.actualSize().xLength, { DoubleArray(dungeon.actualSize().yLength) })
+    fun calculateAutoexploreMap(entity: GameEntity<EntityType>, dungeon: Dungeon): Array<DoubleArray> {
+        val autoexploreCosts = Array(dungeon.actualSize().xLength, { DoubleArray(dungeon.actualSize().yLength) })
         for (x in 0 until dungeon.actualSize().xLength) {
             for (y in 0 until dungeon.actualSize().yLength) {
                 val block = dungeon.fetchBlockOrDefault(Position3D.create(x, y, dungeon.player.position.z))
                 autoexploreCosts[x][y] = DijkstraMap.FLOOR
+                if (block.isClosedDoor) {
+                    autoexploreCosts[x][y] = DijkstraMap.FLOOR
+                }
                 if (block.isWall) {
                     autoexploreCosts[x][y] = DijkstraMap.WALL
                 }
             }
         }
+        return autoexploreCosts
     }
 
     private fun getCoordsOfEnemies(dungeon: Dungeon): MutableList<Coord> {
@@ -74,7 +80,7 @@ class AutoexploreBehavior : BaseBehavior<GameContext>(AutoexploreAttribute::clas
     private fun getCoordsOfUnseenBlocks(dungeon: Dungeon, level: Int): Array<Coord> {
         val goals = mutableListOf<Coord>()
         dungeon.fetchBlocksAtLevel(level).forEach {
-            if (it.block.seen.not()) {
+            if (it.block.seen.not() && it.block.isOccupied.not()) {
                 goals.add(Coord.get(it.position.x, it.position.y))
             }
         }

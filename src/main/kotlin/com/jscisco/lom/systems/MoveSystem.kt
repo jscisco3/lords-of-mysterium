@@ -1,5 +1,6 @@
 package com.jscisco.lom.systems
 
+import com.jscisco.lom.attributes.AutoexploreAttribute
 import com.jscisco.lom.attributes.InitiativeAttribute
 import com.jscisco.lom.attributes.flags.ActiveTurn
 import com.jscisco.lom.attributes.types.Player
@@ -26,10 +27,11 @@ object MoveSystem : BaseFacet<GameContext>() {
         context.dungeon.fetchBlockAt(position).ifPresent {
             if (it.isOccupied) {
                 source.tryActionsOn(context, it.occupier)
+                logger.info("Active turn: %s ; Autoexploring: %s".format(source.hasAttribute<ActiveTurn>(), source.hasAttribute<AutoexploreAttribute>()))
             } else {
                 if (context.dungeon.moveEntity(source, position)) {
                     source.whenHasAttribute<InitiativeAttribute> { initiative ->
-                        initiative.initiativeProperty.value += 1
+                        initiative.initiativeProperty.value = 2
                     }
                     if (source.type == Player) {
                         Zircon.eventBus.publish(UpdateFOW())
