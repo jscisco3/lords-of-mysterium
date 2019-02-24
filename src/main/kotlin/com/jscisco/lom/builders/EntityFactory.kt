@@ -2,21 +2,24 @@ package com.jscisco.lom.builders;
 
 import com.jscisco.lom.attributes.*
 import com.jscisco.lom.attributes.flags.BlockOccupier
+import com.jscisco.lom.attributes.flags.Exploring
 import com.jscisco.lom.attributes.flags.Openable
 import com.jscisco.lom.attributes.flags.VisionBlocker
 import com.jscisco.lom.attributes.types.*
+import com.jscisco.lom.behaviors.AutoexploreBehavior
 import com.jscisco.lom.behaviors.InitiativeBehavior
-import com.jscisco.lom.behaviors.PlayerInputHandler
 import com.jscisco.lom.behaviors.ai.AIBehavior
 import com.jscisco.lom.behaviors.ai.HunterSeekerAI
 import com.jscisco.lom.behaviors.ai.WanderAI
 import com.jscisco.lom.commands.AttackCommand
 import com.jscisco.lom.commands.OpenDoorCommand
 import com.jscisco.lom.dungeon.Dungeon
-import com.jscisco.lom.entities.FogOfWar
+import com.jscisco.lom.dungeon.FogOfWar
 import com.jscisco.lom.events.GameLogEvent
 import com.jscisco.lom.events.scope.EntityEventScope
-import com.jscisco.lom.extensions.*
+import com.jscisco.lom.extensions.GameEntity
+import com.jscisco.lom.extensions.newGameEntityOfType
+import com.jscisco.lom.extensions.triggers
 import com.jscisco.lom.systems.*
 import com.jscisco.lom.systems.combat.CombatSystem
 import com.jscisco.lom.trigger.Trigger
@@ -34,6 +37,7 @@ object EntityFactory {
     fun newPlayer() = newGameEntityOfType(Player) {
         attributes(Player,
                 NameAttribute("The Greatest Thief in the Multiverse"),
+                Exploring,
                 StatBlockAttribute.create(
                         strength = 10,
                         intelligence = 8,
@@ -66,9 +70,10 @@ object EntityFactory {
                 EventListenerAttribute(EntityEventScope()),
                 EntityActions(AttackCommand::class, OpenDoorCommand::class),
                 InitiativeAttribute.create(
-                        initiative = 10
+                        initiative = 0
                 ))
-        behaviors(PlayerInputHandler, InitiativeBehavior())
+        behaviors(InitiativeBehavior(),
+                AutoexploreBehavior())
         facets(ItemPickerSystem,
                 ItemDropperSystem,
                 CombatSystem,
@@ -96,7 +101,7 @@ object EntityFactory {
                 EntityPosition(),
                 EntityActions(AttackCommand::class),
                 InitiativeAttribute.create(
-                        initiative = 100
+                        initiative = 2
                 ))
         behaviors(
                 InitiativeBehavior(),

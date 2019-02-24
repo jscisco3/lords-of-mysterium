@@ -54,13 +54,13 @@ object CombatSystem : BaseFacet<GameContext>() {
     }
 
     private fun hitSuccessful(attack: Attack): Boolean {
-        logger.info("%s attacked %s and had %s toHit vs their %s ev".format(attack.attacker, attack.defender, attack.toHit, attack.ev))
+        logger.debug("%s attacked %s and had %s toHit vs their %s ev".format(attack.attacker, attack.defender, attack.toHit, attack.ev))
         return (attack.toHit >= attack.ev)
     }
 
     private fun calculateDamage(attack: Attack): Int {
         val damage = max(1, attack.attackPower - attack.ac)
-        logger.info("%s dealt %s damage to %s.".format(attack.attacker, damage, attack.defender))
+        logger.debug("%s dealt %s damage to %s.".format(attack.attacker, damage, attack.defender))
         return damage
     }
 }

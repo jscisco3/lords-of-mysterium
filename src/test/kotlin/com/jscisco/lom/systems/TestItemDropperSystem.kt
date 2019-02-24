@@ -43,7 +43,6 @@ class TestItemDropperSystem {
         context = GameContext(
                 dungeon = dungeon,
                 screen = mockk(),
-                input = mockk(),
                 player = player
         )
     }

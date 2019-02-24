@@ -10,7 +10,6 @@ import com.jscisco.lom.events.DoorOpenedEvent
 import com.jscisco.lom.extensions.GameCommand
 import com.jscisco.lom.extensions.attribute
 import com.jscisco.lom.extensions.responseWhenCommandIs
-import com.jscisco.lom.extensions.tile
 import org.hexworks.amethyst.api.Consumed
 import org.hexworks.amethyst.api.Response
 import org.hexworks.amethyst.api.base.BaseFacet
@@ -28,7 +27,7 @@ object OpenDoorSystem : BaseFacet<GameContext>() {
         door.removeAttribute(BlockOccupier)
         door.removeAttribute(door.attribute<EntityTile>())
         door.addAttribute(EntityTile(GameTileBuilder.openDoor()))
-        logger.info(door.tile.toString())
+        logger.info("Opening door")
         Zircon.eventBus.publish(DoorOpenedEvent(context, source, door))
         Consumed
     }

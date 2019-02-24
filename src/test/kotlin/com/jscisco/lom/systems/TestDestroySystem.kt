@@ -34,7 +34,6 @@ class TestDestroySystem {
     private val context: GameContext = GameContext(
             dungeon = dungeon,
             player = player,
-            input = mockk(),
             screen = mockk()
     )
 

@@ -8,10 +8,6 @@ class InitiativeAttribute(val initiativeProperty: Property<Int>) : Attribute {
 
     val initiative: Int by initiativeProperty.asDelegate()
 
-    fun recharge() {
-        initiativeProperty.value += 100
-    }
-
     companion object {
         fun create(initiative: Int = 100): InitiativeAttribute {
             return InitiativeAttribute(createPropertyFrom(initiative))

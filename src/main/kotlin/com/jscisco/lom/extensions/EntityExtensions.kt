@@ -3,6 +3,7 @@ package com.jscisco.lom.extensions
 import com.jscisco.lom.attributes.*
 import com.jscisco.lom.attributes.flags.BlockOccupier
 import com.jscisco.lom.attributes.flags.VisionBlocker
+import com.jscisco.lom.attributes.types.Door
 import com.jscisco.lom.attributes.types.Player
 import com.jscisco.lom.attributes.types.Wall
 import com.jscisco.lom.dungeon.GameContext
@@ -46,6 +47,9 @@ val AnyGameEntity.isPlayer: Boolean
 
 val AnyGameEntity.isWall: Boolean
     get() = this.type == Wall
+
+val AnyGameEntity.isClosedDoor: Boolean
+    get() = this.type == Door && this.occupiesBlock
 
 val AnyGameEntity.nameAttribute: NameAttribute
     get() = attribute()

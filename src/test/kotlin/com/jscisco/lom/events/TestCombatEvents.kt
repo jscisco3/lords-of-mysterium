@@ -45,7 +45,6 @@ class TestCombatEvents {
         context = GameContext(
                 dungeon = dungeon,
                 screen = Screens.createScreenFor(TileGridBuilder.newBuilder().build()),
-                input = KeyStroke('a'),
                 player = attacker
         )
     }

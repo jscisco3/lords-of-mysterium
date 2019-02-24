@@ -1,9 +1,13 @@
 package com.jscisco.lom.systems
 
+import com.jscisco.lom.attributes.AutoexploreAttribute
 import com.jscisco.lom.attributes.InitiativeAttribute
+import com.jscisco.lom.attributes.flags.ActiveTurn
+import com.jscisco.lom.attributes.types.Player
 import com.jscisco.lom.commands.MoveCommand
 import com.jscisco.lom.dungeon.GameContext
 import com.jscisco.lom.events.EntityMovedEvent
+import com.jscisco.lom.events.UpdateFOW
 import com.jscisco.lom.extensions.*
 import org.hexworks.amethyst.api.Consumed
 import org.hexworks.amethyst.api.Response
@@ -23,11 +27,16 @@ object MoveSystem : BaseFacet<GameContext>() {
         context.dungeon.fetchBlockAt(position).ifPresent {
             if (it.isOccupied) {
                 source.tryActionsOn(context, it.occupier)
+                logger.info("Active turn: %s ; Autoexploring: %s".format(source.hasAttribute<ActiveTurn>(), source.hasAttribute<AutoexploreAttribute>()))
             } else {
                 if (context.dungeon.moveEntity(source, position)) {
                     source.whenHasAttribute<InitiativeAttribute> { initiative ->
-                        initiative.initiativeProperty.value += 10
+                        initiative.initiativeProperty.value = 2
                     }
+                    if (source.type == Player) {
+                        Zircon.eventBus.publish(UpdateFOW())
+                    }
+                    source.removeAttribute(ActiveTurn)
                     Zircon.eventBus.publish(EntityMovedEvent(source, position))
                 }
             }

@@ -9,5 +9,4 @@ import org.hexworks.zircon.api.screen.Screen
 
 data class GameContext(val dungeon: Dungeon,
                        val screen: Screen,
-                       val input: Input,
                        val player: GameEntity<Player>) : Context

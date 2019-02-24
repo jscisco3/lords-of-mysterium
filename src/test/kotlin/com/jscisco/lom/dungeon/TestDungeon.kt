@@ -1,24 +1,14 @@
 package com.jscisco.lom.dungeon
 
-import com.jscisco.lom.attributes.types.Player
 import com.jscisco.lom.builders.EntityFactory
-import com.jscisco.lom.dungeon.strategies.GenerationStrategy
-import com.jscisco.lom.dungeon.strategies.GenericDungeonStrategy
-import com.jscisco.lom.extensions.GameEntity
+import com.jscisco.lom.data.TestData
+import com.jscisco.lom.extensions.entityName
 import com.jscisco.lom.extensions.position
 import org.assertj.core.api.Assertions
-import org.hexworks.cobalt.events.internal.ApplicationScope
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
-import org.hexworks.zircon.api.Screens
-import org.hexworks.zircon.api.builder.grid.TileGridBuilder
 import org.hexworks.zircon.api.data.impl.Position3D
-import org.hexworks.zircon.api.data.impl.Size3D
-import org.hexworks.zircon.api.input.InputType
-import org.hexworks.zircon.api.input.KeyStroke
-import org.hexworks.zircon.internal.Zircon
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
@@ -26,29 +16,10 @@ class TestDungeon {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
-    val player: GameEntity<Player>
-    val dungeon: Dungeon
-
-    init {
-        // Make sue we have no events subscriibed
-        Zircon.eventBus.cancelScope(ApplicationScope)
-
-        val dungeonSize: Size3D = Size3D.create(100, 60, 2)
-        val visibleSize: Size3D = Size3D.create(25, 25, 1)
-        player = EntityFactory.newPlayer()
-        val strategy: GenerationStrategy = GenericDungeonStrategy(dungeonSize = dungeonSize)
-
-        val dungeonBuilder: DungeonBuilder = DungeonBuilder(
-                dungeonSize = dungeonSize,
-                strategy = strategy,
-                player = player
-        )
-        dungeon = dungeonBuilder.build(visibleSize, dungeonSize)
-
-    }
+    val dungeon: Dungeon = TestData.newTestDungeon()
+    val player = dungeon.player
 
     @Nested
-    @Disabled
     inner class DungeonMovement {
 
         private val initialPosition = Position3D.create(5, 5, 0)
@@ -59,80 +30,20 @@ class TestDungeon {
         }
 
         @Test
-        fun testHandleInputMovementDown() {
-            val keystroke = KeyStroke(
-                    type = InputType.ArrowDown
-            )
-
-            val context = GameContext(
-                    dungeon = dungeon,
-                    screen = Screens.createScreenFor(TileGridBuilder.newBuilder().build()),
-                    input = keystroke,
-                    player = player
-            )
-            val expectedPosition = initialPosition.withRelativeY(1)
-            Assertions.assertThat(player.position).isEqualTo(expectedPosition)
-        }
-
-        @Test
-        fun testHandleInputMovementUp() {
-            val keystroke = KeyStroke(
-                    type = InputType.ArrowUp
-            )
-
-            val context = GameContext(
-                    dungeon = dungeon,
-                    screen = Screens.createScreenFor(TileGridBuilder.newBuilder().build()),
-                    input = keystroke,
-                    player = player
-            )
-            val expectedPosition = initialPosition.withRelativeY(-1)
-            Assertions.assertThat(player.position).isEqualTo(expectedPosition)
-        }
-
-        @Test
-        fun testHandleInputMovementLeft() {
-            val keystroke = KeyStroke(
-                    type = InputType.ArrowLeft
-            )
-
-            val context = GameContext(
-                    dungeon = dungeon,
-                    screen = Screens.createScreenFor(TileGridBuilder.newBuilder().build()),
-                    input = keystroke,
-                    player = player
-            )
-            val expectedPosition = initialPosition.withRelativeX(-1)
-            Assertions.assertThat(player.position).isEqualTo(expectedPosition)
-        }
-
-        @Test
-        fun testHandleInputMovementRight() {
-            val keystroke = KeyStroke(
-                    type = InputType.ArrowRight
-            )
-
-            val context = GameContext(
-                    dungeon = dungeon,
-                    screen = Screens.createScreenFor(TileGridBuilder.newBuilder().build()),
-                    input = keystroke,
-                    player = player
-            )
-            val expectedPosition = initialPosition.withRelativeX(1)
-            Assertions.assertThat(player.position).isEqualTo(expectedPosition)
-        }
-
-        @Test
-        fun testMoveEntitySuccessfully() {
+        fun `move an entity to an unoccupied position should succeed`() {
             val newPosition = Position3D.create(20, 20, 0)
+            val previousGameBlock = dungeon.fetchBlockAt(player.position).get()
             val entityMoved = dungeon.moveEntity(player, newPosition)
-
             Assertions.assertThat(entityMoved).isTrue()
+            // The game block that held the player should no longer
+            Assertions.assertThat(previousGameBlock.entities.contains(player)).isFalse()
             Assertions.assertThat(dungeon.findPositionOf(player).get()).isEqualTo(newPosition)
+            // The new game block should have the entity
+            Assertions.assertThat(dungeon.fetchBlockAt(newPosition).get().entities.contains(player)).isTrue()
         }
 
         @Test
-        fun testMoveEntityFailed() {
+        fun `moving an entity to an unoccupied position should fail`() {
             val currentPosition = dungeon.findPositionOf(player).get()
             val newPosition = Position3D.create(-1, -1, 0)
 
@@ -144,7 +55,7 @@ class TestDungeon {
     }
 
     @Test
-    fun testAddEntityAtPosition() {
+    fun `Entities added at a particular location should be there`() {
         val sword = EntityFactory.newSword()
         val position = Position3D.create(15, 15, 0)
         dungeon.addEntity(sword, position)
@@ -152,17 +63,27 @@ class TestDungeon {
     }
 
     @Test
-    fun testAddDungeonEntity() {
+    fun `Dungeon entities (those with no position) should not be present`() {
         val sword = EntityFactory.newSword()
         dungeon.addDungeonEntity(sword)
         Assertions.assertThat(dungeon.findPositionOf(sword).isPresent).isFalse()
     }
 
     @Test
-    fun testInitializeFOV() {
-        Assertions.assertThat(dungeon.resistanceMap.getValue(0)[0][0]).isEqualTo(1.0)
-        Assertions.assertThat(dungeon.resistanceMap.getValue(0)[1][1]).isLessThan(0.1)
-        Assertions.assertThat(dungeon.resistanceMap.getValue(0)[99][59]).isEqualTo(1.0)
+    fun `The resistance map should be calculate as expected`() {
+        val wallPosition = Position3D.create(10, 10, 0)
+        dungeon.addEntity(EntityFactory.newWall(), wallPosition)
+
+        dungeon.calculateResistanceMap(dungeon.resistanceMap)
+
+        val firstFloorResistanceMap = dungeon.resistanceMap[0]
+
+        Assertions.assertThat(firstFloorResistanceMap).isNotNull
+        if (firstFloorResistanceMap != null) {
+            Assertions.assertThat(firstFloorResistanceMap[10][10]).isEqualTo(1.0)
+            Assertions.assertThat(firstFloorResistanceMap[0][0]).isEqualTo(0.0)
+        }
+
     }
 
 }

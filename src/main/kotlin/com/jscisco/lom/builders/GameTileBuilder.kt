@@ -75,6 +75,21 @@ object GameTileBuilder {
 
     val EMPTY: CharacterTile = Tiles.empty()
 
+    val LOOKING_LINE: CharacterTile = Tiles.newBuilder()
+            .withBackgroundColor(TileColors.create(244, 241, 66, 192))
+            .withCharacter(' ')
+            .buildCharacterTile()
+
+    val LOOKING_LINE_BLOCKED: CharacterTile = Tiles.newBuilder()
+            .withBackgroundColor(TileColors.create(244, 12, 12, 128))
+            .withCharacter(' ')
+            .buildCharacterTile()
+
+    val LOOKING_LINE_SELECTED: CharacterTile = Tiles.newBuilder()
+            .withBackgroundColor(TileColors.create(12, 12, 244, 128))
+            .withCharacter(' ')
+            .buildCharacterTile()
+
     val UNREVEALED: CharacterTile = Tiles.newBuilder()
             .withBackgroundColor(DEFAULT_BACKGROUND)
             .withCharacter(' ')

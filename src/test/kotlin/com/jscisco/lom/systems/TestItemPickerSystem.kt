@@ -45,7 +45,6 @@ class TestItemPickerSystem {
         context = GameContext(
                 dungeon = dungeon,
                 screen = mockk(),
-                input = mockk(),
                 player = player
         )
     }
@@ -56,9 +55,6 @@ class TestItemPickerSystem {
         val swordPosition = Position3D.create(5, 5, 0)
         dungeon.addEntity(sword, swordPosition)
         dungeon.moveEntity(player, swordPosition).toString()
-
-        logger.info(player.position.toString())
-        logger.info(sword.position.toString())
 
         player.executeCommand(PickItemUpCommand(
                 context = context,
