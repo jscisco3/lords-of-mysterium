@@ -14,8 +14,10 @@ import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.ComponentAlignment
 import org.hexworks.zircon.api.component.Container
+import org.hexworks.zircon.api.extensions.onMouseEvent
 import org.hexworks.zircon.api.graphics.BoxType
-import org.hexworks.zircon.api.kotlin.onMouseReleased
+import org.hexworks.zircon.api.uievent.MouseEventType
+import org.hexworks.zircon.api.uievent.Processed
 
 class InventoryDialog(gameContext: GameContext) : Dialog(screen = gameContext.screen) {
 
@@ -36,7 +38,7 @@ class InventoryDialog(gameContext: GameContext) : Dialog(screen = gameContext.sc
                         .withText("Drop")
                         .withAlignmentWithin(inventoryPanel, ComponentAlignment.BOTTOM_LEFT)
                         .build().apply {
-                            onMouseReleased {
+                            onMouseEvent(MouseEventType.MOUSE_RELEASED) { _, _ ->
                                 itemListFragment.fetchSelectedItem().map { item ->
                                     itemListFragment.removeSelectedItem()
                                     player.executeCommand(DropItemCommand(gameContext,
@@ -44,18 +46,20 @@ class InventoryDialog(gameContext: GameContext) : Dialog(screen = gameContext.sc
                                             item,
                                             player.position))
                                 }
+                                Processed
                             }
                         }
                 val equip = Components.button()
                         .withText("Equip")
                         .withAlignmentAround(drop, ComponentAlignment.RIGHT_CENTER)
                         .build().apply {
-                            onMouseReleased {
+                            onMouseEvent(MouseEventType.MOUSE_RELEASED) { _, _ ->
                                 itemListFragment.fetchSelectedItem().map { item ->
                                     player.executeCommand(EquipItemCommand(gameContext,
                                             player, item, player.equipment.getSlotsByType(item.equippable.equipmentType)[0]))
                                     itemListFragment.removeSelectedItem()
                                 }
+                                Processed
                             }
                         }
                 inventoryPanel.addComponent(drop)

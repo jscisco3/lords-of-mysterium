@@ -12,9 +12,11 @@ import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.Sizes
 import org.hexworks.zircon.api.data.impl.Size3D
+import org.hexworks.zircon.api.extensions.onMouseEvent
 import org.hexworks.zircon.api.graphics.BoxType
-import org.hexworks.zircon.api.kotlin.onMouseReleased
 import org.hexworks.zircon.api.mvc.base.BaseView
+import org.hexworks.zircon.api.uievent.MouseEventType
+import org.hexworks.zircon.api.uievent.Processed
 
 class StartView() : BaseView() {
 
@@ -34,7 +36,7 @@ class StartView() : BaseView() {
                 .wrapWithBox()
                 .build()
 
-        jumpIntoDungeon.onMouseReleased {
+        jumpIntoDungeon.onMouseEvent(MouseEventType.MOUSE_RELEASED) { _, _ ->
             val dungeonSize = Size3D.create(WINDOW_WIDTH, WINDOW_HEIGHT, 5)
             val visibleSize = Size3D.create(VISIBLE_DUNGEON_WIDTH, VISIBLE_DUNGEON_HEIGHT, 1)
 
@@ -44,6 +46,7 @@ class StartView() : BaseView() {
 
             replaceWith(DungeonView(dungeon))
             close()
+            Processed
         }
         panel.addComponent(jumpIntoDungeon)
         screen.addComponent(panel)

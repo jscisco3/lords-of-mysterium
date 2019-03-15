@@ -46,9 +46,6 @@ dependencies {
 
     compile "org.hexworks.cobalt:cobalt.logging:$cobaltVersion"
 
-    //artemis-odb
-    compile "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
-
     compile "com.squidpony:squidlib-util:$squidLibVersion"
 
     testCompile "org.junit.jupiter:junit-jupiter-api:$junitVersion"

@@ -13,7 +13,7 @@ import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.Fragment
 import org.hexworks.zircon.api.component.RadioButtonGroup
-import org.hexworks.zircon.api.kotlin.onSelection
+import org.hexworks.zircon.api.extensions.onSelection
 
 class ItemListFragment(items: List<GameEntity<Item>>, width: Int) : Fragment {
 

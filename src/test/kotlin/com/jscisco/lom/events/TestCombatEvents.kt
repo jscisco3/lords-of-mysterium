@@ -13,7 +13,6 @@ import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.Screens
 import org.hexworks.zircon.api.builder.grid.TileGridBuilder
 import org.hexworks.zircon.api.data.impl.Size3D
-import org.hexworks.zircon.api.input.KeyStroke
 import org.hexworks.zircon.internal.Zircon
 import org.junit.jupiter.api.Test
 

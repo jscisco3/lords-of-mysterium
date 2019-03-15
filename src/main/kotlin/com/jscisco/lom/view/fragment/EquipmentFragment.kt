@@ -14,7 +14,9 @@ import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.component.Component
 import org.hexworks.zircon.api.component.ComponentAlignment
 import org.hexworks.zircon.api.component.Fragment
-import org.hexworks.zircon.api.kotlin.onMouseReleased
+import org.hexworks.zircon.api.extensions.onMouseEvent
+import org.hexworks.zircon.api.uievent.MouseEventType
+import org.hexworks.zircon.api.uievent.Processed
 
 /**
  * entity: The entity who owns this equipmentAttribute
@@ -41,12 +43,13 @@ class EquipmentFragment(private val context: GameContext, private val entity: Ga
                             .withText("U")
                             .withPosition(0, index)
                             .build().apply {
-                                onMouseReleased {
+                                onMouseEvent(MouseEventType.MOUSE_RELEASED) { _, _ ->
                                     entity.executeCommand(UnequipItemCommand(
                                             context,
                                             entity,
                                             eq
                                     ))
+                                    Processed
                                 }
                             }
 
@@ -56,7 +59,7 @@ class EquipmentFragment(private val context: GameContext, private val entity: Ga
                             .withText(eq.type.name)
                             .withPosition(unequipButton.width + 1, index)
                             .build().also {
-                                it.onMouseReleased {
+                                it.onMouseEvent(MouseEventType.MOUSE_RELEASED) { _, _ ->
                                     this.addFragment(ItemListFragment(
                                             entity.inventory.items.filter { item ->
                                                 item.equippable.equipmentType == eq.type
@@ -65,6 +68,7 @@ class EquipmentFragment(private val context: GameContext, private val entity: Ga
                                     ).apply {
                                         root.moveRightBy(30)
                                     })
+                                    Processed
                                 }
                             }
                     )
