@@ -34,10 +34,6 @@ class TestAutoexploreBehavior {
         val autoexploreBehavior = player.findBehavior(AutoexploreBehavior::class).get()
 
         val costMap = autoexploreBehavior.calculateAutoexploreMap(player, dungeon)
-        println(costMap[10][10])
-        println(costMap[11][10])
-        println(costMap[3][3])
-        println(costMap[5][5])
 
         autoexploreAttribute.dijkstraMap.initialize(costMap)
         autoexploreAttribute.dijkstraMap.measurement = DijkstraMap.Measurement.CHEBYSHEV
@@ -57,8 +53,6 @@ class TestAutoexploreBehavior {
             }
             println("%s: %s".format(x, rowStr))
         }
-        println(autoexploreAttribute.dijkstraMap.gradientMap[10][10])
-
     }
 
 

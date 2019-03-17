@@ -28,7 +28,7 @@ class InitiativeBehavior : BaseBehavior<GameContext>(InitiativeAttribute::class)
         if (entity.initiative.initiative <= 0) {
             entity.addAttribute(ActiveTurn)
             if (entity.type == Player) {
-                logger.info("%s now has an active turn.".format(entity.entityName))
+                logger.debug("%s now has an active turn.".format(entity.entityName))
             }
         }
         return true
