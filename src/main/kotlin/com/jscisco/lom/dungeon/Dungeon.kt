@@ -6,8 +6,8 @@ import com.jscisco.lom.attributes.types.NPC
 import com.jscisco.lom.attributes.types.Player
 import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.builders.GameBlockFactory
-import com.jscisco.lom.dungeon.state.ExploringState
 import com.jscisco.lom.dungeon.state.HeroState
+import com.jscisco.lom.dungeon.state.ProcessingState
 import com.jscisco.lom.events.*
 import com.jscisco.lom.extensions.*
 import org.hexworks.amethyst.api.Engines.newEngine
@@ -47,7 +47,10 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     private val entityPositionLookup = mutableMapOf<Identifier, Position3D>()
     private val fogOfWar: FogOfWar by lazy { FogOfWar(this, player, actualSize) }
 
-    val heroState: MutableList<HeroState> = mutableListOf(ExploringState())
+    val heroState: MutableList<HeroState> = mutableListOf(ProcessingState())
+
+    val currentState: HeroState
+        get() = heroState.last()
 
     val enemyList = mutableListOf<GameEntity<EntityType>>()
 
@@ -110,11 +113,12 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
 
         Zircon.eventBus.subscribe<CancelAutoexplore> { (entity) ->
             entity.whenHasAttribute<AutoexploreAttribute> {
+                // Remove the autoexplore state & Attribute
                 entity.removeAttribute(it)
+                popState()
+                logger.info(heroState.last().toString())
             }
-
         }
-
     }
 
     fun calculateResistanceMap(resistanceMap: MutableMap<Int, Array<DoubleArray>>) {
@@ -299,11 +303,13 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
 
     fun popState() {
         if (heroState.size > 1) {
-            heroState.dropLast(1)
+            heroState.removeAt(heroState.size - 1)
         }
+        logger.info("A state has been popped. Current state is: %s".format(currentState))
     }
 
     fun pushState(state: HeroState) {
+        logger.info("%s has been pushed and is the current state.".format(state.toString()))
         heroState.add(state)
     }
 

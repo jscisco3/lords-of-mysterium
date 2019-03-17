@@ -4,6 +4,7 @@ import com.jscisco.lom.attributes.InitiativeAttribute
 import com.jscisco.lom.attributes.flags.ActiveTurn
 import com.jscisco.lom.attributes.types.Player
 import com.jscisco.lom.dungeon.GameContext
+import com.jscisco.lom.dungeon.state.PlayerTurnState
 import com.jscisco.lom.extensions.entityName
 import com.jscisco.lom.extensions.initiative
 import org.hexworks.amethyst.api.base.BaseBehavior
@@ -23,12 +24,13 @@ class InitiativeBehavior : BaseBehavior<GameContext>(InitiativeAttribute::class)
     override fun update(entity: Entity<EntityType, GameContext>, context: GameContext): Boolean {
         // Tick down
         entity.initiative.initiativeProperty.value -= 1
-        logger.debug("%s is %s ticks away from taking their turn.".format(entity.entityName, entity.initiative.initiative))
+        logger.info("%s is %s ticks away from taking their turn.".format(entity.entityName, entity.initiative.initiative))
         // Once you hit 0, take a turn
         if (entity.initiative.initiative <= 0) {
             entity.addAttribute(ActiveTurn)
             if (entity.type == Player) {
-                logger.debug("%s now has an active turn.".format(entity.entityName))
+                context.dungeon.pushState(PlayerTurnState())
+                logger.info("%s now has an active turn.".format(entity.entityName))
             }
         }
         return true

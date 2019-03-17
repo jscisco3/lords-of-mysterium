@@ -1,27 +1,20 @@
 package com.jscisco.lom.view
 
-import com.jscisco.lom.attributes.AutoexploreAttribute
 import com.jscisco.lom.attributes.LookingAttribute
 import com.jscisco.lom.attributes.flags.ActiveTurn
 import com.jscisco.lom.attributes.flags.Exploring
-import com.jscisco.lom.attributes.types.inventory
 import com.jscisco.lom.blocks.GameBlock
-import com.jscisco.lom.commands.*
 import com.jscisco.lom.configuration.GameConfiguration.LOG_AREA_HEIGHT
 import com.jscisco.lom.configuration.GameConfiguration.SIDEBAR_WIDTH
 import com.jscisco.lom.configuration.GameConfiguration.WINDOW_HEIGHT
 import com.jscisco.lom.configuration.GameConfiguration.WINDOW_WIDTH
 import com.jscisco.lom.dungeon.Dungeon
 import com.jscisco.lom.dungeon.GameContext
-import com.jscisco.lom.events.CancelAutoexplore
 import com.jscisco.lom.events.GameLogEvent
 import com.jscisco.lom.events.Targeting
 import com.jscisco.lom.events.TargetingCancelled
 import com.jscisco.lom.extensions.attribute
-import com.jscisco.lom.extensions.position
 import com.jscisco.lom.extensions.whenHasAttribute
-import com.jscisco.lom.view.dialog.EquipmentDialog
-import com.jscisco.lom.view.dialog.InventoryDialog
 import com.jscisco.lom.view.fragment.PlayerStatsFragment
 import org.hexworks.cobalt.events.api.subscribe
 import org.hexworks.cobalt.logging.api.Logger
@@ -85,8 +78,8 @@ class DungeonView(private val dungeon: Dungeon) : BaseView() {
         screen.onKeyboardEvent(KeyboardEventType.KEY_RELEASED) { event, _ ->
             val player = dungeon.player
             val context = GameContext(dungeon = dungeon, screen = screen, player = dungeon.player)
-            Zircon.eventBus.publish(CancelAutoexplore(player))
             player.whenHasAttribute<ActiveTurn> {
+                dungeon.currentState.handleInput(context, event)
                 player.whenHasAttribute<LookingAttribute> {
                     val lookingAttribute = player.attribute<LookingAttribute>()
                     logger.debug("You are looking at %s".format(lookingAttribute.position.toString()))

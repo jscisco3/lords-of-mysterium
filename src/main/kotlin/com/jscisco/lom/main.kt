@@ -1,12 +1,10 @@
 package com.jscisco.lom
 
-import com.jscisco.lom.attributes.AutoexploreAttribute
-import com.jscisco.lom.attributes.flags.ActiveTurn
 import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.configuration.GameConfiguration
 import com.jscisco.lom.dungeon.DungeonBuilder
+import com.jscisco.lom.dungeon.GameContext
 import com.jscisco.lom.dungeon.strategies.GenericDungeonStrategy
-import com.jscisco.lom.extensions.hasAttribute
 import com.jscisco.lom.view.DungeonView
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
@@ -33,9 +31,15 @@ fun main(args: Array<String>) {
 
     while (true) {
         try {
-            if (dungeon.player.hasAttribute<ActiveTurn>().not() || dungeon.player.hasAttribute<AutoexploreAttribute>()) {
-                dungeon.update(dv.screen)
-            }
+            dungeon.currentState.update(GameContext(
+                    dungeon = dungeon,
+                    screen = dv.screen,
+                    player = dungeon.player
+            ))
+//            logger.info(dungeon.currentState.toString())
+//            if (dungeon.player.hasAttribute<ActiveTurn>().not() || dungeon.player.hasAttribute<AutoexploreAttribute>()) {
+//                dungeon.update(dv.screen)
+//            }
         } catch (e: Exception) {
             logger.error(e.stackTrace.toString() ?: "Unknown")
         }

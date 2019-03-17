@@ -3,13 +3,13 @@ package com.jscisco.lom.dungeon.state
 import com.jscisco.lom.dungeon.GameContext
 import org.hexworks.zircon.api.uievent.UIEvent
 
-class TargetingState : HeroState {
+class ProcessingState : HeroState {
 
     override fun update(context: GameContext) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        context.dungeon.update(context.screen)
     }
 
     override fun handleInput(context: GameContext, input: UIEvent) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        // Processing state is just responsible for making sure normal behaviors are running
     }
 }

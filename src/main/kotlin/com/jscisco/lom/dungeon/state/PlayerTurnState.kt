@@ -14,7 +14,12 @@ import org.hexworks.zircon.api.uievent.KeyboardEvent
 import org.hexworks.zircon.api.uievent.KeyboardEventType
 import org.hexworks.zircon.api.uievent.UIEvent
 
-class ExploringState() : HeroState {
+class PlayerTurnState : HeroState {
+
+    override fun update(context: GameContext) {
+//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return
+    }
 
     override fun handleInput(context: GameContext, input: UIEvent) {
         // Keyboard events
@@ -48,6 +53,7 @@ class ExploringState() : HeroState {
                     player.removeAttribute(Exploring)
                 }
             }
+            context.dungeon.popState()
         }
     }
 }
