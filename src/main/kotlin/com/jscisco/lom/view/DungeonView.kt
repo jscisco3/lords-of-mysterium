@@ -87,33 +87,6 @@ class DungeonView(private val dungeon: Dungeon) : BaseView() {
             val context = GameContext(dungeon = dungeon, screen = screen, player = dungeon.player)
             Zircon.eventBus.publish(CancelAutoexplore(player))
             player.whenHasAttribute<ActiveTurn> {
-                player.whenHasAttribute<Exploring> {
-                    when (event.code) {
-                        KeyCode.UP -> player.executeCommand(MoveCommand(context, player, player.position.withRelativeY(-1)))
-                        KeyCode.DOWN -> player.executeCommand(MoveCommand(context, player, player.position.withRelativeY(1)))
-                        KeyCode.LEFT -> player.executeCommand(MoveCommand(context, player, player.position.withRelativeX(-1)))
-                        KeyCode.RIGHT -> player.executeCommand(MoveCommand(context, player, player.position.withRelativeX(1)))
-                    }
-                    when (event.key) {
-                        "," -> player.executeCommand(PickItemUpCommand(context = context, source = player, position = player.position))
-                        "i" -> context.screen.openModal(InventoryDialog(context))
-                        "e" -> context.screen.openModal(EquipmentDialog(context))
-                        "d" -> if (player.inventory.items.lastOrNull() != null) {
-                            player.executeCommand(DropItemCommand(context, player, player.inventory.items.last(), player.position))
-                        }
-                        "z" -> {
-                            player.addAttribute(AutoexploreAttribute())
-                            player.update(context)
-                        }
-                        ">" -> player.executeCommand(DescendStairsCommand(context, player))
-                        "<" -> player.executeCommand(AscendStairsCommand(context, player))
-                        // 't' -> targetingMode()
-                        "l" -> {
-                            player.addAttribute(LookingAttribute(player.position))
-                            player.removeAttribute(Exploring)
-                        }
-                    }
-                }
                 player.whenHasAttribute<LookingAttribute> {
                     val lookingAttribute = player.attribute<LookingAttribute>()
                     logger.debug("You are looking at %s".format(lookingAttribute.position.toString()))
