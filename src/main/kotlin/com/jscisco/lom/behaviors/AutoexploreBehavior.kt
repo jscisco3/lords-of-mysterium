@@ -36,12 +36,11 @@ class AutoexploreBehavior : BaseBehavior<GameContext>() {
             var path = dijkstraMap.findPath(1, getCoordsOfEnemies(context.dungeon), mutableListOf<Coord>(), Coord.get(entity.position.x, entity.position.y),
                     *goals)
             if (path.size == 0 && context.dungeon.findPositionOfStairsUp(entity.position.z).isPresent) {
+                logger.info(getCoordsOfStairsUp(context.dungeon, entity.position.z).toString())
                 path = dijkstraMap.findPath(1, getCoordsOfEnemies(context.dungeon), mutableListOf<Coord>(), Coord.get(entity.position.x, entity.position.y),
                         getCoordsOfStairsUp(context.dungeon, entity.position.z))
-            }
-            if (goals.isEmpty()) {
-                logger.info("No goals")
-                Zircon.eventBus.publish(CancelAutoexplore(entity))
+                val playerCoord = Coord.get(entity.position.x, entity.position.y)
+                logger.info("Path: $path, player: $playerCoord")
             }
             if (path.size > 0 && path[0] != Coord.get(entity.position.x, entity.position.y)) {
                 entity.executeCommand(MoveCommand(context, entity, Position3D.create(path[0].x, path[0].y, entity.position.z))).also {
@@ -95,6 +94,15 @@ class AutoexploreBehavior : BaseBehavior<GameContext>() {
     private fun getCoordsOfStairsUp(dungeon: Dungeon, level: Int): Coord {
         val stairsUp = dungeon.findPositionOfStairsUp(level).get()
         return Coord.get(stairsUp.x, stairsUp.y)
+    }
+
+    private fun getGoals(dungeon: Dungeon, level: Int): Array<Coord> {
+        val goals = ArrayList<Coord>()
+        getCoordsOfUnseenBlocks(dungeon, level).forEach {
+            goals.add(it)
+        }
+        goals.add(getCoordsOfStairsUp(dungeon, level))
+        return goals.toTypedArray()
     }
 
 }
