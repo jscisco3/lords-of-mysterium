@@ -19,6 +19,7 @@ object ItemPickerSystem : BaseFacet<GameContext>() {
             itemHolder.inventory.addItem(item)
             dungeon.removeEntity(item)
         }
+        // TODO: Return Passed when there are no items in location
         Consumed
     }
 

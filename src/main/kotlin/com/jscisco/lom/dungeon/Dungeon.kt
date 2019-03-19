@@ -96,6 +96,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         Zircon.eventBus.subscribe<EntityMovedEvent> { (entity, _) ->
             if (entity.isPlayer) {
                 updateCamera()
+                Zircon.eventBus.publish(UpdateFOW())
             }
         }
 

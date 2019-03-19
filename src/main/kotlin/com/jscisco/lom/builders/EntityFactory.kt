@@ -82,7 +82,8 @@ object EntityFactory {
                 EquipItemSystem,
                 UnequipItemSystem,
                 StairAscender,
-                StairDescender)
+                StairDescender,
+                TurnSystem)
 
     }
 

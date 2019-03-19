@@ -45,10 +45,6 @@ fun main(args: Array<String>) {
                     screen = dv.screen,
                     player = dungeon.player
             ))
-//            logger.info(dungeon.currentState.toString())
-//            if (dungeon.player.hasAttribute<ActiveTurn>().not() || dungeon.player.hasAttribute<AutoexploreAttribute>()) {
-//                dungeon.update(dv.screen)
-//            }
         } catch (e: Exception) {
             logger.error(e.localizedMessage ?: "Unknown")
         }

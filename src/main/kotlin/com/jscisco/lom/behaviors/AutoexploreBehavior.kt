@@ -2,6 +2,7 @@ package com.jscisco.lom.behaviors
 
 import com.jscisco.lom.attributes.AutoexploreAttribute
 import com.jscisco.lom.attributes.flags.ActiveTurn
+import com.jscisco.lom.commands.EndTurnCommand
 import com.jscisco.lom.commands.MoveCommand
 import com.jscisco.lom.dungeon.Dungeon
 import com.jscisco.lom.dungeon.GameContext
@@ -10,6 +11,7 @@ import com.jscisco.lom.extensions.GameEntity
 import com.jscisco.lom.extensions.attribute
 import com.jscisco.lom.extensions.hasAttribute
 import com.jscisco.lom.extensions.position
+import org.hexworks.amethyst.api.Consumed
 import org.hexworks.amethyst.api.base.BaseBehavior
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.cobalt.logging.api.Logger
@@ -24,6 +26,7 @@ class AutoexploreBehavior : BaseBehavior<GameContext>() {
     private var logger: Logger = LoggerFactory.getLogger(javaClass)
 
     override fun update(entity: GameEntity<EntityType>, context: GameContext): Boolean {
+        // This should only work when I have both the AutoexploreAttribute && an ActiveTurn
         if (entity.hasAttribute<AutoexploreAttribute>() && entity.hasAttribute<ActiveTurn>()) {
             val dijkstraMap = entity.attribute<AutoexploreAttribute>().dijkstraMap
             dijkstraMap.initialize(calculateAutoexploreMap(entity, context.dungeon))
@@ -41,7 +44,11 @@ class AutoexploreBehavior : BaseBehavior<GameContext>() {
                 Zircon.eventBus.publish(CancelAutoexplore(entity))
             }
             if (path.size > 0 && path[0] != Coord.get(entity.position.x, entity.position.y)) {
-                entity.executeCommand(MoveCommand(context, entity, Position3D.create(path[0].x, path[0].y, entity.position.z)))
+                entity.executeCommand(MoveCommand(context, entity, Position3D.create(path[0].x, path[0].y, entity.position.z))).also {
+                    if (it == Consumed) {
+                        entity.executeCommand(EndTurnCommand(context, entity))
+                    }
+                }
             } else {
                 logger.info("I can't find a path")
                 Zircon.eventBus.publish(CancelAutoexplore(entity))
