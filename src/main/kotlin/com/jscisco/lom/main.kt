@@ -5,11 +5,14 @@ import com.jscisco.lom.configuration.GameConfiguration
 import com.jscisco.lom.dungeon.DungeonBuilder
 import com.jscisco.lom.dungeon.GameContext
 import com.jscisco.lom.dungeon.strategies.GenericDungeonStrategy
+import com.jscisco.lom.events.QuitGameEvent
 import com.jscisco.lom.view.DungeonView
+import org.hexworks.cobalt.events.api.subscribe
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.SwingApplications
 import org.hexworks.zircon.api.data.impl.Size3D
+import org.hexworks.zircon.internal.Zircon
 import java.util.*
 
 fun main(args: Array<String>) {
@@ -28,8 +31,14 @@ fun main(args: Array<String>) {
     val dv = DungeonView(dungeon)
     application.dock(dv)
 
+    var playing = true
 
-    while (true) {
+    Zircon.eventBus.subscribe<QuitGameEvent> {
+        playing = false
+        logger.info("quitting game")
+    }
+
+    while (playing) {
         try {
             dungeon.currentState.update(GameContext(
                     dungeon = dungeon,
@@ -41,7 +50,8 @@ fun main(args: Array<String>) {
 //                dungeon.update(dv.screen)
 //            }
         } catch (e: Exception) {
-            logger.error(e.stackTrace.toString() ?: "Unknown")
+            logger.error(e.localizedMessage ?: "Unknown")
         }
     }
+    System.exit(0)
 }

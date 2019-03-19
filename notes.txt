@@ -3,6 +3,16 @@ Events are statements of fact about what change has been made to the state
 There should be a single command handler per command
 Commands can emit any number of Events
 
+How should the game loop look like?
+    while(playing) {
+        dungeon.state.update()
+            --> ProcessingState updates all entities
+            --> PlayerTurnState does nothing, handles input for the player when it is their turn
+            --> Autoexplore state updates all entities, handles input for the player to cancel
+            --> Targeting state does nothing, handles input to move the cursor
+    }
+
+
 
 What events exist and how does everything work together?
 - DamageEvent ([Target] takes [Amount] of damage from [Source])
@@ -103,3 +113,7 @@ How should CharacterAttributes work?
             Effects = listOf(
                 TriggeredEffect(trigger = OnDamageEvent, function = {}, condition = ALWAYS)
             )
+
+
+Game State TODO:
+-

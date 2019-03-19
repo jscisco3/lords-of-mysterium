@@ -1,8 +1,6 @@
 package com.jscisco.lom.view
 
-import com.jscisco.lom.attributes.LookingAttribute
 import com.jscisco.lom.attributes.flags.ActiveTurn
-import com.jscisco.lom.attributes.flags.Exploring
 import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.configuration.GameConfiguration.LOG_AREA_HEIGHT
 import com.jscisco.lom.configuration.GameConfiguration.SIDEBAR_WIDTH
@@ -11,9 +9,6 @@ import com.jscisco.lom.configuration.GameConfiguration.WINDOW_WIDTH
 import com.jscisco.lom.dungeon.Dungeon
 import com.jscisco.lom.dungeon.GameContext
 import com.jscisco.lom.events.GameLogEvent
-import com.jscisco.lom.events.Targeting
-import com.jscisco.lom.events.TargetingCancelled
-import com.jscisco.lom.extensions.attribute
 import com.jscisco.lom.extensions.whenHasAttribute
 import com.jscisco.lom.view.fragment.PlayerStatsFragment
 import org.hexworks.cobalt.events.api.subscribe
@@ -26,7 +21,6 @@ import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.extensions.onKeyboardEvent
 import org.hexworks.zircon.api.game.ProjectionMode
 import org.hexworks.zircon.api.mvc.base.BaseView
-import org.hexworks.zircon.api.uievent.KeyCode
 import org.hexworks.zircon.api.uievent.KeyboardEventType
 import org.hexworks.zircon.api.uievent.Processed
 import org.hexworks.zircon.internal.Zircon
@@ -75,27 +69,12 @@ class DungeonView(private val dungeon: Dungeon) : BaseView() {
         screen.addComponent(gameComponent)
         screen.addComponent(logPanel)
 
-        screen.onKeyboardEvent(KeyboardEventType.KEY_RELEASED) { event, _ ->
+        screen.onKeyboardEvent(KeyboardEventType.KEY_PRESSED) { event, _ ->
             val player = dungeon.player
             val context = GameContext(dungeon = dungeon, screen = screen, player = dungeon.player)
+            logger.info(dungeon.heroState.toString())
             player.whenHasAttribute<ActiveTurn> {
                 dungeon.currentState.handleInput(context, event)
-                player.whenHasAttribute<LookingAttribute> {
-                    val lookingAttribute = player.attribute<LookingAttribute>()
-                    logger.debug("You are looking at %s".format(lookingAttribute.position.toString()))
-                    when (event.code) {
-                        KeyCode.UP -> lookingAttribute.position = lookingAttribute.position.withRelativeY(-1)
-                        KeyCode.DOWN -> lookingAttribute.position = lookingAttribute.position.withRelativeY(1)
-                        KeyCode.LEFT -> lookingAttribute.position = lookingAttribute.position.withRelativeX(-1)
-                        KeyCode.RIGHT -> lookingAttribute.position = lookingAttribute.position.withRelativeX(1)
-                        KeyCode.ESCAPE -> {
-                            player.removeAttribute(lookingAttribute)
-                            player.addAttribute(Exploring)
-                            Zircon.eventBus.publish(TargetingCancelled())
-                        }
-                    }
-                    Zircon.eventBus.publish(Targeting())
-                }
             }
             Processed
         }

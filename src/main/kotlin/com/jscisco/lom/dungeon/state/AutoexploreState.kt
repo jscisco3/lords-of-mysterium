@@ -7,12 +7,15 @@ import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.uievent.UIEvent
 import org.hexworks.zircon.internal.Zircon
 
+/**
+ * We should utilize the AutoexploreBehavior to move automatically.
+ */
 class AutoexploreState : HeroState {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     override fun update(context: GameContext) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        context.dungeon.update(context.screen)
     }
 
     override fun handleInput(context: GameContext, input: UIEvent) {

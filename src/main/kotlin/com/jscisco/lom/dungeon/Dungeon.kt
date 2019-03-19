@@ -29,6 +29,7 @@ import org.hexworks.zircon.api.game.GameArea
 import org.hexworks.zircon.api.screen.Screen
 import org.hexworks.zircon.internal.Zircon
 import java.io.File
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 
@@ -47,10 +48,12 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     private val entityPositionLookup = mutableMapOf<Identifier, Position3D>()
     private val fogOfWar: FogOfWar by lazy { FogOfWar(this, player, actualSize) }
 
-    val heroState: MutableList<HeroState> = mutableListOf(ProcessingState())
+    val heroState: Deque<HeroState> = ArrayDeque()
 
     val currentState: HeroState
-        get() = heroState.last()
+        get() {
+            return heroState.peekFirst()
+        }
 
     val enemyList = mutableListOf<GameEntity<EntityType>>()
 
@@ -63,6 +66,8 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     }
 
     init {
+        heroState.push(ProcessingState())
+
         blocks.forEach { pos, block ->
             setBlockAt(pos, block)
             block.entities.forEach {
@@ -116,7 +121,6 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
                 // Remove the autoexplore state & Attribute
                 entity.removeAttribute(it)
                 popState()
-                logger.info(heroState.last().toString())
             }
         }
     }
@@ -303,14 +307,14 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
 
     fun popState() {
         if (heroState.size > 1) {
-            heroState.removeAt(heroState.size - 1)
+            heroState.removeFirst()
         }
-        logger.info("A state has been popped. Current state is: %s".format(currentState))
+        logger.info("A state has been popped. Current state is: %s".format(heroState.toString()))
     }
 
     fun pushState(state: HeroState) {
-        logger.info("%s has been pushed and is the current state.".format(state.toString()))
-        heroState.add(state)
+        logger.info("%s has been pushed and is the current state.".format(heroState.toString()))
+        heroState.addFirst(state)
     }
 
     companion object {
