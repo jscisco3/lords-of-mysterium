@@ -71,6 +71,7 @@ class PlayerTurnState : HeroState {
                     // Add autoexplore attribute so the behavior works as expected
                     player.addAttribute(AutoexploreAttribute())
                     // Push a new state so that the correct update call is made
+                    context.dungeon.popState()
                     context.dungeon.pushState(AutoexploreState())
 //                    player.update(context)
                 }

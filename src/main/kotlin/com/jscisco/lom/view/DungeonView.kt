@@ -1,6 +1,5 @@
 package com.jscisco.lom.view
 
-import com.jscisco.lom.attributes.flags.ActiveTurn
 import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.configuration.GameConfiguration.LOG_AREA_HEIGHT
 import com.jscisco.lom.configuration.GameConfiguration.SIDEBAR_WIDTH
@@ -9,7 +8,6 @@ import com.jscisco.lom.configuration.GameConfiguration.WINDOW_WIDTH
 import com.jscisco.lom.dungeon.Dungeon
 import com.jscisco.lom.dungeon.GameContext
 import com.jscisco.lom.events.GameLogEvent
-import com.jscisco.lom.extensions.whenHasAttribute
 import com.jscisco.lom.view.fragment.PlayerStatsFragment
 import org.hexworks.cobalt.events.api.subscribe
 import org.hexworks.cobalt.logging.api.Logger
@@ -73,9 +71,7 @@ class DungeonView(private val dungeon: Dungeon) : BaseView() {
             val player = dungeon.player
             val context = GameContext(dungeon = dungeon, screen = screen, player = dungeon.player)
             logger.info(dungeon.heroState.toString())
-            player.whenHasAttribute<ActiveTurn> {
-                dungeon.currentState.handleInput(context, event)
-            }
+            dungeon.currentState.handleInput(context, event)
             Processed
         }
     }
