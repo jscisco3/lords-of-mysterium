@@ -6,6 +6,8 @@ import com.jscisco.lom.dungeon.GameContext
 import com.jscisco.lom.extensions.GameCommand
 import com.jscisco.lom.extensions.responseWhenCommandIs
 import org.hexworks.amethyst.api.Consumed
+import org.hexworks.amethyst.api.Pass
+import org.hexworks.amethyst.api.Response
 import org.hexworks.amethyst.api.base.BaseFacet
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.cobalt.logging.api.Logger
@@ -16,9 +18,11 @@ object ItemDropperSystem : BaseFacet<GameContext>() {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     override fun executeCommand(command: GameCommand<out EntityType>) = command.responseWhenCommandIs<DropItemCommand> { (context, itemHolder, item, position) ->
+        var response: Response = Pass
         if (itemHolder.inventory.removeItem(item)) {
             context.dungeon.addEntity(item, position)
+            response = Consumed
         }
-        Consumed
+        response
     }
 }
