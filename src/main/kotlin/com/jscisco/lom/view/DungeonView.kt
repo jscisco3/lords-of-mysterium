@@ -70,7 +70,6 @@ class DungeonView(private val dungeon: Dungeon) : BaseView() {
         screen.onKeyboardEvent(KeyboardEventType.KEY_PRESSED) { event, _ ->
             val player = dungeon.player
             val context = GameContext(dungeon = dungeon, screen = screen, player = dungeon.player)
-            logger.info(dungeon.heroState.toString())
             dungeon.currentState.handleInput(context, event)
             Processed
         }

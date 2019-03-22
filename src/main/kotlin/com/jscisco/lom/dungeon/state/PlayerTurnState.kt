@@ -38,7 +38,6 @@ class PlayerTurnState : HeroState {
         var response: Response = Pass
         if (input.type == KeyboardEventType.KEY_PRESSED) {
             val event = input as KeyboardEvent
-            logger.info(input.toString())
             when (event.code) {
                 KeyCode.UP -> {
                     response = player.executeCommand(MoveCommand(context, player, player.position.withRelativeY(-1)))
@@ -87,7 +86,6 @@ class PlayerTurnState : HeroState {
 //                    player.removeAttribute(Exploring)
                 }
             }
-            logger.info(response.toString())
             if (response == Consumed) {
                 player.executeCommand(EndTurnCommand(context, player))
                 context.dungeon.popState()

@@ -310,11 +310,11 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         if (heroState.size > 1) {
             heroState.removeFirst()
         }
-        logger.info("A state has been popped. Current state is: %s".format(heroState.toString()))
+        logger.debug("A state has been popped. Current state is: %s".format(heroState.toString()))
     }
 
     fun pushState(state: HeroState) {
-        logger.info("%s has been pushed and is the current state.".format(heroState.toString()))
+        logger.debug("%s has been pushed and is the current state.".format(heroState.toString()))
         heroState.addFirst(state)
     }
 

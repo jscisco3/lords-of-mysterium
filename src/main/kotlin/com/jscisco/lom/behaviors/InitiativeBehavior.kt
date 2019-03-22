@@ -34,7 +34,7 @@ class InitiativeBehavior : BaseBehavior<GameContext>(InitiativeAttribute::class)
                 if (context.dungeon.currentState.javaClass != AutoexploreState::class.java) {
                     context.dungeon.pushState(PlayerTurnState())
                 }
-                logger.info("%s now has an active turn.".format(entity.entityName))
+                logger.debug("%s now has an active turn.".format(entity.entityName))
             }
         }
         return true
