@@ -2,6 +2,7 @@ package com.jscisco.lom.systems
 
 import com.jscisco.lom.attributes.EntityPosition
 import com.jscisco.lom.attributes.types.Player
+import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.commands.DestroyCommand
 import com.jscisco.lom.dungeon.DungeonBuilder
 import com.jscisco.lom.dungeon.GameContext
@@ -20,7 +21,7 @@ class TestDestroySystem {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
-    private val player: GameEntity<Player> = destroyableEntity()
+    private val player: GameEntity<Player> = EntityFactory.newPlayer()
     private val dungeonSize = Size3D.create(50, 50, 2)
     private val dungeon = DungeonBuilder(
             dungeonSize = dungeonSize,

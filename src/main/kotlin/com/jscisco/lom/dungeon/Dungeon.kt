@@ -87,7 +87,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
 
         addEntity(player, playerStartPosition.get())
         logger.debug("The player is at: %s".format(player.position))
-        fogOfWar.updateFOW()
+//        fogOfWar.updateFOW()
         updateCamera()
     }
 

@@ -1,10 +1,12 @@
 package com.jscisco.lom.systems
 
 import com.jscisco.lom.attributes.EntityPosition
+import com.jscisco.lom.attributes.FieldOfView
 import com.jscisco.lom.attributes.Inventory
 import com.jscisco.lom.attributes.types.Item
 import com.jscisco.lom.attributes.types.Player
 import com.jscisco.lom.attributes.types.inventory
+import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.commands.DropItemCommand
 import com.jscisco.lom.dungeon.Dungeon
 import com.jscisco.lom.dungeon.DungeonBuilder
@@ -91,6 +93,9 @@ class TestItemDropperSystem {
             attributes(
                     Inventory(maxWeight = 100),
                     EntityPosition()
+//                    FieldOfView(
+//                            radius = 10.0
+//                    )
             )
             facets(
                     ItemDropperSystem
