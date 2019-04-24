@@ -28,7 +28,6 @@ class PlayerTurnState : HeroState {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     override fun update(context: GameContext) {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         return
     }
 

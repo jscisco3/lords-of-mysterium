@@ -7,7 +7,6 @@ import com.jscisco.lom.attributes.flags.Openable
 import com.jscisco.lom.attributes.flags.VisionBlocker
 import com.jscisco.lom.attributes.types.*
 import com.jscisco.lom.behaviors.AutoexploreBehavior
-import com.jscisco.lom.behaviors.InitiativeBehavior
 import com.jscisco.lom.behaviors.ai.AIBehavior
 import com.jscisco.lom.behaviors.ai.HunterSeekerAI
 import com.jscisco.lom.behaviors.ai.WanderAI
@@ -72,8 +71,7 @@ object EntityFactory {
                 InitiativeAttribute.create(
                         initiative = 0
                 ))
-        behaviors(InitiativeBehavior(),
-                AutoexploreBehavior())
+        behaviors(AutoexploreBehavior())
         facets(ItemPickerSystem,
                 ItemDropperSystem,
                 CombatSystem,
@@ -84,7 +82,8 @@ object EntityFactory {
                 StairAscender,
                 StairDescender,
                 TurnSystem,
-                DestroySystem)
+                DestroySystem,
+                InitiativeSystem)
 
     }
 
@@ -106,12 +105,12 @@ object EntityFactory {
                         initiative = 2
                 ))
         behaviors(
-                InitiativeBehavior(),
                 AIBehavior(HunterSeekerAI(updateTarget = { Position3D.unknown() }).or(WanderAI()))
         )
         facets(CombatSystem,
                 MoveSystem,
-                DestroySystem)
+                DestroySystem,
+                InitiativeSystem)
     }
 
     fun newWall() = newGameEntityOfType(Wall) {

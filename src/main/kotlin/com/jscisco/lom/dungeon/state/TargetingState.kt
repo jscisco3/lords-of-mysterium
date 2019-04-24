@@ -15,7 +15,6 @@ import org.hexworks.zircon.internal.Zircon
 class TargetingState : HeroState {
 
     override fun update(context: GameContext) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun handleInput(context: GameContext, input: UIEvent) {

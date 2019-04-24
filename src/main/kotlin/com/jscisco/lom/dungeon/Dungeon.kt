@@ -1,11 +1,13 @@
 package com.jscisco.lom.dungeon
 
 import com.jscisco.lom.attributes.AutoexploreAttribute
+import com.jscisco.lom.attributes.InitiativeAttribute
 import com.jscisco.lom.attributes.types.Item
 import com.jscisco.lom.attributes.types.NPC
 import com.jscisco.lom.attributes.types.Player
 import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.builders.GameBlockFactory
+import com.jscisco.lom.commands.InitiativeCommand
 import com.jscisco.lom.dungeon.state.HeroState
 import com.jscisco.lom.dungeon.state.ProcessingState
 import com.jscisco.lom.events.*
@@ -87,7 +89,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
 
         addEntity(player, playerStartPosition.get())
         logger.debug("The player is at: %s".format(player.position))
-//        fogOfWar.updateFOW()
+        fogOfWar.updateFOW()
         updateCamera()
     }
 
@@ -137,12 +139,27 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     }
 
     fun update(screen: Screen) {
+        // Decrement the initiative for everyone
+        val decrement = calculateInitiativeDecrement()
+        fetchEntitiesOnZLevel(this.player.position.z).forEach {
+            it.executeCommand(InitiativeCommand(
+                    GameContext(
+                            dungeon = this,
+                            screen = screen,
+                            player = this.player
+                    ),
+                    it,
+                    decrement
+            ))
+        }
+
         engine.update(GameContext(
                 dungeon = this,
                 screen = screen,
                 player = this.player
         ))
     }
+
 
     private fun updateCamera() {
         logger.debug("updating camera based on player position: %s".format(player.position.toString()))
@@ -284,6 +301,14 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         })
     }
 
+    fun fetchEntitiesOnZLevel(z: Int): List<GameEntity<EntityType>> {
+        val entities = mutableListOf<GameEntity<EntityType>>()
+        fetchBlocksAtLevel(z).forEach {
+            entities.addAll(it.block.entities.toList())
+        }
+        return entities.toList()
+    }
+
     fun findItemsAt(pos: Position3D): List<GameEntity<Item>> {
         return fetchEntitiesAt(pos).filterType()
     }
@@ -304,6 +329,20 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
                 }
             }
         }
+    }
+
+    fun calculateInitiativeDecrement(): Int {
+        var decrement = 0
+
+        fetchEntitiesOnZLevel(player.position.z).forEach {
+            it.whenHasAttribute<InitiativeAttribute> { initiativeAttribute ->
+                if (initiativeAttribute.initiative > decrement) {
+                    decrement = initiativeAttribute.initiative
+                }
+            }
+        }
+
+        return decrement
     }
 
     fun popState() {
