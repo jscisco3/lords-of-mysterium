@@ -69,7 +69,7 @@ object EntityFactory {
                 EventListenerAttribute(EntityEventScope()),
                 EntityActions(AttackCommand::class, OpenDoorCommand::class),
                 InitiativeAttribute.create(
-                        initiative = 0
+                        initiative = 500
                 ))
         behaviors(AutoexploreBehavior())
         facets(ItemPickerSystem,
@@ -102,7 +102,7 @@ object EntityFactory {
                 EntityPosition(),
                 EntityActions(AttackCommand::class),
                 InitiativeAttribute.create(
-                        initiative = 2
+                        initiative = 1000
                 ))
         behaviors(
                 AIBehavior(HunterSeekerAI(updateTarget = { Position3D.unknown() }).or(WanderAI()))

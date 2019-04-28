@@ -33,6 +33,7 @@ object GameConfiguration {
         logger.debug("WINDOW_WIDTH: %s | WINDOW_HEIGHT: %s | DUNGEON_SIZE: %s".format(WINDOW_WIDTH, WINDOW_HEIGHT, DUNGEON_SIZE))
         val config = AppConfigs.newConfig()
                 .enableBetaFeatures()
+                .withDebugMode(false)
                 .withDefaultTileset(TILESET)
         if (FULL_SCREEN) {
             config.fullScreen()

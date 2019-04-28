@@ -332,11 +332,11 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     }
 
     fun calculateInitiativeDecrement(): Int {
-        var decrement = 0
+        var decrement = Int.MAX_VALUE
 
         fetchEntitiesOnZLevel(player.position.z).forEach {
             it.whenHasAttribute<InitiativeAttribute> { initiativeAttribute ->
-                if (initiativeAttribute.initiative > decrement) {
+                if (initiativeAttribute.initiative <= decrement) {
                     decrement = initiativeAttribute.initiative
                 }
             }
