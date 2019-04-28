@@ -1,13 +1,11 @@
 package com.jscisco.lom.dungeon
 
 import com.jscisco.lom.attributes.AutoexploreAttribute
-import com.jscisco.lom.attributes.InitiativeAttribute
 import com.jscisco.lom.attributes.types.Item
 import com.jscisco.lom.attributes.types.NPC
 import com.jscisco.lom.attributes.types.Player
 import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.builders.GameBlockFactory
-import com.jscisco.lom.commands.InitiativeCommand
 import com.jscisco.lom.dungeon.state.HeroState
 import com.jscisco.lom.dungeon.state.ProcessingState
 import com.jscisco.lom.events.*
@@ -139,20 +137,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     }
 
     fun update(screen: Screen) {
-        // Decrement the initiative for everyone
-        val decrement = calculateInitiativeDecrement()
-        fetchEntitiesOnZLevel(this.player.position.z).forEach {
-            it.executeCommand(InitiativeCommand(
-                    GameContext(
-                            dungeon = this,
-                            screen = screen,
-                            player = this.player
-                    ),
-                    it,
-                    decrement
-            ))
-        }
-
+        InitiativeCalculator.handleInitiative(this, screen)
         engine.update(GameContext(
                 dungeon = this,
                 screen = screen,
@@ -329,20 +314,6 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
                 }
             }
         }
-    }
-
-    fun calculateInitiativeDecrement(): Int {
-        var decrement = Int.MAX_VALUE
-
-        fetchEntitiesOnZLevel(player.position.z).forEach {
-            it.whenHasAttribute<InitiativeAttribute> { initiativeAttribute ->
-                if (initiativeAttribute.initiative <= decrement) {
-                    decrement = initiativeAttribute.initiative
-                }
-            }
-        }
-
-        return decrement
     }
 
     fun popState() {
