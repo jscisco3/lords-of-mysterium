@@ -38,9 +38,7 @@ dependencies {
 
 
     compile "org.slf4j:slf4j-api:$slf4jVersion"
-
-    compile "org.hexworks.amethyst:amethyst.core-jvm:$amethystVersion"
-
+    
     compile "org.hexworks.zircon:zircon.core-jvm:$zirconVersion"
     compile "org.hexworks.zircon:zircon.jvm.swing:$zirconVersion"
 

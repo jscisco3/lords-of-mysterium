@@ -1,11 +1,19 @@
 package com.jscisco.lom.commands
 
-import com.jscisco.lom.dungeon.GameContext
-import com.jscisco.lom.extensions.GameCommand
-import com.jscisco.lom.extensions.GameEntity
-import org.hexworks.amethyst.api.entity.EntityType
+import com.jscisco.lom.actor.Actor
+import com.jscisco.lom.dungeon.Dungeon
+import org.hexworks.cobalt.datatypes.extensions.ifPresent
 import org.hexworks.zircon.api.data.impl.Position3D
 
-data class MoveCommand(override val context: GameContext,
-                       override val source: GameEntity<EntityType>,
-                       val position: Position3D) : GameCommand<EntityType>
+class MoveCommand(dungeon: Dungeon, receiver: Actor, private val direction: Position3D) : Command(dungeon, receiver) {
+    override fun invoke() {
+        val oldPosition = receiver.position
+        val newPosition = oldPosition.plus(direction)
+
+        dungeon.fetchBlockAt(newPosition).ifPresent {
+            if (!it.isOccupied) {
+                receiver.position = newPosition
+            }
+        }
+    }
+}

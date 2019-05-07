@@ -1,0 +1,9 @@
+package com.jscisco.lom.actor
+
+import org.hexworks.cobalt.databinding.api.property.Property
+import org.hexworks.zircon.api.data.impl.Position3D
+
+abstract class Actor {
+    protected abstract val positionProperty: Property<Position3D>
+    var position: Position3D by positionProperty.asDelegate()
+}
