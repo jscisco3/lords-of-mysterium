@@ -22,14 +22,15 @@ class GameBlock(var terrain: Terrain = Floor(),
     // or the last non-item, or the last item (if no non-item is present)
     override val layers: MutableList<Tile>
         get() {
-            if (inFov) {
-                return mutableListOf(terrain.tile, getEntityTile())
-            } else {
-                if (seen) {
-                    return mutableListOf(terrain.tile, lastSeen)
-                }
-            }
-            return mutableListOf(terrain.tile, terrain.tile)
+//            if (inFov) {
+//                return mutableListOf(terrain.tile, getEntityTile())
+//            } else {
+//                if (seen) {
+//                    return mutableListOf(terrain.tile, lastSeen)
+//                }
+//            }
+//            return mutableListOf(terrain.tile, terrain.tile)
+            return mutableListOf(terrain.tile, getEntityTile())
         }
 
     override fun fetchSide(side: BlockSide): Tile {

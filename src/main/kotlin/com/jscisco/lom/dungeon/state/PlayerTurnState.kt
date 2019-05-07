@@ -29,12 +29,14 @@ class PlayerTurnState(dungeon: Dungeon, screen: Screen) : State(dungeon, screen)
     }
 
     override fun handleInput(input: UIEvent): Response {
+        logger.info("Handling input: $input")
         // Keyboard events
         if (input.type == KeyboardEventType.KEY_PRESSED) {
             val event = input as KeyboardEvent
             when (event.code) {
                 KeyCode.UP -> {
                     return MoveCommand(dungeon, player, player.position.withRelativeY(-1)).let {
+                        logger.info("Moving up")
                         it.invoke()
                     }
                 }

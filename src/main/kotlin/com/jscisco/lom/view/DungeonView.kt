@@ -65,8 +65,8 @@ class DungeonView(private val dungeon: Dungeon) : BaseView() {
         screen.addComponent(gameComponent)
         screen.addComponent(logPanel)
 
-        screen.onKeyboardEvent(KeyboardEventType.KEY_PRESSED) { event, _ ->
-            Processed
-        }
+//        screen.onKeyboardEvent(KeyboardEventType.KEY_PRESSED) { event, _ ->
+//            Processed
+//        }
     }
 }

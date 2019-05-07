@@ -35,7 +35,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         .build() {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
-    private val fogOfWar: FogOfWar by lazy { FogOfWar(this, player, actualSize) }
+//    private val fogOfWar: FogOfWar by lazy { FogOfWar(this, player, actualSize) }
 
 //    val targetingOverlay: TargetingOverlay by lazy { TargetingOverlay(this, player, actualSize) }
 
@@ -62,8 +62,9 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         }
 
         addActor(player, playerStartPosition.get())
+        player.position = playerStartPosition.get()
         logger.debug("The player is at: %s".format(player.position))
-        fogOfWar.updateFOW()
+//        fogOfWar.updateFOW()
         updateCamera()
     }
 
@@ -72,11 +73,11 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
 
         Zircon.eventBus.subscribe<DoorOpenedEvent> {
             calculateResistanceMap(resistanceMap)
-            fogOfWar.updateFOW()
+//            fogOfWar.updateFOW()
         }
 
         Zircon.eventBus.subscribe<UpdateFOW> {
-            fogOfWar.updateFOW()
+            //            fogOfWar.updateFOW()
         }
     }
 
@@ -127,7 +128,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
                     y = (Math.random() * size.yLength).toInt() + offset.y,
                     z = offset.z)
             fetchBlockAt(pos).map {
-                if (it.isOccupied.not()) {
+                if (it.isOccupied.not() && it.isWalkable) {
                     position = Maybe.of(pos)
                 }
             }

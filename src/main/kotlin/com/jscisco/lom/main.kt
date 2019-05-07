@@ -3,6 +3,7 @@ package com.jscisco.lom
 import com.jscisco.lom.actor.Player
 import com.jscisco.lom.configuration.GameConfiguration
 import com.jscisco.lom.dungeon.DungeonBuilder
+import com.jscisco.lom.dungeon.state.PlayerTurnState
 import com.jscisco.lom.dungeon.strategies.GenericDungeonStrategy
 import com.jscisco.lom.events.QuitGameEvent
 import com.jscisco.lom.view.DungeonView
@@ -11,6 +12,9 @@ import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.SwingApplications
 import org.hexworks.zircon.api.data.impl.Size3D
+import org.hexworks.zircon.api.extensions.onKeyboardEvent
+import org.hexworks.zircon.api.uievent.KeyboardEventType
+import org.hexworks.zircon.api.uievent.Processed
 import org.hexworks.zircon.internal.Zircon
 import java.util.*
 
@@ -32,16 +36,24 @@ fun main(args: Array<String>) {
 
     var playing = true
 
+    val state = PlayerTurnState(dungeon, dv.screen)
+
     Zircon.eventBus.subscribe<QuitGameEvent> {
         playing = false
         logger.info("quitting game")
     }
 
-    while (playing) {
-        try {
-        } catch (e: Exception) {
-            logger.error(e.localizedMessage ?: "Unknown")
-        }
+    dv.screen.onKeyboardEvent(KeyboardEventType.KEY_PRESSED) { event, _ ->
+        state.handleInput(event)
+        Processed
     }
-    System.exit(0)
+
+//    while (playing) {
+//        try {
+//
+//        } catch (e: Exception) {
+//            logger.error(e.localizedMessage ?: "Unknown")
+//        }
+//    }
+//    System.exit(0)
 }
