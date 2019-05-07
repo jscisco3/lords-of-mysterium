@@ -1,11 +1,9 @@
 package com.jscisco.lom.dungeon.strategies
 
 import com.jscisco.lom.blocks.GameBlock
-import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.builders.GameBlockFactory
 import org.hexworks.zircon.api.data.impl.Position3D
 import org.hexworks.zircon.api.data.impl.Size3D
-import java.io.File
 
 abstract class GenerationStrategy(private val dungeonSize: Size3D) {
 
@@ -48,12 +46,12 @@ abstract class GenerationStrategy(private val dungeonSize: Size3D) {
     }
 
     open fun createItems() {
-        blocks[Position3D.create(5, 5, 0)] = GameBlock.createWith(EntityFactory.newSword())
+//        blocks[Position3D.create(5, 5, 0)] = GameBlock.createWith(EntityFactory.newSword())
     }
 
     internal fun placeStairs() {
-        blocks[Position3D.create(15, 15, 0)] = GameBlock.createWith(EntityFactory.stairsUp())
-        blocks[Position3D.create(20, 30, 1)] = GameBlock.createWith(EntityFactory.stairsDown())
+//        blocks[Position3D.create(15, 15, 0)] = GameBlock.createWith(EntityFactory.stairsUp())
+//        blocks[Position3D.create(20, 30, 1)] = GameBlock.createWith(EntityFactory.stairsDown())
 
     }
 

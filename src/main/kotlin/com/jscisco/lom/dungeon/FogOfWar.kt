@@ -1,10 +1,7 @@
 package com.jscisco.lom.dungeon
 
-import com.jscisco.lom.attributes.types.Player
-import com.jscisco.lom.attributes.types.fov
+import com.jscisco.lom.actor.Player
 import com.jscisco.lom.builders.GameTileBuilder
-import com.jscisco.lom.extensions.GameEntity
-import com.jscisco.lom.extensions.position
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.Layers
@@ -13,10 +10,9 @@ import org.hexworks.zircon.api.data.impl.Position3D
 import org.hexworks.zircon.api.data.impl.Size3D
 import org.hexworks.zircon.api.graphics.Layer
 import squidpony.squidgrid.FOV
-import squidpony.squidgrid.Radius
 import java.util.concurrent.ConcurrentHashMap
 
-class FogOfWar(val dungeon: Dungeon, val player: GameEntity<Player>, val size: Size3D) {
+class FogOfWar(val dungeon: Dungeon, val player: Player, val size: Size3D) {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
     private val fieldOfViewCalculator = FOV()
@@ -37,18 +33,18 @@ class FogOfWar(val dungeon: Dungeon, val player: GameEntity<Player>, val size: S
     }
 
     fun updateFOW() {
-        // Assume player has FOV
-        player.fov.fov = fieldOfViewCalculator.calculateFOV(dungeon.resistanceMap.getValue(player.position.z), player.position.x, player.position.y, player.fov.radius, Radius.DIAMOND)
-        val fov = player.fov.fov
-        for (x in 0 until fov.size) {
-            for (y in 0 until fov[x].size) {
-                // If the tile is in FOV, then the overlay should be EMPTY
-                // Else:
-                //      If the tile is out of FOV, but it is seen, then it should be SEEN_OUT_OF_SIGHT
-                //      If the tile is out of FOV & not seen, then it should be UNREVEALED:
-                updateGameBlockAtPosition(Position3D.create(x, y, player.position.z), fov[x][y])
-            }
-        }
+//        // Assume player has FOV
+//        player.fov.fov = fieldOfViewCalculator.calculateFOV(dungeon.resistanceMap.getValue(player.position.z), player.position.x, player.position.y, player.fov.radius, Radius.DIAMOND)
+//        val fov = player.fov.fov
+//        for (x in 0 until fov.size) {
+//            for (y in 0 until fov[x].size) {
+//                // If the tile is in FOV, then the overlay should be EMPTY
+//                // Else:
+//                //      If the tile is out of FOV, but it is seen, then it should be SEEN_OUT_OF_SIGHT
+//                //      If the tile is out of FOV & not seen, then it should be UNREVEALED:
+//                updateGameBlockAtPosition(Position3D.create(x, y, player.position.z), fov[x][y])
+//            }
+//        }
     }
 
     private fun updateGameBlockAtPosition(position: Position3D, fovValue: Double) {

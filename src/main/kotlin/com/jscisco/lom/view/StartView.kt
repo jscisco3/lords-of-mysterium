@@ -1,6 +1,6 @@
 package com.jscisco.lom.view
 
-import com.jscisco.lom.builders.EntityFactory
+import com.jscisco.lom.actor.Player
 import com.jscisco.lom.configuration.GameConfiguration.VISIBLE_DUNGEON_HEIGHT
 import com.jscisco.lom.configuration.GameConfiguration.VISIBLE_DUNGEON_WIDTH
 import com.jscisco.lom.configuration.GameConfiguration.WINDOW_HEIGHT
@@ -40,7 +40,7 @@ class StartView() : BaseView() {
             val dungeonSize = Size3D.create(WINDOW_WIDTH, WINDOW_HEIGHT, 5)
             val visibleSize = Size3D.create(VISIBLE_DUNGEON_WIDTH, VISIBLE_DUNGEON_HEIGHT, 1)
 
-            val dungeon = DungeonBuilder(dungeonSize, strategy = GenericDungeonStrategy(dungeonSize), player = EntityFactory.newPlayer())
+            val dungeon = DungeonBuilder(dungeonSize, strategy = GenericDungeonStrategy(dungeonSize), player = Player())
                     .build(visibleSize, dungeonSize)
 //            dungeon.writeToFile()
 

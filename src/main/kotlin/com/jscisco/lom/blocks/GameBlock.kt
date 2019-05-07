@@ -2,15 +2,18 @@ package com.jscisco.lom.blocks
 
 import com.jscisco.lom.actor.Actor
 import com.jscisco.lom.builders.GameTileBuilder
-import com.jscisco.lom.extensions.GameEntity
+import com.jscisco.lom.item.Item
 import com.jscisco.lom.terrain.Floor
 import com.jscisco.lom.terrain.Terrain
+import org.hexworks.cobalt.datatypes.Maybe
+import org.hexworks.cobalt.datatypes.extensions.fold
 import org.hexworks.zircon.api.data.BlockSide
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.data.base.BlockBase
 
-class GameBlock(private var terrain: Terrain = Floor(),
-                private var currentActors: MutableList<Actor> = mutableListOf(),
+class GameBlock(var terrain: Terrain = Floor(),
+                private var currentItems: MutableList<Item> = mutableListOf(),
+                var actor: Maybe<Actor> = Maybe.ofNullable(null),
                 var seen: Boolean = false,
                 var inFov: Boolean = false,
                 var lastSeen: Tile = GameTileBuilder.floor()) : BlockBase<Tile>() {
@@ -34,56 +37,47 @@ class GameBlock(private var terrain: Terrain = Floor(),
     }
 
     fun getEntityTile(): Tile {
-        val itemTile: Tile? = currentActors.filter { it.hasAttribute<Item>() }.map { it.tile }.lastOrNull()
-        val nonItemTile: Tile? = currentActors.filter { !it.hasAttribute<Item>() }.map { it.tile }.lastOrNull()
+        val itemTile: Tile? = currentItems.lastOrNull()?.tile
+        val nonItemTile: Tile? = actor.fold(
+                whenEmpty = { null },
+                whenPresent = {
+                    it.tile
+                }
+        )
         if (nonItemTile != null) {
             return nonItemTile
         }
         if (itemTile != null) {
             return itemTile
         }
-        return GameTileBuilder.floor()
+        return terrain.tile
     }
 
-    val isWall: Boolean
-        get() = !terrain.walkable;
+    val isOccupied: Boolean
+        get() = actor.isPresent
 
-    val isClosedDoor: Boolean
-        get() = currentEntities.any {
-            it.isClosedDoor
-        }
-
-    val isStairsDown: Boolean
-        get() = currentEntities.any {
-            it.type is StairsDown
-        }
-
-    val isStairsUp: Boolean
-        get() = currentEntities.any {
-            it.type is StairsUp
-        }
+    val isWalkable: Boolean
+        get() = terrain.walkable
 
     val blocksVision: Boolean
-        get() = currentEntities.any {
-            it.blocksVision
-        }
+        get() = !terrain.transparent
 
-    val entities: Iterable<GameEntity<EntityType>>
-        get() = currentEntities.toList()
-
-    fun addEntity(entity: GameEntity<EntityType>) {
-        currentEntities.add(entity)
+    fun addActor(actor: Actor) {
+        this.actor = Maybe.of(actor)
     }
 
-    fun removeEntity(entity: GameEntity<EntityType>) {
-        currentEntities.remove(entity)
+    fun removeActor() {
+        this.actor = Maybe.ofNullable(null)
     }
+
+    val items: List<Item>
+        get() = currentItems.toList()
 
     companion object {
         fun create(): GameBlock = GameBlock()
 
-        fun createWith(entity: GameEntity<EntityType>): GameBlock = GameBlock().also {
-            it.addEntity(entity)
+        fun createWith(actor: Actor): GameBlock = GameBlock().also {
+            it.addActor(actor)
         }
     }
 }

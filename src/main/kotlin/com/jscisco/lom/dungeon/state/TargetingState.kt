@@ -1,39 +1,33 @@
 package com.jscisco.lom.dungeon.state
 
-import com.jscisco.lom.attributes.LookingAttribute
-import com.jscisco.lom.attributes.flags.Exploring
-import com.jscisco.lom.dungeon.GameContext
-import com.jscisco.lom.events.Targeting
-import com.jscisco.lom.events.TargetingCancelled
-import com.jscisco.lom.extensions.attribute
-import org.hexworks.zircon.api.uievent.KeyCode
-import org.hexworks.zircon.api.uievent.KeyboardEvent
-import org.hexworks.zircon.api.uievent.KeyboardEventType
+import com.jscisco.lom.commands.Pass
+import com.jscisco.lom.commands.Response
+import com.jscisco.lom.dungeon.Dungeon
+import org.hexworks.zircon.api.screen.Screen
 import org.hexworks.zircon.api.uievent.UIEvent
-import org.hexworks.zircon.internal.Zircon
 
-class TargetingState : HeroState {
+class TargetingState(dungeon: Dungeon, screen: Screen) : State(dungeon, screen) {
 
-    override fun update(context: GameContext) {
-    }
+    override fun update() {}
 
-    override fun handleInput(context: GameContext, input: UIEvent) {
-        val player = context.player
-        val lookingAttribute = player.attribute<LookingAttribute>()
-        if (input.type == KeyboardEventType.KEY_RELEASED) {
-            val event = input as KeyboardEvent
-            when (event.code) {
-                KeyCode.UP -> lookingAttribute.position = lookingAttribute.position.withRelativeY(-1)
-                KeyCode.DOWN -> lookingAttribute.position = lookingAttribute.position.withRelativeY(1)
-                KeyCode.LEFT -> lookingAttribute.position = lookingAttribute.position.withRelativeX(-1)
-                KeyCode.RIGHT -> lookingAttribute.position = lookingAttribute.position.withRelativeX(1)
-                KeyCode.ESCAPE -> {
-                    player.removeAttribute(lookingAttribute)
-                    player.addAttribute(Exploring)
-                    Zircon.eventBus.publish(TargetingCancelled())
-                }
-            }
-            Zircon.eventBus.publish(Targeting())
-        }
+    override fun handleInput(input: UIEvent): Response {
+//        val player = context.player
+//        val lookingAttribute = player.attribute<LookingAttribute>()
+//        if (input.type == KeyboardEventType.KEY_RELEASED) {
+//            val event = input as KeyboardEvent
+//            when (event.code) {
+//                KeyCode.UP -> lookingAttribute.position = lookingAttribute.position.withRelativeY(-1)
+//                KeyCode.DOWN -> lookingAttribute.position = lookingAttribute.position.withRelativeY(1)
+//                KeyCode.LEFT -> lookingAttribute.position = lookingAttribute.position.withRelativeX(-1)
+//                KeyCode.RIGHT -> lookingAttribute.position = lookingAttribute.position.withRelativeX(1)
+//                KeyCode.ESCAPE -> {
+//                    player.removeAttribute(lookingAttribute)
+//                    player.addAttribute(Exploring)
+//                    Zircon.eventBus.publish(TargetingCancelled())
+//                }
+//            }
+//            Zircon.eventBus.publish(Targeting())
+//        }
+        return Pass
     }
 }

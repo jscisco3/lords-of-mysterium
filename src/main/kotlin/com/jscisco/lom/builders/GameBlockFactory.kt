@@ -1,20 +1,14 @@
 package com.jscisco.lom.builders
 
 import com.jscisco.lom.blocks.GameBlock
+import com.jscisco.lom.terrain.Wall
 
 object GameBlockFactory {
 
 
     fun floor() = GameBlock.create()
 
-    fun wall() = GameBlock.createWith(EntityFactory.newWall())
-
-    fun stairsUp() = GameBlock.createWith(EntityFactory.stairsUp())
-
-    fun stairsDown() = GameBlock.createWith(EntityFactory.stairsDown())
-
-    fun closedDoor() = GameBlock.createWith(EntityFactory.newClosedDoor())
-
-    fun openDoor() = GameBlock.createWith(EntityFactory.newOpenDoor())
-
+    fun wall() = GameBlock.create().also {
+        it.terrain = Wall()
+    }
 }

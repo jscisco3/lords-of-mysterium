@@ -5,6 +5,6 @@ import com.jscisco.lom.dungeon.Dungeon
 
 abstract class Command(val dungeon: Dungeon, val receiver: Actor) {
 
-    abstract fun invoke()
+    abstract fun invoke() : Response
 
 }

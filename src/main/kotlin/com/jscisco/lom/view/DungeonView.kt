@@ -6,9 +6,7 @@ import com.jscisco.lom.configuration.GameConfiguration.SIDEBAR_WIDTH
 import com.jscisco.lom.configuration.GameConfiguration.WINDOW_HEIGHT
 import com.jscisco.lom.configuration.GameConfiguration.WINDOW_WIDTH
 import com.jscisco.lom.dungeon.Dungeon
-import com.jscisco.lom.dungeon.GameContext
 import com.jscisco.lom.events.GameLogEvent
-import com.jscisco.lom.view.fragment.PlayerStatsFragment
 import org.hexworks.cobalt.events.api.subscribe
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
@@ -31,7 +29,7 @@ class DungeonView(private val dungeon: Dungeon) : BaseView() {
         val sidebar = Components.panel()
                 .withSize(SIDEBAR_WIDTH, WINDOW_HEIGHT)
                 .build()
-        sidebar.addFragment(PlayerStatsFragment(dungeon.player))
+//        sidebar.addFragment(PlayerStatsFragment(dungeon.player))
 
         val gameComponent = GameComponents.newGameComponentBuilder<Tile, GameBlock>()
                 .withGameArea(dungeon)
@@ -68,9 +66,6 @@ class DungeonView(private val dungeon: Dungeon) : BaseView() {
         screen.addComponent(logPanel)
 
         screen.onKeyboardEvent(KeyboardEventType.KEY_PRESSED) { event, _ ->
-            val player = dungeon.player
-            val context = GameContext(dungeon = dungeon, screen = screen, player = dungeon.player)
-            dungeon.currentState.handleInput(context, event)
             Processed
         }
     }

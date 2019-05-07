@@ -4,14 +4,11 @@ import com.jscisco.lom.actor.Actor
 import com.jscisco.lom.actor.Player
 import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.builders.GameBlockFactory
-import com.jscisco.lom.dungeon.state.HeroState
-import com.jscisco.lom.dungeon.state.ProcessingState
-import com.jscisco.lom.events.*
-import com.jscisco.lom.extensions.GameEntity
-import com.jscisco.lom.extensions.filterType
-import org.hexworks.cobalt.datatypes.Identifier
+import com.jscisco.lom.events.DoorOpenedEvent
+import com.jscisco.lom.events.UpdateFOW
+import com.jscisco.lom.item.Item
 import org.hexworks.cobalt.datatypes.Maybe
-import org.hexworks.cobalt.datatypes.extensions.fold
+import org.hexworks.cobalt.datatypes.extensions.ifPresent
 import org.hexworks.cobalt.datatypes.extensions.map
 import org.hexworks.cobalt.events.api.subscribe
 import org.hexworks.cobalt.logging.api.Logger
@@ -22,10 +19,8 @@ import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.data.impl.Position3D
 import org.hexworks.zircon.api.data.impl.Size3D
 import org.hexworks.zircon.api.game.GameArea
-import org.hexworks.zircon.api.screen.Screen
 import org.hexworks.zircon.internal.Zircon
 import java.io.File
-import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 
@@ -40,17 +35,9 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         .build() {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
-    private val entityPositionLookup = mutableMapOf<Identifier, Position3D>()
     private val fogOfWar: FogOfWar by lazy { FogOfWar(this, player, actualSize) }
 
-    val heroState: Deque<HeroState> = ArrayDeque()
-
-    val currentState: HeroState
-        get() {
-            return heroState.peekFirst()
-        }
-
-    val targetingOverlay: TargetingOverlay by lazy { TargetingOverlay(this, player, actualSize) }
+//    val targetingOverlay: TargetingOverlay by lazy { TargetingOverlay(this, player, actualSize) }
 
     val resistanceMap = ConcurrentHashMap<Int, Array<DoubleArray>>().also {
         for (z in 0 until actualSize.zLength) {
@@ -59,12 +46,9 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     }
 
     init {
-        heroState.push(ProcessingState())
-
         blocks.forEach { pos, block ->
             setBlockAt(pos, block)
-            block.entities.forEach {
-                entityPositionLookup[it.id] = pos
+            block.actor.ifPresent {
                 it.position = pos
             }
         }
@@ -77,7 +61,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
             playerStartPosition = findEmptyLocationWithin(Position3D.defaultPosition().withZ(0), actualSize)
         }
 
-        addEntity(player, playerStartPosition.get())
+        addActor(player, playerStartPosition.get())
         logger.debug("The player is at: %s".format(player.position))
         fogOfWar.updateFOW()
         updateCamera()
@@ -85,12 +69,6 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
 
 
     private fun registerEvents() {
-        Zircon.eventBus.subscribe<EntityMovedEvent> { (entity, _) ->
-            if (entity.isPlayer) {
-                updateCamera()
-                fogOfWar.updateFOW()
-            }
-        }
 
         Zircon.eventBus.subscribe<DoorOpenedEvent> {
             calculateResistanceMap(resistanceMap)
@@ -100,22 +78,6 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         Zircon.eventBus.subscribe<UpdateFOW> {
             fogOfWar.updateFOW()
         }
-
-        Zircon.eventBus.subscribe<Targeting> {
-            targetingOverlay.updateOverlay()
-        }
-
-        Zircon.eventBus.subscribe<TargetingCancelled> {
-            targetingOverlay.clearOverlay()
-        }
-//
-//        Zircon.eventBus.subscribe<CancelAutoexplore> { (entity) ->
-//            entity.whenHasAttribute<AutoexploreAttribute> {
-//                // Remove the autoexplore state & Attribute
-//                entity.removeAttribute(it)
-//                popState()
-//            }
-//        }
     }
 
     fun calculateResistanceMap(resistanceMap: MutableMap<Int, Array<DoubleArray>>) {
@@ -127,11 +89,6 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
             }
         }
     }
-
-    fun update(screen: Screen) {
-        InitiativeCalculator.handleInitiative(this, screen)
-    }
-
 
     private fun updateCamera() {
         logger.info("updating camera based on player position: %s".format(player.position.toString()))
@@ -158,32 +115,6 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     }
 
     /**
-     * Finds the [Position3D] of the StairsDown the given ZLevel
-     */
-    fun findPositionOfStairsDown(z: Int): Maybe<Position3D> {
-        var position: Position3D? = null
-        fetchBlocksAtLevel(z).forEach {
-            if (it.block.isStairsDown) {
-                position = it.position
-            }
-        }
-        return Maybe.ofNullable(position)
-    }
-
-    /**
-     * Finds the [Position3D] of the StairsUp for the given ZLevel
-     */
-    fun findPositionOfStairsUp(z: Int): Maybe<Position3D> {
-        var position: Position3D? = null
-        fetchBlocksAtLevel(z).forEach {
-            if (it.block.isStairsUp) {
-                position = it.position
-            }
-        }
-        return Maybe.ofNullable(position)
-    }
-
-    /**
      * Finds an empty location on a given Z-level
      */
     fun findEmptyLocationWithin(offset: Position3D, size: Size3D): Maybe<Position3D> {
@@ -207,28 +138,27 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
 
     /**
      * Add an [Entity] at a given [Position3D]
-     * No effect if the [Entity] already exists in the dungeon
+     * return [true] if added, [false] othersise.
      */
-//    fun addEntity(entity: GameEntity<EntityType>, position: Position3D) {
-//        engine.addEntity(entity)
-//        if (entity.type == NPC) {
-//            enemyList.add(entity)
-//        }
-//        if (entityPositionLookup.containsKey(entity.id).not()) {
-//            entityPositionLookup[entity.id] = position
-//            fetchBlockAt(position).map {
-//                it.addEntity(entity)
-//            }
-//        }
-//        entity.position = position
-//    }
+    fun addActor(actor: Actor, position: Position3D): Boolean {
+        var added = false
+        fetchBlockAt(position).map {
+            if (!it.isOccupied) {
+                it.addActor(actor)
+                added = true
+            }
+        }
+        return added
+    }
 
-//    fun removeEntity(entity: GameEntity<EntityType>) {
-//        engine.removeEntity(entity)
-//        entityPositionLookup.remove(entity.id)?.let { pos ->
-//            fetchBlockAt(pos).map { it.removeEntity(entity) }
-//        }
-//    }
+    fun removeEntity(actor: Actor) {
+        blocks.forEach {
+            if (it.value.actor.isPresent && it.value.actor.get() == actor) {
+                it.value.removeActor()
+                return@forEach
+            }
+        }
+    }
 
     /**
      * Move an [Entity] to the desired [Postion3D]
@@ -238,7 +168,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         if (actualSize().containsPosition(position) && position.x >= 0 && position.y >= 0) {
             val oldPos = actor.position
             fetchBlockAt(oldPos).map {
-                it.removeActor(actor)
+                it.removeActor()
             }
             fetchBlockAt(position).map {
                 it.addActor(actor)
@@ -248,25 +178,14 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         } else {
             return false
         }
-        return true
     }
 
-    fun fetchEntitiesAt(pos: Position3D): List<GameEntity<EntityType>> {
-        return fetchBlockAt(pos).fold(whenEmpty = { kotlin.collections.listOf() }, whenPresent = {
-            it.entities.toList()
-        })
-    }
-
-    fun fetchEntitiesOnZLevel(z: Int): List<GameEntity<EntityType>> {
-        val entities = mutableListOf<GameEntity<EntityType>>()
-        fetchBlocksAtLevel(z).forEach {
-            entities.addAll(it.block.entities.toList())
+    fun findItemsAt(pos: Position3D): List<Item> {
+        var items = listOf<Item>()
+        fetchBlockAt(pos).ifPresent {
+            items = it.items
         }
-        return entities.toList()
-    }
-
-    fun findItemsAt(pos: Position3D): List<GameEntity<Item>> {
-        return fetchEntitiesAt(pos).filterType()
+        return items
     }
 
     fun writeToFile() {
@@ -285,18 +204,6 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
                 }
             }
         }
-    }
-
-    fun popState() {
-        if (heroState.size > 1) {
-            heroState.removeFirst()
-        }
-        logger.debug("A state has been popped. Current state is: %s".format(heroState.toString()))
-    }
-
-    fun pushState(state: HeroState) {
-        logger.debug("%s has been pushed and is the current state.".format(heroState.toString()))
-        heroState.addFirst(state)
     }
 
     companion object {

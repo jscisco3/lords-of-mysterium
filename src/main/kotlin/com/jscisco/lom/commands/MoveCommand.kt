@@ -6,14 +6,16 @@ import org.hexworks.cobalt.datatypes.extensions.ifPresent
 import org.hexworks.zircon.api.data.impl.Position3D
 
 class MoveCommand(dungeon: Dungeon, receiver: Actor, private val direction: Position3D) : Command(dungeon, receiver) {
-    override fun invoke() {
+    override fun invoke(): Response {
         val oldPosition = receiver.position
         val newPosition = oldPosition.plus(direction)
 
         dungeon.fetchBlockAt(newPosition).ifPresent {
             if (!it.isOccupied) {
                 receiver.position = newPosition
+                Consumed
             }
         }
+        return Pass
     }
 }

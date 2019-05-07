@@ -1,9 +1,8 @@
 package com.jscisco.lom
 
-import com.jscisco.lom.builders.EntityFactory
+import com.jscisco.lom.actor.Player
 import com.jscisco.lom.configuration.GameConfiguration
 import com.jscisco.lom.dungeon.DungeonBuilder
-import com.jscisco.lom.dungeon.GameContext
 import com.jscisco.lom.dungeon.strategies.GenericDungeonStrategy
 import com.jscisco.lom.events.QuitGameEvent
 import com.jscisco.lom.view.DungeonView
@@ -25,7 +24,7 @@ fun main(args: Array<String>) {
     val dungeonSize = Size3D.create(GameConfiguration.WINDOW_WIDTH, GameConfiguration.WINDOW_HEIGHT, 5)
     val visibleSize = Size3D.create(GameConfiguration.VISIBLE_DUNGEON_WIDTH, GameConfiguration.VISIBLE_DUNGEON_HEIGHT, 1)
 
-    val dungeon = DungeonBuilder(dungeonSize, strategy = GenericDungeonStrategy(dungeonSize), player = EntityFactory.newPlayer())
+    val dungeon = DungeonBuilder(dungeonSize, strategy = GenericDungeonStrategy(dungeonSize), player = Player())
             .build(visibleSize, dungeonSize)
 
     val dv = DungeonView(dungeon)
@@ -40,11 +39,6 @@ fun main(args: Array<String>) {
 
     while (playing) {
         try {
-            dungeon.currentState.update(GameContext(
-                    dungeon = dungeon,
-                    screen = dv.screen,
-                    player = dungeon.player
-            ))
         } catch (e: Exception) {
             logger.error(e.localizedMessage ?: "Unknown")
         }
