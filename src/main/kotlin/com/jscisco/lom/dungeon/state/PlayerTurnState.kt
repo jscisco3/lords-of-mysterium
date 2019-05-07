@@ -5,6 +5,7 @@ import com.jscisco.lom.commands.MoveCommand
 import com.jscisco.lom.commands.Pass
 import com.jscisco.lom.commands.Response
 import com.jscisco.lom.dungeon.Dungeon
+import com.jscisco.lom.events.PushStateEvent
 import com.jscisco.lom.events.QuitGameEvent
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
@@ -29,14 +30,12 @@ class PlayerTurnState(dungeon: Dungeon, screen: Screen) : State(dungeon, screen)
     }
 
     override fun handleInput(input: UIEvent): Response {
-        logger.info("Handling input: $input")
         // Keyboard events
         if (input.type == KeyboardEventType.KEY_PRESSED) {
             val event = input as KeyboardEvent
             when (event.code) {
                 KeyCode.UP -> {
                     return MoveCommand(dungeon, player, player.position.withRelativeY(-1)).let {
-                        logger.info("Moving up")
                         it.invoke()
                     }
                 }
@@ -72,9 +71,7 @@ class PlayerTurnState(dungeon: Dungeon, screen: Screen) : State(dungeon, screen)
 //                }
                 "z" -> {
                     // Push a new state so that the correct update call is made
-//                    context.dungeon.pushState(AutoexploreState())
-//                    // Update the player so the Autoexplore behavior runs.
-//                    player.update(context)
+                    Zircon.eventBus.publish(PushStateEvent(AutoexploreState(dungeon, screen)))
                 }
                 ">" -> {
 //                    response = player.executeCommand(DescendStairsCommand(context, player))

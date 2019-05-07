@@ -4,7 +4,10 @@ import com.jscisco.lom.actor.Player
 import com.jscisco.lom.configuration.GameConfiguration
 import com.jscisco.lom.dungeon.DungeonBuilder
 import com.jscisco.lom.dungeon.state.PlayerTurnState
+import com.jscisco.lom.dungeon.state.State
 import com.jscisco.lom.dungeon.strategies.GenericDungeonStrategy
+import com.jscisco.lom.events.PopStateEvent
+import com.jscisco.lom.events.PushStateEvent
 import com.jscisco.lom.events.QuitGameEvent
 import com.jscisco.lom.view.DungeonView
 import org.hexworks.cobalt.events.api.subscribe
@@ -36,24 +39,35 @@ fun main(args: Array<String>) {
 
     var playing = true
 
-    val state = PlayerTurnState(dungeon, dv.screen)
+    val states = mutableListOf<State>(PlayerTurnState(dungeon, dv.screen))
 
     Zircon.eventBus.subscribe<QuitGameEvent> {
         playing = false
         logger.info("quitting game")
     }
 
+    Zircon.eventBus.subscribe<PopStateEvent> {
+        logger.trace("Popping state ${states.last()}")
+        states.removeAt(states.lastIndex)
+        logger.info("Current state is now ${states.last()}")
+    }
+
+    Zircon.eventBus.subscribe<PushStateEvent> {
+        states.add(it.state)
+    }
+
     dv.screen.onKeyboardEvent(KeyboardEventType.KEY_PRESSED) { event, _ ->
-        state.handleInput(event)
+        logger.info(states.last().toString())
+        states.last().handleInput(event)
         Processed
     }
 
-//    while (playing) {
-//        try {
-//
-//        } catch (e: Exception) {
-//            logger.error(e.localizedMessage ?: "Unknown")
-//        }
-//    }
-//    System.exit(0)
+    while (playing) {
+        try {
+            states.last().update()
+        } catch (e: Exception) {
+            logger.error(e.localizedMessage ?: "Unknown")
+        }
+    }
+    System.exit(0)
 }
