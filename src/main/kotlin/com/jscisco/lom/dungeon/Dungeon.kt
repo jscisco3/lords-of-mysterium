@@ -96,11 +96,11 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         Zircon.eventBus.subscribe<EntityMovedEvent> { (entity, _) ->
             if (entity.isPlayer) {
                 updateCamera()
-                Zircon.eventBus.publish(UpdateFOW())
+                fogOfWar.updateFOW()
             }
         }
 
-        Zircon.eventBus.subscribe<DoorOpenedEvent>() {
+        Zircon.eventBus.subscribe<DoorOpenedEvent> {
             calculateResistanceMap(resistanceMap)
             fogOfWar.updateFOW()
         }
@@ -147,11 +147,11 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
 
 
     private fun updateCamera() {
-        logger.debug("updating camera based on player position: %s".format(player.position.toString()))
+        logger.info("updating camera based on player position: %s".format(player.position.toString()))
         val screenPosition = findPositionOf(player).get() - visibleOffset()
         val halfHeight = visibleSize.yLength / 2
         val halfWidth = visibleSize.xLength / 2
-        logger.debug("visible offset is: %s, screen position is: %s, half Height: %s, half width: %s".format(visibleOffset().toString(), screenPosition.toString(), halfHeight, halfWidth))
+        logger.info("visible offset is: %s, screen position is: %s, half Height: %s, half width: %s".format(visibleOffset().toString(), screenPosition.toString(), halfHeight, halfWidth))
         if (screenPosition.y > halfHeight) {
             logger.debug("Scrolling forward by %s".format(screenPosition.y - halfHeight))
             scrollForwardBy(screenPosition.y - halfHeight)

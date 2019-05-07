@@ -18,7 +18,7 @@ object StairAscender : BaseFacet<GameContext>() {
     override fun executeCommand(command: GameCommand<out EntityType>): Response = command.responseWhenCommandIs<AscendStairsCommand> { (context, source) ->
         context.dungeon.fetchBlockAt(source.position).ifPresent {
             if (it.isStairsUp) {
-                source.executeCommand(MoveCommand(context, source, source.position.withRelativeZ(1)))
+                source.executeCommand(MoveCommand(context, source, source.position.withRelativeZ(-1)))
                 context.dungeon.findPositionOfStairsDown(source.position.z).ifPresent {
                     source.executeCommand(MoveCommand(context, source, it))
                 }

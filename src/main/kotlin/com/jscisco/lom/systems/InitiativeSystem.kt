@@ -23,9 +23,9 @@ object InitiativeSystem : BaseFacet<GameContext>() {
 
 
     override fun executeCommand(command: GameCommand<out EntityType>): Response = command.responseWhenCommandIs<InitiativeCommand> { (context, source, decrement) ->
-        logger.info("%s has %s initiative and is reducing it by %s.".format(source.entityName, source.initiative.initiativeProperty.value, decrement))
+        logger.debug("%s has %s initiative and is reducing it by %s.".format(source.entityName, source.initiative.initiativeProperty.value, decrement))
         source.initiative.initiativeProperty.value -= decrement
-        logger.info("%s has %s initiative.".format(source.entityName, source.initiative.initiativeProperty.value))
+        logger.debug("%s has %s initiative.".format(source.entityName, source.initiative.initiativeProperty.value))
         if (source.initiative.initiative <= 0) {
             source.addAttribute(ActiveTurn)
             if (source.type == Player) {
@@ -34,7 +34,7 @@ object InitiativeSystem : BaseFacet<GameContext>() {
                     context.dungeon.pushState(PlayerTurnState())
                 }
             }
-            logger.info("%s now has an active turn.".format(source.entityName))
+            logger.debug("%s now has an active turn.".format(source.entityName))
         }
 
         Consumed

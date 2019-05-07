@@ -19,7 +19,7 @@ object StairDescender : BaseFacet<GameContext>() {
         // Move the entity down a floor
         context.dungeon.fetchBlockAt(source.position).ifPresent {
             if (it.isStairsDown) {
-                source.executeCommand(MoveCommand(context, source, source.position.withRelativeZ(-1)))
+                source.executeCommand(MoveCommand(context, source, source.position.withRelativeZ(1)))
                 context.dungeon.findPositionOfStairsUp(source.position.z).ifPresent {
                     source.executeCommand(MoveCommand(context, source, it))
                 }
