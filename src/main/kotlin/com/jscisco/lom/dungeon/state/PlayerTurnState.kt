@@ -25,9 +25,7 @@ class PlayerTurnState(dungeon: Dungeon, screen: Screen) : State(dungeon, screen)
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
     private val player: Player = dungeon.player
 
-    override fun update() {
-
-    }
+    override fun update() {}
 
     override fun handleInput(input: UIEvent): Response {
         // Keyboard events
@@ -71,7 +69,8 @@ class PlayerTurnState(dungeon: Dungeon, screen: Screen) : State(dungeon, screen)
 //                }
                 "z" -> {
                     // Push a new state so that the correct update call is made
-                    Zircon.eventBus.publish(PushStateEvent(AutoexploreState(dungeon, screen)))
+                    val autoExploreState = AutoexploreState(dungeon, screen)
+                    Zircon.eventBus.publish(PushStateEvent(autoExploreState))
                 }
                 ">" -> {
 //                    response = player.executeCommand(DescendStairsCommand(context, player))

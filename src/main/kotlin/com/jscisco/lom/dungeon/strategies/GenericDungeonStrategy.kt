@@ -14,7 +14,7 @@ class GenericDungeonStrategy(private val dungeonSize: Size3D) : GenerationStrate
         val dungeonGenerator = DungeonGenerator(dungeonSize.xLength, dungeonSize.yLength)
         val rng = StatefulRNG()
         for (z in 0 until dungeonSize.zLength) {
-            dungeonGenerator.addDoors(25, false)
+            dungeonGenerator.addDoors(0, false)
             val serpent = SerpentMapGenerator(dungeonSize.xLength, dungeonSize.yLength, rng, 0.2)
             serpent.putWalledBoxRoomCarvers(2)
             serpent.putWalledRoundRoomCarvers(2)
