@@ -2,6 +2,7 @@ package com.jscisco.lom.commands
 
 import com.jscisco.lom.actor.Actor
 import com.jscisco.lom.dungeon.Dungeon
+import com.jscisco.lom.extensions.calculateFOV
 import org.hexworks.cobalt.datatypes.extensions.ifPresent
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
@@ -17,6 +18,7 @@ class MoveCommand(dungeon: Dungeon, receiver: Actor, private val newPosition: Po
             if (!it.isOccupied && it.isWalkable) {
                 // This should probably be changed
                 dungeon.moveEntity(receiver, newPosition)
+                dungeon.calculateFOV(receiver)
                 Consumed
             }
         }

@@ -40,8 +40,8 @@ fun Dungeon.calculateResistanceMap(actor: Actor): Array<DoubleArray> {
     return calculatedResistanceMap
 }
 
-fun Dungeon.calculateFOV(actor: Actor, dungeon: Dungeon) {
-    val resistanceMap = dungeon.calculateResistanceMap(actor)
+fun Dungeon.calculateFOV(actor: Actor) {
+    val resistanceMap = this.calculateResistanceMap(actor)
     actor.fieldOfView.fov = FOV().let {
         it.calculateFOV(resistanceMap, actor.position.x, actor.position.y, actor.fieldOfView.radius, Radius.DIAMOND)
     }
