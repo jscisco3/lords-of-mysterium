@@ -22,8 +22,6 @@ import org.hexworks.zircon.api.data.impl.Position3D
 import org.hexworks.zircon.api.data.impl.Size3D
 import org.hexworks.zircon.api.game.GameArea
 import org.hexworks.zircon.internal.Zircon
-import java.io.File
-import java.util.concurrent.ConcurrentHashMap
 
 
 class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
@@ -40,12 +38,6 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     private val fogOfWar: FogOfWar by lazy { FogOfWar(this) }
 
 //    val targetingOverlay: TargetingOverlay by lazy { TargetingOverlay(this, player, actualSize) }
-
-    val resistanceMap = ConcurrentHashMap<Int, Array<DoubleArray>>().also {
-        for (z in 0 until actualSize.zLength) {
-            it[z] = Array(actualSize.xLength, { DoubleArray(actualSize.yLength) })
-        }
-    }
 
     init {
         blocks.forEach { pos, block ->
@@ -140,6 +132,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         fetchBlockAt(position).map {
             if (!it.isOccupied) {
                 it.addActor(actor)
+                actor.position = position
                 added = true
             }
         }
@@ -181,24 +174,6 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
             items = it.items
         }
         return items
-    }
-
-    fun writeToFile() {
-        for (z in 0 until actualSize().zLength) {
-            File("logs/%s_dungeon_floor_%s.txt".format(System.getProperty("session.id"), z)).printWriter().use { out ->
-                out.println("=================== Floor: %s ===================".format(z))
-                for (y in 0 until actualSize().yLength) {
-                    val sb = StringBuilder()
-                    for (x in 0 until actualSize().xLength) {
-                        val block = blocks[Position3D.create(x, y, z)]
-                        block?.inFov = true
-                        val c = block?.getEntityTile()?.asCharacterTile()?.get()?.character
-                        sb.append(c)
-                    }
-                    out.println(sb)
-                }
-            }
-        }
     }
 
     companion object {

@@ -1,10 +1,12 @@
 package com.jscisco.lom.dungeon
 
-import com.jscisco.lom.builders.EntityFactory
+import com.jscisco.lom.actor.Monster
 import com.jscisco.lom.data.TestData
-import com.jscisco.lom.extensions.entityName
-import com.jscisco.lom.extensions.position
+import com.jscisco.lom.extensions.calculateResistanceMap
+import com.jscisco.lom.extensions.updateGameBlocks
+import com.jscisco.lom.terrain.Wall
 import org.assertj.core.api.Assertions
+import org.hexworks.cobalt.datatypes.extensions.ifPresent
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.data.impl.Position3D
@@ -36,54 +38,78 @@ class TestDungeon {
             val entityMoved = dungeon.moveEntity(player, newPosition)
             Assertions.assertThat(entityMoved).isTrue()
             // The game block that held the player should no longer
-            Assertions.assertThat(previousGameBlock.entities.contains(player)).isFalse()
-            Assertions.assertThat(dungeon.findPositionOf(player).get()).isEqualTo(newPosition)
+            Assertions.assertThat(previousGameBlock.actor.isEmpty()).isTrue()
+            Assertions.assertThat(player.position).isEqualTo(newPosition)
             // The new game block should have the entity
-            Assertions.assertThat(dungeon.fetchBlockAt(newPosition).get().entities.contains(player)).isTrue()
+            Assertions.assertThat(dungeon.fetchBlockAt(newPosition).get().actor.isPresent).isTrue()
         }
 
         @Test
         fun `moving an entity to an unoccupied position should fail`() {
-            val currentPosition = dungeon.findPositionOf(player).get()
+            val currentPosition = dungeon.player.position
             val newPosition = Position3D.create(-1, -1, 0)
 
             val entityMoved = dungeon.moveEntity(player, newPosition)
             Assertions.assertThat(entityMoved).isFalse()
-            Assertions.assertThat(dungeon.findPositionOf(player).get()).isEqualTo(currentPosition)
+            Assertions.assertThat(dungeon.player.position).isEqualTo(currentPosition)
         }
 
     }
 
     @Test
     fun `Entities added at a particular location should be there`() {
-        val sword = EntityFactory.newSword()
+        val goblin = Monster()
         val position = Position3D.create(15, 15, 0)
-        dungeon.addEntity(sword, position)
-        Assertions.assertThat(dungeon.findPositionOf(sword).get()).isEqualTo(Position3D.create(15, 15, 0))
+        dungeon.addActor(goblin, position)
+        Assertions.assertThat(goblin.position).isEqualTo(Position3D.create(15, 15, 0))
     }
 
-    @Test
-    fun `Dungeon entities (those with no position) should not be present`() {
-        val sword = EntityFactory.newSword()
-        dungeon.addDungeonEntity(sword)
-        Assertions.assertThat(dungeon.findPositionOf(sword).isPresent).isFalse()
-    }
+    @Nested
+    inner class FOVTests {
+        @Test
+        fun `The resistance map should be calculate as expected`() {
+            val wallPosition = Position3D.create(10, 10, 0)
+            dungeon.fetchBlockAt(wallPosition).ifPresent {
+                it.terrain = Wall()
+            }
 
-    @Test
-    fun `The resistance map should be calculate as expected`() {
-        val wallPosition = Position3D.create(10, 10, 0)
-        dungeon.addEntity(EntityFactory.newWall(), wallPosition)
+            dungeon.calculateResistanceMap(dungeon.player)
 
-        dungeon.calculateResistanceMap(dungeon.resistanceMap)
+            val firstFloorResistanceMap = dungeon.calculateResistanceMap(dungeon.player)
 
-        val firstFloorResistanceMap = dungeon.resistanceMap[0]
+            Assertions.assertThat(firstFloorResistanceMap).isNotNull
+            if (firstFloorResistanceMap != null) {
+                Assertions.assertThat(firstFloorResistanceMap[10][10]).isEqualTo(1.0)
+                Assertions.assertThat(firstFloorResistanceMap[0][0]).isEqualTo(0.0)
+            }
+        }
 
-        Assertions.assertThat(firstFloorResistanceMap).isNotNull
-        if (firstFloorResistanceMap != null) {
-            Assertions.assertThat(firstFloorResistanceMap[10][10]).isEqualTo(1.0)
-            Assertions.assertThat(firstFloorResistanceMap[0][0]).isEqualTo(0.0)
+        @Test
+        fun `Game block in FOV should have in_fov toggled & seen`() {
+            dungeon.player.fieldOfView.fov[0][0] = 1.0
+            dungeon.updateGameBlocks(dungeon.player)
+            Assertions.assertThat(dungeon.fetchBlockAt(Position3D.create(0, 0, 0)).get().inFov).isTrue()
+            Assertions.assertThat(dungeon.fetchBlockAt(Position3D.create(0, 0, 0)).get().seen).isTrue()
+        }
+
+        @Test
+        fun `Game block not in FOV should not be inFov`() {
+            dungeon.player.fieldOfView.fov[0][0] = 0.0
+            dungeon.updateGameBlocks(dungeon.player)
+            Assertions.assertThat(dungeon.fetchBlockAt(Position3D.create(0, 0, 0)).get().inFov).isFalse()
+        }
+
+        @Test
+        fun `Game block that was in FOV but is no longer should be seen`() {
+            dungeon.player.fieldOfView.fov[0][0] = 1.0
+            dungeon.updateGameBlocks(dungeon.player)
+            Assertions.assertThat(dungeon.fetchBlockAt(Position3D.create(0, 0, 0)).get().inFov).isTrue()
+            Assertions.assertThat(dungeon.fetchBlockAt(Position3D.create(0, 0, 0)).get().seen).isTrue()
+            dungeon.player.fieldOfView.fov[0][0] = 0.0
+            dungeon.updateGameBlocks(dungeon.player)
+            Assertions.assertThat(dungeon.fetchBlockAt(Position3D.create(0, 0, 0)).get().inFov).isFalse()
+            Assertions.assertThat(dungeon.fetchBlockAt(Position3D.create(0, 0, 0)).get().seen).isTrue()
         }
 
     }
-
 }

@@ -1,7 +1,7 @@
 package com.jscisco.lom.data
 
+import com.jscisco.lom.actor.Player
 import com.jscisco.lom.blocks.GameBlock
-import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.builders.GameBlockFactory
 import com.jscisco.lom.dungeon.Dungeon
 import org.hexworks.zircon.api.data.impl.Position3D
@@ -22,13 +22,11 @@ object TestData {
             }
         }
 
-        val dungeon = Dungeon(blocks = blocks,
+        return Dungeon(blocks = blocks,
                 visibleSize = Size3D.create(25, 25, 1),
                 actualSize = dungeonSize,
-                player = EntityFactory.newPlayer()
+                player = Player()
         )
-
-        return dungeon
     }
 
 }
