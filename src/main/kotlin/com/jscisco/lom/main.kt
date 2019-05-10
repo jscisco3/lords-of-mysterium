@@ -9,7 +9,11 @@ import com.jscisco.lom.dungeon.strategies.GenericDungeonStrategy
 import com.jscisco.lom.events.PopStateEvent
 import com.jscisco.lom.events.PushStateEvent
 import com.jscisco.lom.events.QuitGameEvent
+import com.jscisco.lom.events.dialog.OpenEquipmentDialog
+import com.jscisco.lom.events.dialog.OpenInventoryDialog
 import com.jscisco.lom.view.DungeonView
+import com.jscisco.lom.view.dialog.EquipmentDialog
+import com.jscisco.lom.view.dialog.InventoryDialog
 import org.hexworks.cobalt.events.api.subscribe
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
@@ -42,22 +46,28 @@ fun main(args: Array<String>) {
     val states = mutableListOf<State>(PlayerTurnState(dungeon))
 
     Zircon.eventBus.subscribe<QuitGameEvent> {
-        playing = false
-        logger.info("quitting game")
+        System.exit(0)
     }
 
     Zircon.eventBus.subscribe<PopStateEvent> {
-        logger.info("Popping state ${states.last()}")
+        //        logger.info("Popping state ${states.last()}")
         states.removeAt(states.lastIndex)
-        logger.info("Current state is now ${states.last()}")
+//        logger.info("Current state is now ${states.last()}")
     }
 
     Zircon.eventBus.subscribe<PushStateEvent> {
         states.add(it.state)
     }
 
+    Zircon.eventBus.subscribe<OpenInventoryDialog> {
+        dv.screen.openModal(InventoryDialog(it.dungeon, it.player, dv.screen))
+    }
+
+    Zircon.eventBus.subscribe<OpenEquipmentDialog> {
+        dv.screen.openModal(EquipmentDialog(it.player, dv.screen))
+    }
+
     dv.screen.onKeyboardEvent(KeyboardEventType.KEY_PRESSED) { event, _ ->
-        logger.info(states.last().toString())
         states.last().handleInput(event)
         Processed
     }
@@ -65,5 +75,4 @@ fun main(args: Array<String>) {
     while (playing) {
         states.last().update()
     }
-    System.exit(0)
 }

@@ -7,6 +7,8 @@ import com.jscisco.lom.commands.Response
 import com.jscisco.lom.dungeon.Dungeon
 import com.jscisco.lom.events.PushStateEvent
 import com.jscisco.lom.events.QuitGameEvent
+import com.jscisco.lom.events.dialog.OpenEquipmentDialog
+import com.jscisco.lom.events.dialog.OpenInventoryDialog
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.uievent.KeyCode
@@ -59,12 +61,12 @@ class PlayerTurnState(dungeon: Dungeon) : State(dungeon) {
                 "," -> {
 //                    response = player.executeCommand(PickItemUpCommand(context = context, source = player, position = player.position))
                 }
-//                "i" -> {
-//                    Zircon.eventBus.publish(OpenInventoryDialog(dungeon, player))
-//                }
-//                "e" -> {
-//                    Zircon.eventBus.publish(OpenEquipmentDialog(dungeon, player))
-//                }
+                "i" -> {
+                    Zircon.eventBus.publish(OpenInventoryDialog(dungeon, player))
+                }
+                "e" -> {
+                    Zircon.eventBus.publish(OpenEquipmentDialog(player))
+                }
 
 //                "d" -> if (player.inventory.items.lastOrNull() != null) {
 //                    response = player.executeCommand(DropItemCommand(context, player, player.inventory.items.last(), player.position))

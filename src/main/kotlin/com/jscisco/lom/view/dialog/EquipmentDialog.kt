@@ -1,23 +1,21 @@
-//package com.jscisco.lom.view.dialog
-//
-//import com.jscisco.lom.attributes.types.equipment
-//import com.jscisco.lom.dungeon.GameContext
-//import com.jscisco.lom.view.fragment.EquipmentFragment
-//import org.hexworks.zircon.api.Components
-//import org.hexworks.zircon.api.component.Container
-//import org.hexworks.zircon.api.graphics.BoxType
-//
-//class EquipmentDialog(context: GameContext) : Dialog(screen = context.screen) {
-//
-//    val equipment = context.player.equipment
-//
-//    override val container: Container = Components.panel()
-//            .withTitle("EquipmentAttribute")
-//            .withSize(40, equipment.equipmentSlots.size + 2)
-//            .withBoxType(BoxType.SINGLE)
-//            .wrapWithBox()
+package com.jscisco.lom.view.dialog
+
+import com.jscisco.lom.actor.Player
+import org.hexworks.zircon.api.Components
+import org.hexworks.zircon.api.component.Container
+import org.hexworks.zircon.api.graphics.BoxType
+import org.hexworks.zircon.api.screen.Screen
+
+class EquipmentDialog(val player: Player, screen: Screen) : Dialog(screen) {
+
+    override val container: Container = Components.panel()
+            .withTitle("Equipment")
+            .withSize(40, 20)
+            .withBoxType(BoxType.SINGLE)
+            .wrapWithBox()
+            .build()
 //            .build().also { equipmentPanel ->
 //                val equipmentFragment = EquipmentFragment(context, context.player, equipment, 30)
 //                equipmentPanel.addFragment(equipmentFragment)
 //            }
-//}
+}

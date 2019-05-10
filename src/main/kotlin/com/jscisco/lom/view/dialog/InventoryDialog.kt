@@ -1,33 +1,24 @@
-//package com.jscisco.lom.view.dialog
-//
-//import com.jscisco.lom.attributes.types.equipment
-//import com.jscisco.lom.attributes.types.equippable
-//import com.jscisco.lom.attributes.types.inventory
-//import com.jscisco.lom.commands.DropItemCommand
-//import com.jscisco.lom.commands.EquipItemCommand
-//import com.jscisco.lom.dungeon.GameContext
-//import com.jscisco.lom.extensions.position
-//import com.jscisco.lom.view.fragment.ItemListFragment
-//import org.hexworks.cobalt.datatypes.extensions.map
-//import org.hexworks.cobalt.logging.api.Logger
-//import org.hexworks.cobalt.logging.api.LoggerFactory
-//import org.hexworks.zircon.api.Components
-//import org.hexworks.zircon.api.component.ComponentAlignment
-//import org.hexworks.zircon.api.component.Container
-//import org.hexworks.zircon.api.extensions.onMouseEvent
-//import org.hexworks.zircon.api.graphics.BoxType
-//import org.hexworks.zircon.api.uievent.MouseEventType
-//import org.hexworks.zircon.api.uievent.Processed
-//
-//class InventoryDialog(gameContext: GameContext) : Dialog(screen = gameContext.screen) {
-//
-//    val logger: Logger = LoggerFactory.getLogger(javaClass)
-//
-//    override val container: Container = Components.panel()
-//            .withTitle("Inventory")
-//            .withSize(40, 20)
-//            .withBoxType(BoxType.SINGLE)
-//            .wrapWithBox()
+package com.jscisco.lom.view.dialog
+
+import com.jscisco.lom.actor.Player
+import com.jscisco.lom.dungeon.Dungeon
+import org.hexworks.cobalt.logging.api.Logger
+import org.hexworks.cobalt.logging.api.LoggerFactory
+import org.hexworks.zircon.api.Components
+import org.hexworks.zircon.api.component.Container
+import org.hexworks.zircon.api.graphics.BoxType
+import org.hexworks.zircon.api.screen.Screen
+
+class InventoryDialog(val dungeon: Dungeon, val player: Player, screen: Screen) : Dialog(screen) {
+
+    val logger: Logger = LoggerFactory.getLogger(javaClass)
+
+    override val container: Container = Components.panel()
+            .withTitle("Inventory")
+            .withSize(40, 20)
+            .withBoxType(BoxType.SINGLE)
+            .wrapWithBox()
+            .build()
 //            .build().also { inventoryPanel ->
 //                val player = gameContext.player
 //                val inventory = player.inventory
@@ -64,6 +55,4 @@
 //                        }
 //                inventoryPanel.addComponent(drop)
 //                inventoryPanel.addComponent(equip)
-//            }
-//
-//}
+}

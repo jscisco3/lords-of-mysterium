@@ -16,7 +16,6 @@ class MoveCommand(dungeon: Dungeon, receiver: Actor, private val newPosition: Po
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     override fun invoke(): Response {
-        logger.info("Moving to ${newPosition}")
         dungeon.fetchBlockAt(newPosition).ifPresent {
             if (!it.isOccupied && it.isWalkable) {
                 // This should probably be changed
