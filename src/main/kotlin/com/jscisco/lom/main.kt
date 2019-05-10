@@ -39,7 +39,7 @@ fun main(args: Array<String>) {
 
     var playing = true
 
-    val states = mutableListOf<State>(PlayerTurnState(dungeon, dv.screen))
+    val states = mutableListOf<State>(PlayerTurnState(dungeon))
 
     Zircon.eventBus.subscribe<QuitGameEvent> {
         playing = false

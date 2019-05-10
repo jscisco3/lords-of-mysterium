@@ -8,7 +8,6 @@ import com.jscisco.lom.events.PopStateEvent
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.data.impl.Position3D
-import org.hexworks.zircon.api.screen.Screen
 import org.hexworks.zircon.api.uievent.KeyCode
 import org.hexworks.zircon.api.uievent.KeyboardEvent
 import org.hexworks.zircon.api.uievent.KeyboardEventType
@@ -20,7 +19,7 @@ import squidpony.squidmath.Coord
 /**
  * We should utilize the AutoexploreBehavior to move automatically.
  */
-class AutoexploreState(dungeon: Dungeon, screen: Screen) : State(dungeon, screen) {
+class AutoexploreState(dungeon: Dungeon) : State(dungeon) {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
@@ -28,22 +27,16 @@ class AutoexploreState(dungeon: Dungeon, screen: Screen) : State(dungeon, screen
         val costMap: Array<DoubleArray> = calculateAutoexploreCosts()
         val dijkstraMap: DijkstraMap = DijkstraMap()
         dijkstraMap.initialize(costMap)
-        logger.info("${costMap[0][0]}")
         val goals: Array<Coord> = getCoordsOfUnseenBlocks(dungeon, dungeon.player.position.z)
-        logger.info("${goals[0]}")
         val playerCoord = Coord.get(dungeon.player.position.x, dungeon.player.position.y)
         val path = dijkstraMap.findPath(1, listOf<Coord>(), listOf<Coord>(),
                 playerCoord,
                 *goals)
-
-        logger.info("${path.size}")
-
         if (path.isEmpty().not() && path[0] != playerCoord) {
             MoveCommand(dungeon, dungeon.player, Position3D.create(path[0].x, path[0].y, dungeon.player.position.z)).invoke()
         } else {
             Zircon.eventBus.publish(PopStateEvent())
         }
-//        }
     }
 
     override fun handleInput(input: UIEvent): Response {
@@ -77,7 +70,6 @@ class AutoexploreState(dungeon: Dungeon, screen: Screen) : State(dungeon, screen
                 goals.add(Coord.get(it.position.x, it.position.y))
             }
         }
-        logger.info("Number of goals: ${goals.size}")
         return goals.toTypedArray()
     }
 

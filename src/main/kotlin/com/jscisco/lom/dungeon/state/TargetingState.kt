@@ -3,10 +3,9 @@ package com.jscisco.lom.dungeon.state
 import com.jscisco.lom.commands.Pass
 import com.jscisco.lom.commands.Response
 import com.jscisco.lom.dungeon.Dungeon
-import org.hexworks.zircon.api.screen.Screen
 import org.hexworks.zircon.api.uievent.UIEvent
 
-class TargetingState(dungeon: Dungeon, screen: Screen) : State(dungeon, screen) {
+class TargetingState(dungeon: Dungeon) : State(dungeon) {
 
     override fun update() {}
 

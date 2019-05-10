@@ -42,7 +42,23 @@ fun Dungeon.calculateResistanceMap(actor: Actor): Array<DoubleArray> {
 
 fun Dungeon.calculateFOV(actor: Actor) {
     val resistanceMap = this.calculateResistanceMap(actor)
-    actor.fieldOfView.fov = FOV().let {
-        it.calculateFOV(resistanceMap, actor.position.x, actor.position.y, actor.fieldOfView.radius, Radius.DIAMOND)
+    actor.fieldOfView.fov = FOV().calculateFOV(resistanceMap, actor.position.x, actor.position.y, actor.fieldOfView.radius, Radius.DIAMOND).also {
+        updateGameBlocks(actor)
+    }
+}
+
+fun Dungeon.updateGameBlocks(actor: Actor) {
+    actor.fieldOfView.fov.forEachIndexed { x, doubles ->
+        doubles.forEachIndexed { y, value ->
+            fetchBlockAt(Position3D.create(x, y, actor.position.z)).ifPresent {
+                if (value > 0.0) {
+                    it.seen = true
+                    it.inFov = true
+                    it.lastSeen = it.layers.last()
+                } else {
+                    it.inFov = false
+                }
+            }
+        }
     }
 }
