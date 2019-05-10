@@ -5,7 +5,9 @@ import com.jscisco.lom.actor.Player
 import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.builders.GameBlockFactory
 import com.jscisco.lom.events.DoorOpenedEvent
+import com.jscisco.lom.events.UpdateCamera
 import com.jscisco.lom.events.UpdateFOW
+import com.jscisco.lom.extensions.calculateFOV
 import com.jscisco.lom.item.Item
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.cobalt.datatypes.extensions.ifPresent
@@ -35,7 +37,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         .build() {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
-//    private val fogOfWar: FogOfWar by lazy { FogOfWar(this, player, actualSize) }
+    private val fogOfWar: FogOfWar by lazy { FogOfWar(this) }
 
 //    val targetingOverlay: TargetingOverlay by lazy { TargetingOverlay(this, player, actualSize) }
 
@@ -54,7 +56,6 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         }
 
         registerEvents()
-        calculateResistanceMap(resistanceMap)
 
         var playerStartPosition = findEmptyLocationWithin(Position3D.defaultPosition().withZ(0), actualSize)
         while (playerStartPosition.isEmpty()) {
@@ -63,8 +64,8 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
 
         addActor(player, playerStartPosition.get())
         player.position = playerStartPosition.get()
-        logger.debug("The player is at: %s".format(player.position))
-//        fogOfWar.updateFOW()
+        this.calculateFOV(player)
+        fogOfWar.updateFOW()
         updateCamera()
     }
 
@@ -72,31 +73,24 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     private fun registerEvents() {
 
         Zircon.eventBus.subscribe<DoorOpenedEvent> {
-            calculateResistanceMap(resistanceMap)
-//            fogOfWar.updateFOW()
+            //            fogOfWar.updateFOW()
         }
 
         Zircon.eventBus.subscribe<UpdateFOW> {
-            //            fogOfWar.updateFOW()
+            fogOfWar.updateFOW()
         }
-    }
 
-    fun calculateResistanceMap(resistanceMap: MutableMap<Int, Array<DoubleArray>>) {
-        blocks.forEach { pos, block ->
-            if (block.blocksVision) {
-                resistanceMap.getValue(pos.z)[pos.x][pos.y] = 1.0
-            } else {
-                resistanceMap.getValue(pos.z)[pos.x][pos.y] = 0.0
-            }
+        Zircon.eventBus.subscribe<UpdateCamera> {
+            this.updateCamera()
         }
     }
 
     private fun updateCamera() {
-        logger.info("updating camera based on player position: %s".format(player.position.toString()))
+        logger.trace("updating camera based on player position: %s".format(player.position.toString()))
         val screenPosition = player.position - visibleOffset()
         val halfHeight = visibleSize.yLength / 2
         val halfWidth = visibleSize.xLength / 2
-        logger.info("visible offset is: %s, screen position is: %s, half Height: %s, half width: %s".format(visibleOffset().toString(), screenPosition.toString(), halfHeight, halfWidth))
+        logger.trace("visible offset is: %s, screen position is: %s, half Height: %s, half width: %s".format(visibleOffset().toString(), screenPosition.toString(), halfHeight, halfWidth))
         if (screenPosition.y > halfHeight) {
             logger.debug("Scrolling forward by %s".format(screenPosition.y - halfHeight))
             scrollForwardBy(screenPosition.y - halfHeight)
