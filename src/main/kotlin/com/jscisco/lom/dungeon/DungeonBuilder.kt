@@ -1,9 +1,11 @@
 package com.jscisco.lom.dungeon
 
+import com.jscisco.lom.actor.Monster
 import com.jscisco.lom.actor.Player
 import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.dungeon.strategies.GenerationStrategy
 import com.jscisco.lom.dungeon.strategies.GenericDungeonStrategy
+import com.jscisco.lom.extensions.addAtEmptyPosition
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.data.impl.Position3D
@@ -25,9 +27,9 @@ class DungeonBuilder(private val dungeonSize: Size3D,
     }
 
     private fun addNPCs(dungeon: Dungeon, offset: Position3D) {
-//        for (i in 0 until 1) {
-//            dungeon.addAtEmptyPosition(EntityFactory.newGoblin(),
-//                    offset = offset)
-//        }
+        for (i in 0 until 5) {
+            dungeon.addAtEmptyPosition(Monster(),
+                    offset = offset)
+        }
     }
 }

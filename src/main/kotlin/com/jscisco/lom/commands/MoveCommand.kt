@@ -16,6 +16,7 @@ class MoveCommand(dungeon: Dungeon, receiver: Actor, private val newPosition: Po
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     override fun invoke(): Response {
+        var response: Response = Pass
         dungeon.fetchBlockAt(newPosition).ifPresent {
             if (!it.isOccupied && it.isWalkable) {
                 // This should probably be changed
@@ -23,9 +24,12 @@ class MoveCommand(dungeon: Dungeon, receiver: Actor, private val newPosition: Po
                 dungeon.calculateFOV(receiver)
                 Zircon.eventBus.publish(UpdateFOW())
                 Zircon.eventBus.publish(UpdateCamera())
-                Consumed
+                response = Consumed
+            }
+            if (it.isOccupied) {
+                response = AttackCommand(dungeon, receiver, it.actor.get()).invoke()
             }
         }
-        return Pass
+        return response
     }
 }
