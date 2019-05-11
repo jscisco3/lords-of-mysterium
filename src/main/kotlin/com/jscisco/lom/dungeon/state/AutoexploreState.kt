@@ -27,9 +27,9 @@ class AutoexploreState(dungeon: Dungeon) : State(dungeon) {
         val costMap: Array<DoubleArray> = calculateAutoexploreCosts()
         val dijkstraMap: DijkstraMap = DijkstraMap()
         dijkstraMap.initialize(costMap)
-        val goals: Array<Coord> = getCoordsOfUnseenBlocks(dungeon, dungeon.player.position.z)
+        val goals: Array<Coord> = getCoordsOfUnseenBlocks(dungeon.player.position.z)
         val playerCoord = Coord.get(dungeon.player.position.x, dungeon.player.position.y)
-        val path = dijkstraMap.findPath(1, listOf<Coord>(), listOf<Coord>(),
+        val path = dijkstraMap.findPath(1, getCoordsOfEnemies(), listOf<Coord>(),
                 playerCoord,
                 *goals)
         if (path.isEmpty().not() && path[0] != playerCoord) {
@@ -63,7 +63,7 @@ class AutoexploreState(dungeon: Dungeon) : State(dungeon) {
         return autoExploreCosts
     }
 
-    private fun getCoordsOfUnseenBlocks(dungeon: Dungeon, level: Int): Array<Coord> {
+    private fun getCoordsOfUnseenBlocks(level: Int): Array<Coord> {
         val goals = mutableListOf<Coord>()
         dungeon.fetchBlocksAtLevel(level).forEach {
             if (it.block.seen.not() && it.block.isOccupied.not()) {
@@ -71,6 +71,14 @@ class AutoexploreState(dungeon: Dungeon) : State(dungeon) {
             }
         }
         return goals.toTypedArray()
+    }
+
+    private fun getCoordsOfEnemies(): List<Coord> {
+        val enemyCoords = mutableListOf<Coord>()
+        dungeon.monsters.forEach {
+            enemyCoords.add(Coord.get(it.position.x, it.position.y))
+        }
+        return enemyCoords.toList()
     }
 
 }

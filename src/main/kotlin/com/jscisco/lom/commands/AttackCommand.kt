@@ -11,7 +11,7 @@ class AttackCommand(dungeon: Dungeon, private val attacker: Actor, private val d
         defender.health.hp -= 5
         Zircon.eventBus.publish(GameLogEvent("${attacker.name} attacked the ${defender.name}"))
         defender.health.whenShouldBeDestroyed {
-            dungeon.removeEntity(defender)
+            dungeon.removeActor(defender)
             Zircon.eventBus.publish(GameLogEvent("${defender.name} is defeated!"))
         }
         return Consumed

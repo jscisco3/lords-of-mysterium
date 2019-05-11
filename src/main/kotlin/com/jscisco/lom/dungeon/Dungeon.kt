@@ -1,6 +1,7 @@
 package com.jscisco.lom.dungeon
 
 import com.jscisco.lom.actor.Actor
+import com.jscisco.lom.actor.Monster
 import com.jscisco.lom.actor.Player
 import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.builders.GameBlockFactory
@@ -37,14 +38,14 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
     private val fogOfWar: FogOfWar by lazy { FogOfWar(this) }
-
-//    val targetingOverlay: TargetingOverlay by lazy { TargetingOverlay(this, player, actualSize) }
+    private val actors: MutableList<Actor> = mutableListOf(player)
 
     init {
         blocks.forEach { pos, block ->
             setBlockAt(pos, block)
             block.actor.ifPresent {
                 it.position = pos
+                actors.add(it)
             }
         }
 
@@ -142,15 +143,17 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
                 it.addActor(actor)
                 actor.position = position
                 added = true
+                actors.add(actor)
             }
         }
         return added
     }
 
-    fun removeEntity(actor: Actor) {
+    fun removeActor(actor: Actor) {
         blocks.forEach {
             if (it.value.actor.isPresent && it.value.actor.get() == actor) {
                 it.value.removeActor()
+                actors.remove(actor)
                 return@forEach
             }
         }
@@ -175,6 +178,11 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
             return false
         }
     }
+
+    val monsters: List<Actor>
+        get() = actors.filter {
+            it is Monster
+        }
 
     fun findItemsAt(pos: Position3D): List<Item> {
         var items = listOf<Item>()
