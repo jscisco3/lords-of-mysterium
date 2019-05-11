@@ -12,7 +12,13 @@ class Health(initalHp: Int = 100) : DisplayableAttribute {
     private val maxHpProperty: Property<Int> = createPropertyFrom(initalHp)
     private val hpProperty: Property<Int> = createPropertyFrom(initalHp)
     var hp: Int by hpProperty.asDelegate()
-    var maxHp: Int by hpProperty.asDelegate()
+    var maxHp: Int by maxHpProperty.asDelegate()
+
+    fun whenShouldBeDestroyed(fn: () -> Unit) {
+        if (hp < 1) {
+            fn()
+        }
+    }
 
     override fun toComponent(width: Int): Component {
         return Components.panel().withSize(width, 5).build().apply {

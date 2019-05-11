@@ -25,6 +25,7 @@ class MoveCommand(dungeon: Dungeon, receiver: Actor, private val newPosition: Po
                 Zircon.eventBus.publish(UpdateFOW())
                 Zircon.eventBus.publish(UpdateCamera())
                 response = Consumed
+                return@ifPresent
             }
             if (it.isOccupied) {
                 response = AttackCommand(dungeon, receiver, it.actor.get()).invoke()

@@ -50,13 +50,14 @@ fun main(args: Array<String>) {
     }
 
     Zircon.eventBus.subscribe<PopStateEvent> {
-        //        logger.info("Popping state ${states.last()}")
+        logger.info("Popping state ${states.last()}")
         states.removeAt(states.lastIndex)
-//        logger.info("Current state is now ${states.last()}")
+        logger.info("Current state is now ${states.last()}")
     }
 
     Zircon.eventBus.subscribe<PushStateEvent> {
         states.add(it.state)
+        logger.info(states.last().toString())
     }
 
     Zircon.eventBus.subscribe<OpenInventoryDialog> {
