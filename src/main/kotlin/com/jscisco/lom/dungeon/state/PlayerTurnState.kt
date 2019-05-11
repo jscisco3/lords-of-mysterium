@@ -73,7 +73,9 @@ class PlayerTurnState(dungeon: Dungeon) : State(dungeon) {
                 "<" -> {
 //                    response = player.executeCommand(AscendStairsCommand(context, player))
                 }
-                // 't' -> targetingMode()
+                "V" -> {
+                    player.health.hp -= 5
+                }
                 "l" -> {
 //                    player.addAttribute(LookingAttribute(player.position))
 //                    player.removeAttribute(Exploring)

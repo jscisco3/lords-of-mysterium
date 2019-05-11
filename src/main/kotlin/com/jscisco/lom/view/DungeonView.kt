@@ -7,6 +7,7 @@ import com.jscisco.lom.configuration.GameConfiguration.WINDOW_HEIGHT
 import com.jscisco.lom.configuration.GameConfiguration.WINDOW_WIDTH
 import com.jscisco.lom.dungeon.Dungeon
 import com.jscisco.lom.events.GameLogEvent
+import com.jscisco.lom.view.fragment.PlayerStatsFragment
 import org.hexworks.cobalt.events.api.subscribe
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
@@ -14,11 +15,8 @@ import org.hexworks.zircon.api.Components
 import org.hexworks.zircon.api.GameComponents
 import org.hexworks.zircon.api.component.ComponentAlignment
 import org.hexworks.zircon.api.data.Tile
-import org.hexworks.zircon.api.extensions.onKeyboardEvent
 import org.hexworks.zircon.api.game.ProjectionMode
 import org.hexworks.zircon.api.mvc.base.BaseView
-import org.hexworks.zircon.api.uievent.KeyboardEventType
-import org.hexworks.zircon.api.uievent.Processed
 import org.hexworks.zircon.internal.Zircon
 
 class DungeonView(private val dungeon: Dungeon) : BaseView() {
@@ -29,7 +27,7 @@ class DungeonView(private val dungeon: Dungeon) : BaseView() {
         val sidebar = Components.panel()
                 .withSize(SIDEBAR_WIDTH, WINDOW_HEIGHT)
                 .build()
-//        sidebar.addFragment(PlayerStatsFragment(dungeon.player))
+        sidebar.addFragment(PlayerStatsFragment(dungeon.player))
 
         val gameComponent = GameComponents.newGameComponentBuilder<Tile, GameBlock>()
                 .withGameArea(dungeon)
