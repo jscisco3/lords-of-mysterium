@@ -1,13 +1,20 @@
 package com.jscisco.lom.view.dialog
 
 import com.jscisco.lom.actor.Player
+import com.jscisco.lom.commands.DropItemCommand
 import com.jscisco.lom.dungeon.Dungeon
+import com.jscisco.lom.view.fragment.ItemListFragment
+import org.hexworks.cobalt.datatypes.extensions.ifPresent
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.Components
+import org.hexworks.zircon.api.component.ComponentAlignment
 import org.hexworks.zircon.api.component.Container
+import org.hexworks.zircon.api.extensions.onComponentEvent
 import org.hexworks.zircon.api.graphics.BoxType
 import org.hexworks.zircon.api.screen.Screen
+import org.hexworks.zircon.api.uievent.ComponentEventType
+import org.hexworks.zircon.api.uievent.Processed
 
 class InventoryDialog(val dungeon: Dungeon, val player: Player, screen: Screen) : Dialog(screen) {
 
@@ -18,28 +25,23 @@ class InventoryDialog(val dungeon: Dungeon, val player: Player, screen: Screen) 
             .withSize(40, 20)
             .withBoxType(BoxType.SINGLE)
             .wrapWithBox()
-            .build()
-//            .build().also { inventoryPanel ->
-//                val player = gameContext.player
-//                val inventory = player.inventory
-//                val itemListFragment = ItemListFragment(inventory.items, 20)
-//                inventoryPanel.addFragment(itemListFragment)
-//
-//                val drop = Components.button()
-//                        .withText("Drop")
-//                        .withAlignmentWithin(inventoryPanel, ComponentAlignment.BOTTOM_LEFT)
-//                        .build().apply {
-//                            onMouseEvent(MouseEventType.MOUSE_RELEASED) { _, _ ->
-//                                itemListFragment.fetchSelectedItem().map { item ->
-//                                    itemListFragment.removeSelectedItem()
-//                                    player.executeCommand(DropItemCommand(gameContext,
-//                                            player,
-//                                            item,
-//                                            player.position))
-//                                }
-//                                Processed
-//                            }
-//                        }
+            .build().also { inventoryPanel ->
+                val inventory = player.inventory
+                val itemListFragment = ItemListFragment(inventory.items, 20)
+                inventoryPanel.addFragment(itemListFragment)
+
+                val drop = Components.button()
+                        .withText("Drop")
+                        .withAlignmentWithin(inventoryPanel, ComponentAlignment.BOTTOM_LEFT)
+                        .build().apply {
+                            onComponentEvent(ComponentEventType.ACTIVATED) {
+                                itemListFragment.fetchSelectedItem().ifPresent { item ->
+                                    itemListFragment.removeSelectedItem()
+                                    DropItemCommand(dungeon, player, item).invoke()
+                                }
+                                Processed
+                            }
+                        }
 //                val equip = Components.button()
 //                        .withText("Equip")
 //                        .withAlignmentAround(drop, ComponentAlignment.RIGHT_CENTER)
@@ -53,6 +55,7 @@ class InventoryDialog(val dungeon: Dungeon, val player: Player, screen: Screen) 
 //                                Processed
 //                            }
 //                        }
-//                inventoryPanel.addComponent(drop)
-//                inventoryPanel.addComponent(equip)
+                inventoryPanel.addComponent(drop)
+            }
 }
+//                inventoryPanel.addComponent(equip)

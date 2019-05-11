@@ -7,7 +7,7 @@ import org.hexworks.cobalt.datatypes.Maybe
 object ItemFactory {
 
     fun sword(): Item {
-        return Item(tile = GameTileBuilder.SWORD).also {
+        return Item(tile = GameTileBuilder.SWORD, name = "Sword").also {
             it.attack = Maybe.of(Attack(5, 10))
         }
     }

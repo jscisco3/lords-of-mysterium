@@ -6,8 +6,11 @@ import org.hexworks.cobalt.databinding.api.createPropertyFrom
 import org.hexworks.cobalt.datatypes.Maybe
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.data.impl.Position3D
+import java.util.*
 
-class Item(val tile: Tile, initialPosition: Position3D = Position3D.unknown()) {
+class Item(val tile: Tile, initialPosition: Position3D = Position3D.unknown(), val name: String) {
+    val id: UUID = UUID.randomUUID()
+
     private val positionProperty = createPropertyFrom(initialPosition)
     var position: Position3D by positionProperty.asDelegate()
 
