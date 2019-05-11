@@ -16,7 +16,7 @@ class GameBlock(var terrain: Terrain = Floor(),
                 var actor: Maybe<Actor> = Maybe.ofNullable(null),
                 var seen: Boolean = false,
                 var inFov: Boolean = false,
-                var lastSeen: Tile = GameTileBuilder.floor()) : BlockBase<Tile>() {
+                var lastSeen: Tile = GameTileBuilder.FLOOR) : BlockBase<Tile>() {
 
     // We have decided that there are only two layers per block: defaultTile (floor),
     // or the last non-item, or the last item (if no non-item is present)
@@ -69,6 +69,14 @@ class GameBlock(var terrain: Terrain = Floor(),
 
     fun removeActor() {
         this.actor = Maybe.ofNullable(null)
+    }
+
+    fun addItem(item: Item) {
+        this.currentItems.add(item)
+    }
+
+    fun removeItem(item: Item) {
+        this.currentItems.remove(item)
     }
 
     val items: List<Item>

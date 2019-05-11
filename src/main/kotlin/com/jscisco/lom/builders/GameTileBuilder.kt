@@ -10,29 +10,23 @@ import org.hexworks.zircon.api.data.CharacterTile
 
 object GameTileBuilder {
 
-    fun floor(): CharacterTile {
-        return Tiles.newBuilder()
-                .withCharacter('.')
-                .withForegroundColor(FLOOR_FOREGROUND)
-                .withBackgroundColor(FLOOR_BACKGROUND)
-                .buildCharacterTile()
-    }
+    val FLOOR: CharacterTile = Tiles.newBuilder()
+            .withCharacter('.')
+            .withForegroundColor(FLOOR_FOREGROUND)
+            .withBackgroundColor(FLOOR_BACKGROUND)
+            .buildCharacterTile()
 
-    fun wall(): CharacterTile {
-        return Tiles.newBuilder()
-                .withCharacter('#')
-                .withForegroundColor(DEFAULT_FOREGROUND)
-                .withBackgroundColor(DEFAULT_BACKGROUND)
-                .buildCharacterTile()
-    }
+    val WALL: CharacterTile = Tiles.newBuilder()
+            .withCharacter('#')
+            .withForegroundColor(DEFAULT_FOREGROUND)
+            .withBackgroundColor(DEFAULT_BACKGROUND)
+            .buildCharacterTile()
 
-    fun sword(): CharacterTile {
-        return Tiles.newBuilder()
-                .withCharacter(')')
-                .withForegroundColor(DEFAULT_FOREGROUND)
-                .withBackgroundColor(DEFAULT_BACKGROUND)
-                .buildCharacterTile()
-    }
+    val SWORD: CharacterTile = Tiles.newBuilder()
+            .withCharacter(')')
+            .withForegroundColor(DEFAULT_FOREGROUND)
+            .withBackgroundColor(DEFAULT_BACKGROUND)
+            .buildCharacterTile()
 
     fun closedDoor(): CharacterTile {
         return Tiles.newBuilder()

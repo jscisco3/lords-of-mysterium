@@ -4,6 +4,7 @@ import com.jscisco.lom.actor.Actor
 import com.jscisco.lom.actor.Player
 import com.jscisco.lom.blocks.GameBlock
 import com.jscisco.lom.builders.GameBlockFactory
+import com.jscisco.lom.builders.ItemFactory
 import com.jscisco.lom.events.DoorOpenedEvent
 import com.jscisco.lom.events.UpdateCamera
 import com.jscisco.lom.events.UpdateFOW
@@ -56,6 +57,13 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
 
         addActor(player, playerStartPosition.get())
         player.position = playerStartPosition.get()
+
+        fetchBlockAt(player.position).ifPresent {
+            val sword = ItemFactory.sword()
+            sword.position = player.position
+            it.addItem(sword)
+        }
+
         this.calculateFOV(player)
         fogOfWar.updateFOW()
         updateCamera()
