@@ -1,9 +1,7 @@
 package com.jscisco.lom.dungeon.state
 
 import com.jscisco.lom.actor.Player
-import com.jscisco.lom.commands.MoveCommand
-import com.jscisco.lom.commands.Pass
-import com.jscisco.lom.commands.Response
+import com.jscisco.lom.commands.*
 import com.jscisco.lom.dungeon.Dungeon
 import com.jscisco.lom.events.PushStateEvent
 import com.jscisco.lom.events.QuitGameEvent
@@ -37,19 +35,13 @@ class PlayerTurnState(dungeon: Dungeon) : State(dungeon) {
                     return MoveCommand(dungeon, player, player.position.withRelativeY(-1)).invoke()
                 }
                 KeyCode.DOWN -> {
-                    return MoveCommand(dungeon, player, player.position.withRelativeY(1)).let {
-                        it.invoke()
-                    }
+                    return MoveCommand(dungeon, player, player.position.withRelativeY(1)).invoke()
                 }
                 KeyCode.LEFT -> {
-                    return MoveCommand(dungeon, player, player.position.withRelativeX(-1)).let {
-                        it.invoke()
-                    }
+                    return MoveCommand(dungeon, player, player.position.withRelativeX(-1)).invoke()
                 }
                 KeyCode.RIGHT -> {
-                    return MoveCommand(dungeon, player, player.position.withRelativeX(1)).let {
-                        it.invoke()
-                    }
+                    return MoveCommand(dungeon, player, player.position.withRelativeX(1)).invoke()
                 }
                 KeyCode.ESCAPE -> {
                     if (event.shiftDown) {
@@ -59,7 +51,7 @@ class PlayerTurnState(dungeon: Dungeon) : State(dungeon) {
             }
             when (event.key) {
                 "," -> {
-//                    response = player.executeCommand(PickItemUpCommand(context = context, source = player, position = player.position))
+                    return PickItemUpCommand(dungeon, player, player.position).invoke()
                 }
                 "i" -> {
                     Zircon.eventBus.publish(OpenInventoryDialog(dungeon, player))
@@ -67,10 +59,9 @@ class PlayerTurnState(dungeon: Dungeon) : State(dungeon) {
                 "e" -> {
                     Zircon.eventBus.publish(OpenEquipmentDialog(player))
                 }
-
-//                "d" -> if (player.inventory.items.lastOrNull() != null) {
-//                    response = player.executeCommand(DropItemCommand(context, player, player.inventory.items.last(), player.position))
-//                }
+                "d" -> if (player.inventory.items.isEmpty().not()) {
+                    return DropItemCommand(dungeon, player, player.inventory.items[0]).invoke()
+                }
                 "z" -> {
                     // Push a new state so that the correct update call is made
                     val autoExploreState = AutoexploreState(dungeon)
