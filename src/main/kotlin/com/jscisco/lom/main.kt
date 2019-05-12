@@ -41,8 +41,6 @@ fun main(args: Array<String>) {
     val dv = DungeonView(dungeon)
     application.dock(dv)
 
-    var playing = true
-
     val states = mutableListOf<State>(PlayerTurnState(dungeon))
 
     Zircon.eventBus.subscribe<QuitGameEvent> {
@@ -73,7 +71,11 @@ fun main(args: Array<String>) {
         Processed
     }
 
-    while (playing) {
-        states.last().update()
+    while (true) {
+        try {
+            states.last().update()
+        } catch (e: Exception) {
+            logger.info(e.toString())
+        }
     }
 }

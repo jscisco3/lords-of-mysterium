@@ -18,6 +18,6 @@ class TestEmptyDungeonGeneration {
 
         val topLeftCorner = dungeon.fetchBlockAt(Position3D.create(0, 0, 0))
 
-        Assertions.assertThat(topLeftCorner.get().isOccupied).isTrue()
+        Assertions.assertThat(topLeftCorner.get().isWalkable).isFalse()
     }
 }
