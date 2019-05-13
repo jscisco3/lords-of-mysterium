@@ -38,7 +38,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
     private val fogOfWar: FogOfWar by lazy { FogOfWar(this) }
-    private val actors: MutableList<Actor> = mutableListOf(player)
+    val actors: MutableList<Actor> = mutableListOf(player)
 
     init {
         blocks.forEach { pos, block ->

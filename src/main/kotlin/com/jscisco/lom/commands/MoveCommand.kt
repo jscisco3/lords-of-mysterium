@@ -33,6 +33,7 @@ class MoveCommand(dungeon: Dungeon, receiver: Actor, private val newPosition: Po
                 dungeon.calculateFOV(receiver)
                 Zircon.eventBus.publish(UpdateFOW())
                 Zircon.eventBus.publish(UpdateCamera())
+                receiver.initiative.cooldown += 1000
                 response = Consumed
                 return@ifPresent
             }

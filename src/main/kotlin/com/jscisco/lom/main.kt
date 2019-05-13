@@ -4,11 +4,13 @@ import com.jscisco.lom.actor.Player
 import com.jscisco.lom.configuration.GameConfiguration
 import com.jscisco.lom.dungeon.DungeonBuilder
 import com.jscisco.lom.dungeon.state.PlayerTurnState
+import com.jscisco.lom.dungeon.state.ProcessingState
 import com.jscisco.lom.dungeon.state.State
 import com.jscisco.lom.dungeon.strategies.GenericDungeonStrategy
 import com.jscisco.lom.events.PopStateEvent
 import com.jscisco.lom.events.PushStateEvent
 import com.jscisco.lom.events.QuitGameEvent
+import com.jscisco.lom.events.StartPlayerTurn
 import com.jscisco.lom.events.dialog.OpenEquipmentDialog
 import com.jscisco.lom.events.dialog.OpenInventoryDialog
 import com.jscisco.lom.view.DungeonView
@@ -41,10 +43,14 @@ fun main(args: Array<String>) {
     val dv = DungeonView(dungeon)
     application.dock(dv)
 
-    val states = mutableListOf<State>(PlayerTurnState(dungeon))
+    val states = mutableListOf<State>(ProcessingState(dungeon))
 
     Zircon.eventBus.subscribe<QuitGameEvent> {
         System.exit(0)
+    }
+
+    Zircon.eventBus.subscribe<StartPlayerTurn> {
+        Zircon.eventBus.publish(PushStateEvent(PlayerTurnState(dungeon)))
     }
 
     Zircon.eventBus.subscribe<PopStateEvent> {

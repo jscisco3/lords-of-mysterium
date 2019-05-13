@@ -11,7 +11,26 @@ import org.hexworks.zircon.api.uievent.UIEvent
  */
 class ProcessingState(dungeon: Dungeon) : State(dungeon) {
 
-    override fun update() {}
+    override fun update() {
+
+        var minimumCooldown: Int = Int.MAX_VALUE
+        dungeon.actors.forEach {
+            if (it.initiative.cooldown < minimumCooldown) {
+                minimumCooldown = it.initiative.cooldown
+            }
+        }
+
+        dungeon.actors.forEach {
+            it.initiative.cooldown -= minimumCooldown
+        }
+
+        dungeon.actors.forEach {
+            if (it.initiative.cooldown <= 0) {
+                it.takeTurn()
+            }
+        }
+
+    }
 
     override fun handleInput(input: UIEvent): Response {
         return Pass
