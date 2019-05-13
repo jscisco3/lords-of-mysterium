@@ -72,10 +72,6 @@ fun main(args: Array<String>) {
     }
 
     while (true) {
-        try {
-            states.last().update()
-        } catch (e: Exception) {
-            logger.info(e.toString())
-        }
+        states.last()?.update()
     }
 }

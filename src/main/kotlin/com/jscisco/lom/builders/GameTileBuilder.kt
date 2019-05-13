@@ -28,19 +28,15 @@ object GameTileBuilder {
             .withBackgroundColor(DEFAULT_BACKGROUND)
             .buildCharacterTile()
 
-    fun closedDoor(): CharacterTile {
-        return Tiles.newBuilder()
-                .withCharacter('+')
-                .withForegroundColor(TileColors.fromString("#603c27"))
-                .buildCharacterTile()
-    }
+    val CLOSED_DOOR: CharacterTile = Tiles.newBuilder()
+            .withCharacter('+')
+            .withForegroundColor(TileColors.fromString("#603c27"))
+            .buildCharacterTile()
 
-    fun openDoor(): CharacterTile {
-        return Tiles.newBuilder()
-                .withCharacter('/')
-                .withForegroundColor(TileColors.fromString("#603c27"))
-                .buildCharacterTile()
-    }
+    val OPEN_DOOR: CharacterTile = Tiles.newBuilder()
+            .withCharacter('/')
+            .withForegroundColor(TileColors.fromString("#603c27"))
+            .buildCharacterTile()
 
     val PLAYER: CharacterTile = Tiles.newBuilder()
             .withCharacter('@')

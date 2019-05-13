@@ -5,6 +5,7 @@ import com.jscisco.lom.commands.Pass
 import com.jscisco.lom.commands.Response
 import com.jscisco.lom.dungeon.Dungeon
 import com.jscisco.lom.events.PopStateEvent
+import com.jscisco.lom.terrain.ClosedDoor
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.data.impl.Position3D
@@ -22,10 +23,10 @@ import squidpony.squidmath.Coord
 class AutoexploreState(dungeon: Dungeon) : State(dungeon) {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
+    private val dijkstraMap: DijkstraMap = DijkstraMap()
 
     override fun update() {
         val costMap: Array<DoubleArray> = calculateAutoexploreCosts()
-        val dijkstraMap: DijkstraMap = DijkstraMap()
         dijkstraMap.initialize(costMap)
         val goals: Array<Coord> = getCoordsOfUnseenBlocks(dungeon.player.position.z)
         val playerCoord = Coord.get(dungeon.player.position.x, dungeon.player.position.y)
@@ -57,6 +58,9 @@ class AutoexploreState(dungeon: Dungeon) : State(dungeon) {
                 autoExploreCosts[x][y] = DijkstraMap.FLOOR
                 if (block.isWalkable.not()) {
                     autoExploreCosts[x][y] = DijkstraMap.WALL
+                }
+                if (block.terrain is ClosedDoor) {
+                    autoExploreCosts[x][y] = DijkstraMap.FLOOR
                 }
             }
         }
