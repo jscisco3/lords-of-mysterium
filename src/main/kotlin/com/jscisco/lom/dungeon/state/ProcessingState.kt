@@ -13,12 +13,7 @@ class ProcessingState(dungeon: Dungeon) : State(dungeon) {
 
     override fun update() {
 
-        var minimumCooldown: Int = Int.MAX_VALUE
-        dungeon.actors.forEach {
-            if (it.initiative.cooldown < minimumCooldown) {
-                minimumCooldown = it.initiative.cooldown
-            }
-        }
+        val minimumCooldown: Int = calculateMinimumCooldown()
 
         dungeon.actors.forEach {
             it.initiative.cooldown -= minimumCooldown
@@ -30,6 +25,20 @@ class ProcessingState(dungeon: Dungeon) : State(dungeon) {
             }
         }
 
+    }
+
+    fun calculateMinimumCooldown(): Int {
+        var minimumCooldown: Int = Int.MAX_VALUE
+        dungeon.actors.sortBy {
+            it.initiative.cooldown
+        }
+//        dungeon.actors.forEach {
+//            if (it.initiative.cooldown < minimumCooldown) {
+//                minimumCooldown = it.initiative.cooldown
+//            }
+//        }
+//        return minimumCooldown
+        return dungeon.actors[0].initiative.cooldown
     }
 
     override fun handleInput(input: UIEvent): Response {

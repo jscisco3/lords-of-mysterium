@@ -38,7 +38,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
     private val fogOfWar: FogOfWar by lazy { FogOfWar(this) }
-    val actors: MutableList<Actor> = mutableListOf(player)
+    val actors: MutableList<Actor> = mutableListOf()
 
     init {
         blocks.forEach { pos, block ->
@@ -130,6 +130,13 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
             currentTry++
         }
         return position
+    }
+
+    /**
+     * Find an empty location on a given Z-Level
+     */
+    fun findEmptyLocationOnZLevel(zlevel: Int): Maybe<Position3D> {
+        return findEmptyLocationWithin(Position3D.defaultPosition().withZ(zlevel), actualSize)
     }
 
     /**
