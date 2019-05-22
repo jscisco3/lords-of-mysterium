@@ -4,11 +4,18 @@ import com.jscisco.lom.actor.Player
 import com.jscisco.lom.kingdom.buildings.Bank
 import com.jscisco.lom.kingdom.buildings.Inn
 import org.assertj.core.api.Assertions
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class TestKingdom {
 
-    val testKingdom: Kingdom = Kingdom("Test Kingdom")
+    var testKingdom: Kingdom = Kingdom("Test Kingdom")
+
+
+    @BeforeEach
+    fun init() {
+        testKingdom = Kingdom("Test Kingdom")
+    }
 
     @Test
     fun `When I build a building, it should be built if it doesn't exist & I have enough gold`() {
