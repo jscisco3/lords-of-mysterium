@@ -1,3 +1,5 @@
 package com.jscisco.lom.attributes
 
-data class Initiative(var cooldown: Int = 0)
+import org.hexworks.amethyst.api.Attribute
+
+data class Initiative(var cooldown: Int = 0) : Attribute

@@ -1,19 +1,17 @@
 package com.jscisco.lom.blocks
 
-import com.jscisco.lom.actor.Actor
+import GameEntity
 import com.jscisco.lom.builders.GameTileBuilder
-import com.jscisco.lom.item.Item
-import com.jscisco.lom.terrain.Floor
-import com.jscisco.lom.terrain.Terrain
-import org.hexworks.cobalt.datatypes.Maybe
-import org.hexworks.cobalt.datatypes.extensions.fold
+import com.jscisco.lom.extensions.blocksVision
+import com.jscisco.lom.extensions.occupiesBlock
+import com.jscisco.lom.extensions.tile
+import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.zircon.api.data.BlockSide
 import org.hexworks.zircon.api.data.Tile
 import org.hexworks.zircon.api.data.base.BlockBase
 
-class GameBlock(var terrain: Terrain = Floor(),
-                private var currentItems: MutableList<Item> = mutableListOf(),
-                var actor: Maybe<Actor> = Maybe.ofNullable(null),
+class GameBlock(private var defaultTile: Tile = GameTileBuilder.FLOOR,
+                private val currentEntities: MutableList<GameEntity<EntityType>> = mutableListOf(),
                 var seen: Boolean = false,
                 var inFov: Boolean = false,
                 var lastSeen: Tile = GameTileBuilder.FLOOR) : BlockBase<Tile>() {
@@ -30,63 +28,48 @@ class GameBlock(var terrain: Terrain = Floor(),
 //                }
 //            }
 //            return mutableListOf(terrain.tile, terrain.tile)
-            return mutableListOf(terrain.tile, getEntityTile())
+            return mutableListOf(defaultTile, currentEntities.map {
+                it.tile
+            }.let {
+                it.firstOrNull()
+            } ?: GameTileBuilder.EMPTY)
         }
 
     override fun fetchSide(side: BlockSide): Tile {
         return GameTileBuilder.EMPTY
     }
 
-    fun getEntityTile(): Tile {
-        val itemTile: Tile? = currentItems.lastOrNull()?.tile
-        val nonItemTile: Tile? = actor.fold(
-                whenEmpty = { null },
-                whenPresent = {
-                    it.tile
-                }
-        )
-        if (nonItemTile != null) {
-            return nonItemTile
-        }
-        if (itemTile != null) {
-            return itemTile
-        }
-        return terrain.tile
-    }
+    val entities: Iterable<GameEntity<EntityType>>
+        get() = currentEntities.toList()
+
+    val occupier: GameEntity<EntityType>
+        get() = currentEntities.firstOrNull {
+            it.occupiesBlock
+        } ?: throw NoSuchElementException("This block is not occupied")
 
     val isOccupied: Boolean
-        get() = actor.isPresent
-
-    val isWalkable: Boolean
-        get() = terrain.walkable
+        get() = currentEntities.any {
+            it.occupiesBlock
+        }
 
     val blocksVision: Boolean
-        get() = !terrain.transparent
+        get() = currentEntities.any {
+            it.blocksVision
+        }
 
-    fun addActor(actor: Actor) {
-        this.actor = Maybe.of(actor)
+    fun addEntity(entity: GameEntity<EntityType>) {
+        currentEntities.add(entity)
     }
 
-    fun removeActor() {
-        this.actor = Maybe.ofNullable(null)
+    fun removeEntity(entity: GameEntity<EntityType>) {
+        currentEntities.remove(entity)
     }
-
-    fun addItem(item: Item) {
-        this.currentItems.add(item)
-    }
-
-    fun removeItem(item: Item) {
-        this.currentItems.remove(item)
-    }
-
-    val items: List<Item>
-        get() = currentItems.toList()
 
     companion object {
         fun create(): GameBlock = GameBlock()
 
-        fun createWith(actor: Actor): GameBlock = GameBlock().also {
-            it.addActor(actor)
+        fun createWith(entity: GameEntity<EntityType>): GameBlock = GameBlock().also {
+            it.addEntity(entity)
         }
     }
 }

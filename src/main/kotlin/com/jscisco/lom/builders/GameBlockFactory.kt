@@ -10,15 +10,13 @@ object GameBlockFactory {
 
     fun floor() = GameBlock.create()
 
-    fun wall() = GameBlock.create().also {
-        it.terrain = Wall()
-    }
+    fun wall() = GameBlock.createWith(EntityFactory.newWall())
 
-    fun closedDoor() = GameBlock.create().also {
-        it.terrain = ClosedDoor()
-    }
-
-    fun openDoor() = GameBlock.create().also {
-        it.terrain = OpenDoor()
-    }
+//    fun closedDoor() = GameBlock.create().also {
+//        it.terrain = ClosedDoor()
+//    }
+//
+//    fun openDoor() = GameBlock.create().also {
+//        it.terrain = OpenDoor()
+//    }
 }

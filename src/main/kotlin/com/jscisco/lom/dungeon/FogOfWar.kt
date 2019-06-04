@@ -1,6 +1,7 @@
 package com.jscisco.lom.dungeon
 
 import com.jscisco.lom.builders.GameTileBuilder
+import com.jscisco.lom.extensions.position
 import org.hexworks.cobalt.logging.api.Logger
 import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.api.Layers

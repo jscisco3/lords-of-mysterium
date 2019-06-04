@@ -1,12 +1,13 @@
 package com.jscisco.lom.kingdom
 
-import com.jscisco.lom.actor.Player
+import GameEntity
+import com.jscisco.lom.attributes.types.Player
 import com.jscisco.lom.kingdom.buildings.Bank
 import com.jscisco.lom.kingdom.buildings.Building
 import com.jscisco.lom.kingdom.buildings.Inn
 
 class Kingdom(val name: String, val initialMaximumGold: Int = 1000, val initialMaximumHeroes: Int = 2) {
-    val availableHeroes: MutableList<Player> = mutableListOf()
+    val availableHeroes: MutableList<GameEntity<Player>> = mutableListOf()
     val maximumHeroes: Int
         get() = initialMaximumHeroes + ((buildings.lastOrNull { it is Inn } as Inn?)?.maxHeroes ?: 0)
 
@@ -28,7 +29,7 @@ class Kingdom(val name: String, val initialMaximumGold: Int = 1000, val initialM
         }
     }
 
-    fun hireHero(hero: Player, cost: Int) {
+    fun hireHero(hero: GameEntity<Player>, cost: Int) {
         if (availableHeroes.size < maximumHeroes && cost <= currentGold) {
             availableHeroes.add(hero)
             currentGold -= cost

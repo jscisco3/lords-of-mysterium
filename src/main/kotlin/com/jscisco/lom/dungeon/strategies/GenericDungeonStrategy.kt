@@ -30,12 +30,12 @@ class GenericDungeonStrategy(private val dungeonSize: Size3D) : GenerationStrate
                     if (terrain == '.') {
                         blocks[position] = GameBlockFactory.floor()
                     }
-                    if (terrain == '+') {
-                        blocks[position] = GameBlockFactory.closedDoor()
-                    }
-                    if (terrain == '/') {
-                        blocks[position] = GameBlockFactory.openDoor()
-                    }
+//                    if (terrain == '+') {
+//                        blocks[position] = GameBlockFactory.closedDoor()
+//                    }
+//                    if (terrain == '/') {
+//                        blocks[position] = GameBlockFactory.openDoor()
+//                    }
                 }
             }
 //            if (z > 0) {
