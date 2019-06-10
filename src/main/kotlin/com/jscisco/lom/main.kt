@@ -5,6 +5,7 @@ import com.jscisco.lom.configuration.GameConfiguration
 import com.jscisco.lom.dungeon.DungeonBuilder
 import com.jscisco.lom.dungeon.strategies.GenericDungeonStrategy
 import com.jscisco.lom.events.QuitGameEvent
+import com.jscisco.lom.extensions.addAtEmptyPosition
 import com.jscisco.lom.view.DungeonView
 import org.hexworks.cobalt.events.api.subscribe
 import org.hexworks.cobalt.logging.api.Logger
@@ -27,8 +28,11 @@ fun main(args: Array<String>) {
     val dungeonSize = Size3D.create(GameConfiguration.WINDOW_WIDTH, GameConfiguration.WINDOW_HEIGHT, 5)
     val visibleSize = Size3D.create(GameConfiguration.VISIBLE_DUNGEON_WIDTH, GameConfiguration.VISIBLE_DUNGEON_HEIGHT, 1)
 
-    val dungeon = DungeonBuilder(dungeonSize, strategy = GenericDungeonStrategy(dungeonSize), player = EntityFactory.newPlayer())
+    val dungeon = DungeonBuilder(dungeonSize, strategy = GenericDungeonStrategy(dungeonSize))
             .build(visibleSize, dungeonSize)
+            .also {
+                it.addAtEmptyPosition(EntityFactory.newPlayer())
+            }
 
     val dv = DungeonView(dungeon)
     application.dock(dv)
@@ -63,7 +67,7 @@ fun main(args: Array<String>) {
 //    }
 
     dv.screen.handleKeyboardEvents(KeyboardEventType.KEY_PRESSED) { event, _ ->
-//        states.last().handleInput(event)
+        //        states.last().handleInput(event)
         Processed
     }
 

@@ -7,6 +7,7 @@ import com.jscisco.lom.builders.GameBlockFactory
 import com.jscisco.lom.events.DoorOpenedEvent
 import com.jscisco.lom.events.UpdateCamera
 import com.jscisco.lom.events.UpdateFOW
+import com.jscisco.lom.extensions.isPlayer
 import com.jscisco.lom.extensions.position
 import org.hexworks.amethyst.api.Engines.newEngine
 import org.hexworks.amethyst.api.entity.Entity
@@ -28,8 +29,7 @@ import org.hexworks.zircon.internal.Zircon
 
 class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
               private val visibleSize: Size3D,
-              private val actualSize: Size3D,
-              val player: GameEntity<Player>) : GameArea<Tile, GameBlock> by GameAreaBuilder<Tile, GameBlock>()
+              private val actualSize: Size3D) : GameArea<Tile, GameBlock> by GameAreaBuilder<Tile, GameBlock>()
         .withVisibleSize(visibleSize)
         .withActualSize(actualSize)
         .withDefaultBlock(DEFAULT_BLOCK)
@@ -37,8 +37,15 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         .build() {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
-//    private val fogOfWar: FogOfWar by lazy { FogOfWar(this) }
+    //    private val fogOfWar: FogOfWar by lazy { FogOfWar(this) }
     private val entities: MutableList<GameEntity<EntityType>> = mutableListOf()
+
+    val player: GameEntity<Player>
+        get() {
+            return entities.last {
+                it.isPlayer
+            } as GameEntity<Player>
+        }
 
     private val engine = newEngine<GameContext>()
     private val entityPositionLookup = mutableMapOf<Identifier, Position3D>()
@@ -55,9 +62,12 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         }
 
         registerEvents()
-
 //        fogOfWar.updateFOW()
-        updateCamera()
+        try {
+            updateCamera()
+        } catch (e: NoSuchElementException) {
+
+        }
     }
 
 
@@ -68,7 +78,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         }
 
         Zircon.eventBus.subscribe<UpdateFOW> {
-//            fogOfWar.updateFOW()
+            //            fogOfWar.updateFOW()
         }
 
         Zircon.eventBus.subscribe<UpdateCamera> {
@@ -77,7 +87,6 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     }
 
     private fun updateCamera() {
-        logger.trace("updating camera based on player position: %s".format(player.position.toString()))
         val screenPosition = player.position - visibleOffset()
         val halfHeight = visibleSize.yLength / 2
         val halfWidth = visibleSize.xLength / 2
@@ -135,6 +144,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     fun addEntity(entity: Entity<EntityType, GameContext>, position: Position3D) {
         engine.addEntity(entity)
         entities.add(entity)
+        entity.position = position
         entityPositionLookup[entity.id] = position
         fetchBlockAt(position).map {
             it.addEntity(entity)

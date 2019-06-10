@@ -1,5 +1,6 @@
 package com.jscisco.lom.builders
 
+import com.jscisco.lom.attributes.EntityActions
 import com.jscisco.lom.attributes.EntityPosition
 import com.jscisco.lom.attributes.EntityTile
 import com.jscisco.lom.attributes.Health
@@ -7,7 +8,9 @@ import com.jscisco.lom.attributes.flags.BlockOccupier
 import com.jscisco.lom.attributes.types.NPC
 import com.jscisco.lom.attributes.types.Player
 import com.jscisco.lom.attributes.types.Terrain
+import com.jscisco.lom.commands.AttackCommand
 import com.jscisco.lom.extensions.newGameEntityOfType
+import com.jscisco.lom.facets.Attackable
 import com.jscisco.lom.facets.Movable
 import squidpony.squidmath.RNG
 
@@ -19,9 +22,11 @@ object EntityFactory {
                 BlockOccupier,
                 EntityPosition(),
                 EntityTile(GameTileBuilder.PLAYER),
+                EntityActions(AttackCommand::class),
                 Health(initalHp = 200)
         )
-        facets(Movable)
+        facets(Movable,
+                Attackable)
     }
 
     fun newMonster() = newGameEntityOfType(NPC) {
@@ -31,6 +36,8 @@ object EntityFactory {
                 EntityTile(GameTileBuilder.GOBLIN),
                 Health(initalHp = 25)
         )
+        facets(Movable,
+                Attackable)
     }
 
     fun newFloor() = newGameEntityOfType(Terrain) {

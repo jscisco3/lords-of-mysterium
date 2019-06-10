@@ -5,6 +5,7 @@ import com.jscisco.lom.commands.MoveCommand
 import com.jscisco.lom.dungeon.Dungeon
 import com.jscisco.lom.dungeon.GameContext
 import com.jscisco.lom.extensions.responseWhenCommandIs
+import com.jscisco.lom.extensions.tryActionsOn
 import org.hexworks.amethyst.api.Consumed
 import org.hexworks.amethyst.api.Pass
 import org.hexworks.amethyst.api.Response
@@ -18,10 +19,11 @@ object Movable : BaseFacet<GameContext>() {
         val dungeon: Dungeon = context.dungeon
         dungeon.fetchBlockAt(position).ifPresent {
             if (it.isOccupied) {
-                // TODO
+                response = source.tryActionsOn(context, it.occupier)
             } else {
-                dungeon.moveEntity(source, position)
-                response = Consumed
+                if (dungeon.moveEntity(source, position)) {
+                    response = Consumed
+                }
             }
         }
         response

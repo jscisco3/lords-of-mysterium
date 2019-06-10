@@ -11,9 +11,13 @@ import org.hexworks.amethyst.api.Response
 import org.hexworks.amethyst.api.base.BaseFacet
 import org.hexworks.amethyst.api.entity.EntityType
 import org.hexworks.cobalt.datatypes.extensions.ifPresent
+import org.hexworks.cobalt.logging.api.Logger
+import org.hexworks.cobalt.logging.api.LoggerFactory
 import org.hexworks.zircon.internal.Zircon
 
 object Attackable : BaseFacet<GameContext>() {
+
+    private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     override fun executeCommand(command: GameCommand<out EntityType>): Response = command.responseWhenCommandIs<AttackCommand> { (context, attacker, defender) ->
         val defenderHealth = defender.findAttribute(Health::class)

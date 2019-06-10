@@ -1,6 +1,8 @@
 package com.jscisco.lom.kingdom
 
-import com.jscisco.lom.actor.Player
+import GameEntity
+import com.jscisco.lom.attributes.types.Player
+import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.kingdom.buildings.Bank
 import com.jscisco.lom.kingdom.buildings.Inn
 import org.assertj.core.api.Assertions
@@ -73,7 +75,7 @@ class TestKingdom {
 
     @Test
     fun `I should only be able to hire a hero if I have enough money and there is room`() {
-        val hero: Player = Player()
+        val hero: GameEntity<Player> = EntityFactory.newPlayer()
         val cost: Int = 123
         val initialGold: Int = 500
         testKingdom.currentGold = initialGold
