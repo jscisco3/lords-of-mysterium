@@ -3,6 +3,9 @@ package com.jscisco.lom
 import com.jscisco.lom.builders.EntityFactory
 import com.jscisco.lom.configuration.GameConfiguration
 import com.jscisco.lom.dungeon.DungeonBuilder
+import com.jscisco.lom.dungeon.GameContext
+import com.jscisco.lom.dungeon.state.PlayerTurnState
+import com.jscisco.lom.dungeon.state.State
 import com.jscisco.lom.dungeon.strategies.GenericDungeonStrategy
 import com.jscisco.lom.events.QuitGameEvent
 import com.jscisco.lom.extensions.addAtEmptyPosition
@@ -37,7 +40,7 @@ fun main(args: Array<String>) {
     val dv = DungeonView(dungeon)
     application.dock(dv)
 
-//    val states = mutableListOf<State>(ProcessingState(dungeon))
+    val states = mutableListOf<State>(PlayerTurnState(dungeon))
 
     Zircon.eventBus.subscribe<QuitGameEvent> {
         System.exit(0)
@@ -67,11 +70,11 @@ fun main(args: Array<String>) {
 //    }
 
     dv.screen.handleKeyboardEvents(KeyboardEventType.KEY_PRESSED) { event, _ ->
-        //        states.last().handleInput(event)
+        states.last().handleInput(GameContext(dungeon, dv.screen, event))
         Processed
     }
 
-    while (true) {
-//        states.last()?.update()
-    }
+//    while (true) {
+////        states.last()?.update()
+//    }
 }

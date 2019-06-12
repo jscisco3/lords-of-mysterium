@@ -1,5 +1,6 @@
 package com.jscisco.lom.dungeon
 
+import AnyGameEntity
 import GameEntity
 import com.jscisco.lom.attributes.types.Player
 import com.jscisco.lom.blocks.GameBlock
@@ -38,7 +39,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
     //    private val fogOfWar: FogOfWar by lazy { FogOfWar(this) }
-    private val entities: MutableList<GameEntity<EntityType>> = mutableListOf()
+    val entities: MutableList<GameEntity<EntityType>> = mutableListOf()
 
     val player: GameEntity<Player>
         get() {
@@ -86,7 +87,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
         }
     }
 
-    private fun updateCamera() {
+    fun updateCamera() {
         val screenPosition = player.position - visibleOffset()
         val halfHeight = visibleSize.yLength / 2
         val halfWidth = visibleSize.xLength / 2
@@ -142,7 +143,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
      * Add an [Entity] at a given [Position3D]
      */
     fun addEntity(entity: Entity<EntityType, GameContext>, position: Position3D) {
-        engine.addEntity(entity)
+//        engine.addEntity(entity)
         entities.add(entity)
         entity.position = position
         entityPositionLookup[entity.id] = position
@@ -181,6 +182,12 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
             } ?: false
         } else {
             false
+        }
+    }
+
+    fun getEntitiesOnZLevel(zlevel: Int): List<AnyGameEntity> {
+        return entities.filter {
+            it.position.z == zlevel
         }
     }
 

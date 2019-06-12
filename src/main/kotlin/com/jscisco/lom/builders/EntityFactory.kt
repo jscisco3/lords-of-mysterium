@@ -1,9 +1,6 @@
 package com.jscisco.lom.builders
 
-import com.jscisco.lom.attributes.EntityActions
-import com.jscisco.lom.attributes.EntityPosition
-import com.jscisco.lom.attributes.EntityTile
-import com.jscisco.lom.attributes.Health
+import com.jscisco.lom.attributes.*
 import com.jscisco.lom.attributes.flags.BlockOccupier
 import com.jscisco.lom.attributes.types.NPC
 import com.jscisco.lom.attributes.types.Player
@@ -23,7 +20,8 @@ object EntityFactory {
                 EntityPosition(),
                 EntityTile(GameTileBuilder.PLAYER),
                 EntityActions(AttackCommand::class),
-                Health(initalHp = 200)
+                Health(initalHp = 200),
+                Initiative(cooldown = 1000)
         )
         facets(Movable,
                 Attackable)
@@ -34,7 +32,8 @@ object EntityFactory {
                 BlockOccupier,
                 EntityPosition(),
                 EntityTile(GameTileBuilder.GOBLIN),
-                Health(initalHp = 25)
+                Health(initalHp = 25),
+                Initiative(cooldown = 1000)
         )
         facets(Movable,
                 Attackable)

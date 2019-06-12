@@ -25,7 +25,7 @@ object GameConfiguration {
     val DUNGEON_SIZE = Sizes.create3DSize(WINDOW_WIDTH, WINDOW_HEIGHT, 1)
 
 
-    val TILESET = CP437TilesetResources.rogueYun16x16()
+    val TILESET = CP437TilesetResources.yobbo20x20()
 
     val THEME = ColorThemes.adriftInDreams()
 
