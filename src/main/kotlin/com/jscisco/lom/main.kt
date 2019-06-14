@@ -28,13 +28,14 @@ fun main(args: Array<String>) {
 
     val application = SwingApplications.startApplication(GameConfiguration.buildAppConfig())
 //    application.dock(StartView())
-    val dungeonSize = Size3D.create(GameConfiguration.WINDOW_WIDTH, GameConfiguration.WINDOW_HEIGHT, 5)
+    val dungeonSize = Size3D.create(GameConfiguration.WINDOW_WIDTH, GameConfiguration.WINDOW_HEIGHT, 1)
     val visibleSize = Size3D.create(GameConfiguration.VISIBLE_DUNGEON_WIDTH, GameConfiguration.VISIBLE_DUNGEON_HEIGHT, 1)
 
     val dungeon = DungeonBuilder(dungeonSize, strategy = GenericDungeonStrategy(dungeonSize))
             .build(visibleSize, dungeonSize)
             .also {
                 it.addAtEmptyPosition(EntityFactory.newPlayer())
+                it.updateCamera()
             }
 
     val dv = DungeonView(dungeon)

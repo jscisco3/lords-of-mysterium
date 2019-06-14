@@ -1,9 +1,6 @@
 package com.jscisco.lom.builders
 
 import com.jscisco.lom.blocks.GameBlock
-import com.jscisco.lom.terrain.ClosedDoor
-import com.jscisco.lom.terrain.OpenDoor
-import com.jscisco.lom.terrain.Wall
 
 object GameBlockFactory {
 
@@ -12,11 +9,7 @@ object GameBlockFactory {
 
     fun wall() = GameBlock.createWith(EntityFactory.newWall())
 
-//    fun closedDoor() = GameBlock.create().also {
-//        it.terrain = ClosedDoor()
-//    }
-//
-//    fun openDoor() = GameBlock.create().also {
-//        it.terrain = OpenDoor()
-//    }
+    fun closedDoor() = GameBlock.createWith(EntityFactory.newClosedDoor())
+
+    fun openDoor() = GameBlock.createWith(EntityFactory.newOpenDoor())
 }

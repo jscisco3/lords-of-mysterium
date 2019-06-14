@@ -10,6 +10,7 @@ import com.jscisco.lom.events.UpdateCamera
 import com.jscisco.lom.events.UpdateFOW
 import com.jscisco.lom.extensions.isPlayer
 import com.jscisco.lom.extensions.position
+import com.jscisco.lom.util.InitiativeHeap
 import org.hexworks.amethyst.api.Engines.newEngine
 import org.hexworks.amethyst.api.entity.Entity
 import org.hexworks.amethyst.api.entity.EntityType
@@ -40,6 +41,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
     //    private val fogOfWar: FogOfWar by lazy { FogOfWar(this) }
     val entities: MutableList<GameEntity<EntityType>> = mutableListOf()
+    val initiativeHeap = InitiativeHeap()
 
     val player: GameEntity<Player>
         get() {
@@ -58,6 +60,7 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
                 entityPositionLookup[it.id] = pos
                 engine.addEntity(it)
                 entities.add(it)
+                initiativeHeap.add(it)
                 it.position = pos
             }
         }
@@ -143,8 +146,9 @@ class Dungeon(private val blocks: MutableMap<Position3D, GameBlock>,
      * Add an [Entity] at a given [Position3D]
      */
     fun addEntity(entity: Entity<EntityType, GameContext>, position: Position3D) {
-//        engine.addEntity(entity)
+        engine.addEntity(entity)
         entities.add(entity)
+        initiativeHeap.add(entity)
         entity.position = position
         entityPositionLookup[entity.id] = position
         fetchBlockAt(position).map {

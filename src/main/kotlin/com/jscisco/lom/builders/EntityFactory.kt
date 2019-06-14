@@ -52,4 +52,18 @@ object EntityFactory {
         )
     }
 
+    fun newClosedDoor() = newGameEntityOfType(Terrain) {
+        attributes(BlockOccupier,
+                EntityPosition(),
+                EntityTile(GameTileBuilder.CLOSED_DOOR)
+        )
+    }
+
+    fun newOpenDoor() = newGameEntityOfType(Terrain) {
+        attributes(
+                EntityPosition(),
+                EntityTile(GameTileBuilder.OPEN_DOOR)
+        )
+    }
+
 }
